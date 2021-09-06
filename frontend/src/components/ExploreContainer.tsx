@@ -1,6 +1,6 @@
 import React from 'react';
 
-import './ExploreContainer.css';
+import './ExploreContainer.scss';
 
 const ExploreContainer: React.FC = () => (
   <div className="container">
