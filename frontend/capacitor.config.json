@@ -1,0 +1,6 @@
+{
+	"appId": "io.ionic.starter",
+	"appName": "tutorific",
+	"webDir": "build",
+	"bundledWebRuntime": false
+}
