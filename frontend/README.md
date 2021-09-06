@@ -5,7 +5,6 @@
 
 ```bash
 npm install
-npm run prepare
 ```
 
 2. Start the development server:

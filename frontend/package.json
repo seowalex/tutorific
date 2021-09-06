@@ -3,11 +3,6 @@
   "version": "1.0.0",
   "private": true,
   "dependencies": {
-    "@capacitor/app": "1.0.3",
-    "@capacitor/core": "3.2.2",
-    "@capacitor/haptics": "1.0.3",
-    "@capacitor/keyboard": "1.0.3",
-    "@capacitor/status-bar": "1.0.3",
     "@ionic/react": "^5.7.0",
     "@ionic/react-router": "^5.7.0",
     "@testing-library/jest-dom": "^5.14.1",
@@ -35,7 +30,6 @@
     "workbox-streams": "^6.2.4"
   },
   "devDependencies": {
-    "@capacitor/cli": "3.2.2",
     "@types/jest": "^27.0.1",
     "@types/node": "^14.17.14",
     "@types/react": "^17.0.20",
@@ -53,11 +47,11 @@
     "prettier": "^2.3.2"
   },
   "scripts": {
+    "prepare": "cd .. && husky install frontend/.husky",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject",
-    "prepare": "cd .. && husky install frontend/.husky"
+    "eject": "react-scripts eject"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [

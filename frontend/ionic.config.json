@@ -1,7 +1,4 @@
 {
   "name": "tutorific",
-  "integrations": {
-    "capacitor": {}
-  },
   "type": "react"
 }
