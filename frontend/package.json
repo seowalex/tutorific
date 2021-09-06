@@ -61,8 +61,8 @@
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
-      "npx eslint --cache --fix .",
-      "npx prettier --check --write '**/*.{js,jsx,ts,tsx}'"
+      "npx eslint --cache --fix",
+      "npx prettier --write"
     ]
   },
   "browserslist": {
