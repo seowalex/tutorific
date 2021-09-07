@@ -1,0 +1,68 @@
+{
+  "name": "tutorific",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/index.js",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^10.0.0",
+    "koa": "^2.13.1",
+    "koa-bodyparser": "^4.3.0",
+    "koa-json": "^2.0.2",
+    "koa-router": "^10.1.1",
+    "typescript": "^4.4.2"
+  },
+  "devDependencies": {
+    "@types/koa-json": "^2.0.20",
+    "@types/koa-router": "^7.4.4",
+    "@types/node": "^14.17.14",
+    "@typescript-eslint/eslint-plugin": "^4.30.0",
+    "@typescript-eslint/parser": "^4.30.0",
+    "eslint": "^7.32.0",
+    "eslint-config-airbnb": "^18.2.1",
+    "eslint-config-airbnb-typescript": "^14.0.0",
+    "eslint-config-prettier": "^8.3.0",
+    "husky": "^7.0.2",
+    "lint-staged": "^11.1.2",
+    "nodemon": "^2.0.12",
+    "prettier": "^2.3.2"
+  },
+  "scripts": {
+    "prepare": "cd .. && husky install backend/.husky",
+    "start": "rm -rf ./dist && tsc && node .",
+    "dev": "tsc -w && nodemon",
+    "build": "npm run format && npm run lint && rm -rf ./dist && tsc",
+    "lint-fix": "eslint --fix --ext .js,.jsx,.ts,.tsx src/",
+    "lint": "eslint --ext .js,.jsx,.ts,.tsx src/",
+    "format": "prettier --check \"src/**/*.{js,jsx,ts,tsx}\"",
+    "format-fix": "prettier --write \"src/**/*.{js,jsx,ts,tsx}\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cs3216/2021-a3-mobile-cloud-2021-a3-group-6.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/cs3216/2021-a3-mobile-cloud-2021-a3-group-6/issues"
+  },
+  "homepage": "https://github.com/cs3216/2021-a3-mobile-cloud-2021-a3-group-6#readme",
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx}": [
+      "npx eslint --cache --fix",
+      "npx prettier --write"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}
