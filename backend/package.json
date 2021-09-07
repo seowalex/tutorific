@@ -10,6 +10,8 @@
     "koa-bodyparser": "^4.3.0",
     "koa-json": "^2.0.2",
     "koa-router": "^10.1.1",
+    "pg": "^8.7.1",
+    "typeorm": "^0.2.37",
     "typescript": "^4.4.2"
   },
   "devDependencies": {

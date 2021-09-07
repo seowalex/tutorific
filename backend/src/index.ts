@@ -5,6 +5,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 import json from "koa-json";
 import config from "./config/index";
+// import { postgresDB } from 'postgres-connection';
 
 
 const result = dotenv.config();
