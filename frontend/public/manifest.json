@@ -1,6 +1,5 @@
 {
-  "short_name": "Ionic App",
-  "name": "My Ionic App",
+  "name": "Tutorific",
   "icons": [
     {
       "src": "assets/icon/favicon.png",
@@ -9,6 +8,11 @@
     },
     {
       "src": "assets/icon/icon.png",
+      "type": "image/png",
+      "sizes": "1630x1630"
+    },
+    {
+      "src": "assets/icon/maskable.png",
       "type": "image/png",
       "sizes": "512x512",
       "purpose": "maskable"

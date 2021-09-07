@@ -7,19 +7,20 @@ import {
   IonToolbar,
 } from '@ionic/react';
 import ExploreContainer from '../components/ExploreContainer';
-import './Home.scss';
 
-const Home: React.FC = () => (
+import './Profile.scss';
+
+const Profile: React.FC = () => (
   <IonPage>
     <IonHeader>
       <IonToolbar>
-        <IonTitle>Blank</IonTitle>
+        <IonTitle>Profile</IonTitle>
       </IonToolbar>
     </IonHeader>
     <IonContent fullscreen>
       <IonHeader collapse="condense">
         <IonToolbar>
-          <IonTitle size="large">Blank</IonTitle>
+          <IonTitle size="large">Profile</IonTitle>
         </IonToolbar>
       </IonHeader>
       <ExploreContainer />
@@ -27,4 +28,4 @@ const Home: React.FC = () => (
   </IonPage>
 );
 
-export default Home;
+export default Profile;
