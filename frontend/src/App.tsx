@@ -11,8 +11,9 @@ import {
   IonTabs,
 } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
-import { chatbubbles, person, school } from 'ionicons/icons';
-import Listings from './pages/Listings';
+import { bulb, chatbubbles, person, school } from 'ionicons/icons';
+import Tutors from './pages/Tutors';
+import Tutees from './pages/Tutees';
 import Chat from './pages/Chat';
 import Profile from './pages/Profile';
 
@@ -23,9 +24,14 @@ const App: React.FC = () => (
     <IonReactRouter>
       <IonTabs>
         <IonTabBar slot="bottom">
-          <IonTabButton tab="listings" href="/listings">
+          <IonTabButton tab="tutors" href="/tutors">
             <IonIcon icon={school} />
-            <IonLabel>Listings</IonLabel>
+            <IonLabel>Tutors</IonLabel>
+          </IonTabButton>
+
+          <IonTabButton tab="tutees" href="/tutees">
+            <IonIcon icon={bulb} />
+            <IonLabel>Tutees</IonLabel>
           </IonTabButton>
 
           <IonTabButton tab="chat" href="/chat">
@@ -41,9 +47,12 @@ const App: React.FC = () => (
         </IonTabBar>
 
         <IonRouterOutlet>
-          <Redirect exact from="/" to="/listings" />
-          <Route path="/listings">
-            <Listings />
+          <Redirect exact from="/" to="/tutors" />
+          <Route path="/tutors">
+            <Tutors />
+          </Route>
+          <Route path="/tutees">
+            <Tutees />
           </Route>
           <Route path="/chat">
             <Chat />

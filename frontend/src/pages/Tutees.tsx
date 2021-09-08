@@ -12,13 +12,13 @@ import {
 import { search } from 'ionicons/icons';
 import ExploreContainer from '../components/ExploreContainer';
 
-import './Profile.scss';
+import './Tutees.scss';
 
-const Profile: React.FC = () => (
+const Tutees: React.FC = () => (
   <IonPage>
     <IonHeader>
       <IonToolbar>
-        <IonTitle>Profile</IonTitle>
+        <IonTitle>Tutees</IonTitle>
         <IonButtons slot="primary" collapse>
           <IonButton>
             <IonIcon slot="icon-only" icon={search} />
@@ -29,7 +29,7 @@ const Profile: React.FC = () => (
     <IonContent fullscreen>
       <IonHeader collapse="condense">
         <IonToolbar>
-          <IonTitle size="large">Profile</IonTitle>
+          <IonTitle size="large">Tutees</IonTitle>
           <IonButtons slot="primary">
             <IonButton>
               <IonIcon slot="icon-only" icon={search} />
@@ -42,4 +42,4 @@ const Profile: React.FC = () => (
   </IonPage>
 );
 
-export default Profile;
+export default Tutees;
