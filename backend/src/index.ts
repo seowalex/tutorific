@@ -24,7 +24,7 @@ const app = new Koa();
 app.use(bodyParser());
 app.use(json());
 
-// TODO fix cors
+// TODO fix cors for deployment
 
 // if (config.env === 'development') {
 //   app.use(cors({ origin: '*' }));
@@ -56,11 +56,6 @@ app.use(
     console.log(str);
   })
 );
-
-// setup npm start to work
-// settle environment
-// hook up postgres <- here
-// folder structure
 
 app.listen(config.port, () => {
   // eslint-disable-next-line no-console

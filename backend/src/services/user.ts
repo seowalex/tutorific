@@ -1,9 +1,8 @@
 import User from '../models/user';
 import { getRepository } from 'typeorm';
 
-const getUser = async (id: number): Promise<User | undefined> => {
-  const userRepo = getRepository(User);
-  return await userRepo.findOne(id);
+const getUser = async (id: string): Promise<User | undefined> => {
+  return await getRepository(User).findOne(id);
 };
 
 export default {

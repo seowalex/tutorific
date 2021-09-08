@@ -1,7 +1,3 @@
-/*
-This file initializes your PostgreSQL database. You need to supply
-the host name, username, password and database name for your database.
-*/
 import { createConnection, Connection, ConnectionOptions } from 'typeorm';
 import config from './index';
 
