@@ -41,3 +41,6 @@ ctx.body // response body
 ctx.state
 
 ```
+
+## How to use TypeORM
+https://github.com/typeorm/typeorm/blob/master/docs/entities.md

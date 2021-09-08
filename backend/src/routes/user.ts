@@ -4,8 +4,6 @@ import userController from '../controllers/user';
 
 const router: Router = new Router();
 
-// TODO replace with controller methods
-
 router.get('/', async (ctx: Koa.Context) => {
   ctx.body = 'GET ALL';
 });

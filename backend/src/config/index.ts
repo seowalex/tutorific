@@ -1,9 +1,6 @@
 import dotenv from 'dotenv';
 
-const result = dotenv.config();
-if (result.error) {
-  throw new Error('Error parsing dotenv');
-}
+dotenv.config({ path: '.env' });
 
 const config = {
   port: Number(process.env.PORT) || 5000,
