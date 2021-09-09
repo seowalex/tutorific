@@ -1,5 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=Bitter:wght@500&display=swap');
-
 /* Core CSS required for Ionic components to work properly */
 @import '@ionic/react/css/core.css';
 
@@ -20,4 +18,5 @@
 @import './layout/utils.scss';
 
 /* Theme variables */
+@import './theme/fonts.scss';
 @import './theme/variables.scss';
