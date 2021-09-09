@@ -1,9 +1,21 @@
 import { IsEmail } from 'class-validator';
-import { Entity, PrimaryGeneratedColumn, Column, OneToOne, JoinColumn } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  OneToOne,
+  JoinColumn,
+} from 'typeorm';
 import Profile from './profile';
 
 @Entity()
 export default class User {
+  constructor(email: string, password: string, profile: Profile) {
+    this.email = email;
+    this.password = password;
+    this.profile = profile;
+  }
+
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -19,6 +31,5 @@ export default class User {
 
   @OneToOne(() => Profile, { cascade: true, nullable: false })
   @JoinColumn()
-  profile: Profile
-
+  profile: Profile;
 }

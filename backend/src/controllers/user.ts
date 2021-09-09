@@ -20,18 +20,14 @@ const createUser = async (ctx: Koa.Context): Promise<void> => {
   const { email, password } = ctx.request.body;
   const hashedPassword = await authService.hashPassword(password);
   const newProfile = new Profile();
-  const newUser = new User();
-  newUser.email = email;
-  newUser.password = hashedPassword;
-  newUser.profile = newProfile;
+  const newUser = new User(email, hashedPassword, newProfile);
   const createdUser = await userService.createUser(newUser);
-  if (!createdUser) {
-    // not sure about this
-    ctx.throw(HttpStatus.BAD_REQUEST);
-  } else {
-    ctx.body = { data: createdUser.profile };
-  }
-}
+  ctx.body = {
+    data: {
+      profileId: createdUser.profile.id,
+    },
+  };
+};
 
 export default {
   getUser,
