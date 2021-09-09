@@ -1,15 +1,11 @@
 import { TutorListing, TutorListingDetails } from '../Interfaces';
-import { SERVER } from '../Constants';
-
-const headers = {
-  'Content-Type': 'application/json',
-};
+import { SERVER, HEADERS } from '../Constants';
 
 export const apiGetTutorListings = (): Promise<[TutorListing]> => {
   const url = `${SERVER}/api/tutors`;
   const options = {
     method: 'GET',
-    headers,
+    headers: HEADERS,
   };
 
   return fetch(url, options)
@@ -23,7 +19,7 @@ export const apiCreateTutorListing = (
   const url = `${SERVER}/api/tutors`;
   const options = {
     method: 'POST',
-    headers,
+    headers: HEADERS,
     body: JSON.stringify(details),
   };
 
@@ -34,7 +30,7 @@ export const apiGetTutorListing = (id: number): Promise<TutorListing> => {
   const url = `${SERVER}/api/tutor/${id}`;
   const options = {
     method: 'GET',
-    headers,
+    headers: HEADERS,
   };
 
   return fetch(url, options)
@@ -49,7 +45,7 @@ export const apiUpdateTutorListing = (
   const url = `${SERVER}/api/tutor/${id}`;
   const options = {
     method: 'PUT',
-    headers,
+    headers: HEADERS,
     body: JSON.stringify(details),
   };
 
@@ -62,7 +58,7 @@ export const apiDeleteTutorListing = (id: number): Promise<Response> => {
   const url = `${SERVER}/api/tutor/${id}`;
   const options = {
     method: 'DELETE',
-    headers,
+    headers: HEADERS,
   };
 
   return fetch(url, options);

@@ -1,15 +1,11 @@
 import { TuteeListing, TuteeListingDetails } from '../Interfaces';
-import { SERVER } from '../Constants';
-
-const headers = {
-  'Content-Type': 'application/json',
-};
+import { SERVER, HEADERS } from '../Constants';
 
 export const apiGetTuteeListings = (): Promise<[TuteeListing]> => {
   const url = `${SERVER}/api/tutees`;
   const options = {
     method: 'GET',
-    headers,
+    headers: HEADERS,
   };
 
   return fetch(url, options)
@@ -23,7 +19,7 @@ export const apiCreateTuteeListing = (
   const url = `${SERVER}/api/tutees`;
   const options = {
     method: 'POST',
-    headers,
+    headers: HEADERS,
     body: JSON.stringify(details),
   };
 
@@ -34,7 +30,7 @@ export const apiGetTuteeListing = (id: number): Promise<TuteeListing> => {
   const url = `${SERVER}/api/tutee/${id}`;
   const options = {
     method: 'GET',
-    headers,
+    headers: HEADERS,
   };
 
   return fetch(url, options)
@@ -49,7 +45,7 @@ export const apiUpdateTuteeListing = (
   const url = `${SERVER}/api/tutee/${id}`;
   const options = {
     method: 'PUT',
-    headers,
+    headers: HEADERS,
     body: JSON.stringify(details),
   };
 
@@ -62,7 +58,7 @@ export const apiDeleteTuteeListing = (id: number): Promise<Response> => {
   const url = `${SERVER}/api/tutee/${id}`;
   const options = {
     method: 'DELETE',
-    headers,
+    headers: HEADERS,
   };
 
   return fetch(url, options);
