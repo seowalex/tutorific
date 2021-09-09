@@ -17,7 +17,7 @@ export default class User {
   @Column({ nullable: true })
   refresh_token: string;
 
-  @OneToOne(() => Profile, { cascade: true })
+  @OneToOne(() => Profile, { cascade: true, nullable: false })
   @JoinColumn()
   profile: Profile
 

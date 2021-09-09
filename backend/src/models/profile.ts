@@ -12,13 +12,13 @@ export default class Profile {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column()
+    @Column({ nullable: true })
     name: string;
 
-    @Column()
+    @Column({ nullable: true })
     description: string;
 
-    @Column({ type: "enum", enum: Gender })
+    @Column({ type: "enum", enum: Gender, nullable: true })
     gender: Gender
 
     @OneToOne(() => User, user => user.profile)

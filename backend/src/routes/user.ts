@@ -10,9 +10,7 @@ router.get('/', async (ctx: Koa.Context) => {
 
 router.get('/:id', userController.getUser);
 
-router.post('/', async (ctx: Koa.Context) => {
-  ctx.body = 'POST';
-});
+router.post('/', userController.createUser);
 
 router.delete('/:id', async (ctx: Koa.Context) => {
   ctx.body = 'DELETE';
