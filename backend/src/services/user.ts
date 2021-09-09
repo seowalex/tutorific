@@ -1,12 +1,12 @@
-import { getRepository, NoNeedToReleaseEntityManagerError } from 'typeorm';
+import { getRepository } from 'typeorm';
 import User from '../models/user';
 
 
 const getUser = async (id: number): Promise<User | undefined> =>
-  await getRepository(User).findOne(id);
+  getRepository(User).findOne(id);
 
-const createUser = async (new_user: User): Promise<User> =>
-  await getRepository(User).save(new_user);
+const createUser = async (newUser: User): Promise<User> =>
+  getRepository(User).save(newUser);
 
   
 

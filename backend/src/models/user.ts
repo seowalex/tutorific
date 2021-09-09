@@ -12,10 +12,10 @@ export default class User {
   email: string;
 
   @Column()
-  hashed_password: string;
+  password: string;
 
   @Column({ nullable: true })
-  refresh_token: string;
+  refreshToken: string;
 
   @OneToOne(() => Profile, { cascade: true, nullable: false })
   @JoinColumn()

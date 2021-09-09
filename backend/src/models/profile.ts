@@ -1,11 +1,7 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToOne } from 'typeorm';
 import User from './user';
+import Gender from './gender';
 
-enum Gender {
-    MALE = "male",
-    FEMALE = "female",
-    PNTS = "prefer not to say"
-}
 
 @Entity()
 export default class Profile {
