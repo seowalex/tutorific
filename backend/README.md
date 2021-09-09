@@ -18,7 +18,7 @@ Fill in .env file
 3. Start the development server:
 
 ```bash
-npm run start
+npm run dev
 ```
 
 4. Run npm scripts where necessary

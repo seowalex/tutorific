@@ -12,7 +12,6 @@ import router from './routes/index';
 const app = new Koa();
 
 databaseConnection.then(() => {
-  app.listen(config.dbPort);
   // eslint-disable-next-line no-console
   console.info('db listening on port: ', config.dbPort);
 });
