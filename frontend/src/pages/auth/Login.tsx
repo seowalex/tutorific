@@ -16,7 +16,7 @@ import {
 import { useHistory } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 
-import './Login.scss';
+import styles from './Login.module.scss';
 
 interface LoginData {
   email: string;
@@ -59,11 +59,16 @@ const Login: React.FC = () => {
         <IonGrid className="ion-no-padding h-100">
           <IonRow className="ion-align-items-center h-100">
             <IonCol className="ion-no-padding">
-              <div className="brand-header">
-                <IonImg className="brand-img" src="/assets/icon/icon.png" />
-                <h1 className="ion-text-center brand-name">Tutorific</h1>
+              <div className={styles.brandHeader}>
+                <IonImg
+                  className={styles.brandImg}
+                  src="/assets/icon/icon.png"
+                />
+                <h1 className={`${styles.brandName} ion-text-center`}>
+                  Tutorific
+                </h1>
               </div>
-              <form className="login-form" onSubmit={handleSubmit(onSubmit)}>
+              <form onSubmit={handleSubmit(onSubmit)}>
                 <IonItem
                   className="ion-margin-vertical"
                   fill="outline"

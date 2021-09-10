@@ -21,7 +21,7 @@ import {
 import { useHistory } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 
-import './Register.scss';
+import styles from './Register.module.scss';
 
 interface RegisterData {
   email: string;
@@ -71,9 +71,12 @@ const Register: React.FC = () => {
         <IonGrid className="ion-no-padding">
           <IonRow>
             <IonCol className="ion-no-padding">
-              <div className="welcome-header">
-                <IonImg className="welcome-img" src="/assets/welcome.png" />
-                <p className="welcome-text">
+              <div className={styles.welcomeHeader}>
+                <IonImg
+                  className={styles.welcomeImg}
+                  src="/assets/welcome.png"
+                />
+                <p className={styles.welcomeText}>
                   Welcome to Tutorific! Register an account to start looking for
                   tutors/tutees.
                 </p>
