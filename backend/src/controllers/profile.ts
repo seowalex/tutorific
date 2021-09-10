@@ -1,5 +1,15 @@
 import Koa from 'koa';
+import HttpStatus from 'http-status-codes';
 import profileService from '../services/profile';
+
+const getProfile = async (ctx: Koa.Context): Promise<void> => {
+  const profile = await profileService.getProfile(ctx.params.id);
+
+  if (!profile) {
+    ctx.throw(HttpStatus.NOT_FOUND);
+  }
+  ctx.body = { data: profile };
+};
 
 const updateProfile = async (ctx: Koa.Context): Promise<void> => {
   const savedProfile = await profileService.updateProfile(
@@ -12,5 +22,6 @@ const updateProfile = async (ctx: Koa.Context): Promise<void> => {
 };
 
 export default {
+  getProfile,
   updateProfile,
 };

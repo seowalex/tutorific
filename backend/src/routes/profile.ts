@@ -8,9 +8,7 @@ router.get('/', async (ctx: Koa.Context) => {
   ctx.body = 'Get all profiles';
 });
 
-router.get('/:id', async (ctx: Koa.Context) => {
-  ctx.body = 'Get single profile by id';
-});
+router.get('/:id', profileController.getProfile);
 
 router.post('/', async (ctx: Koa.Context) => {
   ctx.body = 'Create profile';
