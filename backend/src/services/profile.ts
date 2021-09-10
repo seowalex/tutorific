@@ -1,15 +1,15 @@
 import { getRepository } from 'typeorm';
-import Profile from '../models/profile';
+import Profile, { CreateProfile, UpdateProfile } from '../models/profile';
 
 const getProfile = async (id: number): Promise<Profile | undefined> =>
   getRepository(Profile).findOne(id);
 
-const createProfile = async (profile: Omit<Profile, 'id'>): Promise<Profile> =>
+const createProfile = async (profile: CreateProfile): Promise<Profile> =>
   getRepository(Profile).save(profile);
 
 const updateProfile = async (
   id: number,
-  profile: Partial<Profile>
+  profile: UpdateProfile
 ): Promise<Profile> =>
   getRepository(Profile).save({ id: Number(id), ...profile });
 
