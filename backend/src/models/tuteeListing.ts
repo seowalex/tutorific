@@ -1,10 +1,4 @@
-import {
-  Entity,
-  PrimaryGeneratedColumn,
-  Column,
-  JoinColumn,
-  ManyToOne,
-} from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
 import Profile from './profile';
 import { Subject, Level, Town } from '../modelHelpers/listingHelper';
 
@@ -13,8 +7,7 @@ export default class TuteeListing {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToOne(() => Profile)
-  @JoinColumn()
+  @ManyToOne(() => Profile, { nullable: false })
   tutee: Profile;
 
   @Column('int')
@@ -23,7 +16,7 @@ export default class TuteeListing {
   @Column('int')
   priceMax: number;
 
-  @Column()
+  @Column('text')
   description: string;
 
   @Column('int', { array: true })

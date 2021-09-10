@@ -13,12 +13,10 @@ export default class Conversation {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToOne(() => Profile)
-  @JoinColumn()
+  @ManyToOne(() => Profile, { nullable: false })
   firstProfile: Profile;
 
-  @ManyToOne(() => Profile)
-  @JoinColumn()
+  @ManyToOne(() => Profile, { nullable: false })
   secondProfile: Profile;
 
   @OneToOne(() => Message)

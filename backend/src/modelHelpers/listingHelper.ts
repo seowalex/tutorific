@@ -1,5 +1,6 @@
-/* eslint-disable no-unused-vars */
 /* eslint-disable no-shadow */
+/* eslint-disable no-unused-vars */
+
 export enum Subject {
   Math = 'Mathematics',
   English = 'English',
