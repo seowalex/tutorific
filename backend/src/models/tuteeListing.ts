@@ -1,6 +1,12 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  ManyToOne,
+  CreateDateColumn,
+} from 'typeorm';
 import Profile from './profile';
-import { Subject, Level, Town } from '../modelHelpers/listingHelper';
+import { Subject, Level, Town } from '../modelUtil/util';
 
 @Entity()
 export default class TuteeListing {
@@ -30,4 +36,7 @@ export default class TuteeListing {
 
   @Column('enum', { enum: Town })
   location: Town;
+
+  @CreateDateColumn()
+  createdAt: Date;
 }

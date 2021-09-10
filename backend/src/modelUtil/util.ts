@@ -1,6 +1,12 @@
 /* eslint-disable no-shadow */
 /* eslint-disable no-unused-vars */
 
+export enum Gender {
+  MALE = 'Male',
+  FEMALE = 'Female',
+  PNTS = 'Prefer not to say',
+}
+
 export enum Subject {
   Math = 'Mathematics',
   English = 'English',

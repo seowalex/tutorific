@@ -1,4 +1,9 @@
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  CreateDateColumn,
+} from 'typeorm';
 // import User from './user';
 
 // eslint-disable-next-line no-unused-vars, no-shadow
@@ -60,6 +65,9 @@ export default class Profile {
 
   @Column({ type: 'enum', enum: Gender, nullable: true })
   gender: Gender;
+
+  @CreateDateColumn()
+  createdAt: Date;
 
   // @OneToOne(() => User, (user) => user.profile)
   // user: User;

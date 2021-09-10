@@ -1,6 +1,12 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  ManyToOne,
+  CreateDateColumn,
+} from 'typeorm';
 import Profile from './profile';
-import { Subject, Level } from '../modelHelpers/listingHelper';
+import { Subject, Level } from '../modelUtil/util';
 
 @Entity()
 export default class TutorListing {
@@ -27,4 +33,7 @@ export default class TutorListing {
 
   @Column('enum', { array: true, enum: Level })
   levels: Level[];
+
+  @CreateDateColumn()
+  createdAt: Date;
 }
