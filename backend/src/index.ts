@@ -5,6 +5,7 @@ import json from 'koa-json';
 import logger from 'koa-logger';
 import HttpStatus from 'http-status-codes';
 import helmet from 'koa-helmet';
+import jwt from 'koa-jwt';
 import Exception from './utils/exception';
 import dbConnection from './database/connection';
 import config from './config/index';
@@ -40,6 +41,12 @@ app.use(async (ctx: Koa.Context, next: () => Promise<any>) => {
     }
   }
 });
+
+app.use(
+  jwt({ secret: process.env.JWT_SECRET ?? 'secret' }).unless({
+    path: [/^\/auth/],
+  })
+);
 
 app.use(router.routes()).use(router.allowedMethods());
 
