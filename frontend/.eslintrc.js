@@ -22,6 +22,7 @@ module.exports = {
   plugins: ['@typescript-eslint'],
   rules: {
     '@typescript-eslint/explicit-module-boundary-types': 'off',
+    'jsx-a11y/alt-text': 'off',
     'react/jsx-props-no-spreading': [
       'error',
       {

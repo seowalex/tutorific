@@ -18,7 +18,7 @@ import Register from './pages/auth/Register';
 import Tutors from './pages/Tutors';
 import Tutees from './pages/Tutees';
 import Chat from './pages/Chat';
-import Profile from './pages/Profile';
+import Profile from './pages/profile/Profile';
 
 import './styles/main.scss';
 

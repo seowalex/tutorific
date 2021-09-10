@@ -7,7 +7,6 @@ import {
   IonContent,
   IonGrid,
   IonHeader,
-  IonImg,
   IonInput,
   IonItem,
   IonLabel,
@@ -62,7 +61,7 @@ const Register: React.FC = () => {
       <IonHeader>
         <IonToolbar>
           <IonButtons slot="start">
-            <IonBackButton defaultHref="/login" />
+            <IonBackButton defaultHref="/login" disabled={isSubmitting} />
           </IonButtons>
           <IonTitle>Register</IonTitle>
         </IonToolbar>
@@ -72,10 +71,7 @@ const Register: React.FC = () => {
           <IonRow>
             <IonCol className="ion-no-padding">
               <div className={styles.welcomeHeader}>
-                <IonImg
-                  className={styles.welcomeImg}
-                  src="/assets/welcome.png"
-                />
+                <img className={styles.welcomeImg} src="/assets/welcome.png" />
                 <p className={styles.welcomeText}>
                   Welcome to Tutorific! Register an account to start looking for
                   tutors/tutees.
@@ -87,6 +83,7 @@ const Register: React.FC = () => {
                   fill="outline"
                   lines="full"
                   color={errors.email ? 'danger' : undefined}
+                  disabled={isSubmitting}
                 >
                   <IonLabel position="floating">Email</IonLabel>
                   <IonInput
@@ -106,6 +103,7 @@ const Register: React.FC = () => {
                   fill="outline"
                   lines="full"
                   color={errors.password ? 'danger' : undefined}
+                  disabled={isSubmitting}
                 >
                   <IonLabel position="floating">Password</IonLabel>
                   <IonInput
@@ -125,6 +123,7 @@ const Register: React.FC = () => {
                   fill="outline"
                   lines="full"
                   color={errors.confirm_password ? 'danger' : undefined}
+                  disabled={isSubmitting}
                 >
                   <IonLabel position="floating">Confirm Password</IonLabel>
                   <IonInput

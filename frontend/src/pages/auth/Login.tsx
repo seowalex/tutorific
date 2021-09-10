@@ -4,7 +4,6 @@ import {
   IonCol,
   IonContent,
   IonGrid,
-  IonImg,
   IonInput,
   IonItem,
   IonLabel,
@@ -60,10 +59,7 @@ const Login: React.FC = () => {
           <IonRow className="ion-align-items-center h-100">
             <IonCol className="ion-no-padding">
               <div className={styles.brandHeader}>
-                <IonImg
-                  className={styles.brandImg}
-                  src="/assets/icon/icon.png"
-                />
+                <img className={styles.brandImg} src="/assets/icon/icon.png" />
                 <h1 className={`${styles.brandName} ion-text-center`}>
                   Tutorific
                 </h1>
@@ -74,6 +70,7 @@ const Login: React.FC = () => {
                   fill="outline"
                   lines="full"
                   color={errors.email ? 'danger' : undefined}
+                  disabled={isSubmitting}
                 >
                   <IonLabel position="floating">Email</IonLabel>
                   <IonInput
@@ -93,6 +90,7 @@ const Login: React.FC = () => {
                   fill="outline"
                   lines="full"
                   color={errors.password ? 'danger' : undefined}
+                  disabled={isSubmitting}
                 >
                   <IonLabel position="floating">Password</IonLabel>
                   <IonInput
@@ -121,6 +119,7 @@ const Login: React.FC = () => {
                     expand="block"
                     color="light"
                     routerLink="/register"
+                    disabled={isSubmitting}
                   >
                     Register
                   </IonButton>
