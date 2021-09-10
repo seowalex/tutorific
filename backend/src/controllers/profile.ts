@@ -1,19 +1,27 @@
 import Koa from 'koa';
-// import Profile from '../models/profile';
-import profileServices from '../services/profile';
+import HttpStatus from 'http-status-codes';
+import profileService from '../services/profile';
+
+const getProfile = async (ctx: Koa.Context): Promise<void> => {
+  const profile = await profileService.getProfile(ctx.params.id);
+
+  if (!profile) {
+    ctx.throw(HttpStatus.NOT_FOUND);
+  }
+  ctx.body = { data: profile };
+};
 
 const updateProfile = async (ctx: Koa.Context): Promise<void> => {
-  // const { profileId, name, description, gender } = ctx.request.body;
-
-  const updatedProfile = { ...ctx.request.body, ...ctx.params };
-  const savedProfile = await profileServices.saveProfile(updatedProfile);
+  const savedProfile = await profileService.updateProfile(
+    ctx.params.id,
+    ctx.request.body
+  );
   ctx.body = {
-    data: {
-      profileId: savedProfile.id,
-    },
+    data: savedProfile,
   };
 };
 
 export default {
+  getProfile,
   updateProfile,
 };

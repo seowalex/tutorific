@@ -10,12 +10,6 @@ import Profile from './profile';
 
 @Entity()
 export default class User {
-  constructor(email: string, password: string, profile: Profile) {
-    this.email = email;
-    this.password = password;
-    this.profile = profile;
-  }
-
   @PrimaryGeneratedColumn()
   id: number;
 
