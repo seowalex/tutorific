@@ -4,8 +4,9 @@ import Profile from '../models/profile';
 const getProfile = async (id: number): Promise<Profile | undefined> =>
   getRepository(Profile).findOne(id);
 
-const createProfile = async (profile: Omit<Profile, 'id'>): Promise<Profile> =>
-  getRepository(Profile).save(profile);
+const createProfile = async (
+  profile: Omit<Profile, 'id' | 'createdAt'>
+): Promise<Profile> => getRepository(Profile).save(profile);
 
 const updateProfile = async (
   id: number,

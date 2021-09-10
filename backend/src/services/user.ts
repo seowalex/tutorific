@@ -7,7 +7,11 @@ const getUser = async (id: number): Promise<User | undefined> =>
 const createUser = async (user: Omit<User, 'id'>): Promise<User> =>
   getRepository(User).save(user);
 
+const getUserByEmail = async (email: string): Promise<User | undefined> =>
+  getRepository(User).findOne({ email });
+
 export default {
   getUser,
   createUser,
+  getUserByEmail,
 };
