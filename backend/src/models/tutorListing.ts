@@ -6,7 +6,7 @@ import {
   CreateDateColumn,
 } from 'typeorm';
 import Profile from './profile';
-import { Subject, Level } from '../modelUtil/util';
+import { Subject, Level } from '../utils/model';
 
 @Entity()
 export default class TutorListing {
