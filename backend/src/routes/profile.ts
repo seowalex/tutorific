@@ -16,7 +16,7 @@ router.post('/', async (ctx: Koa.Context) => {
   ctx.body = 'Create profile';
 });
 
-router.patch('/:id', profileController.updateProfile);
+router.put('/:id', profileController.updateProfile);
 
 router.delete('/:id', async (ctx: Koa.Context) => {
   ctx.body = 'Delete profile';
