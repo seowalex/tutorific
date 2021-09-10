@@ -1,12 +1,35 @@
 import { IsEmail } from 'class-validator';
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  OneToOne,
+  JoinColumn,
+} from 'typeorm';
+import Profile from './profile';
 
 @Entity()
 export default class User {
+  constructor(email: string, password: string, profile: Profile) {
+    this.email = email;
+    this.password = password;
+    this.profile = profile;
+  }
+
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ unique: true, nullable: false })
+  @Column({ unique: true })
   @IsEmail()
   email: string;
+
+  @Column()
+  password: string;
+
+  @Column({ nullable: true })
+  refreshToken: string;
+
+  @OneToOne(() => Profile, { cascade: true, nullable: false })
+  @JoinColumn()
+  profile: Profile;
 }
