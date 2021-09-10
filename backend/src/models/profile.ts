@@ -1,15 +1,11 @@
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  CreateDateColumn,
+} from 'typeorm';
 // import User from './user';
-
-// eslint-disable-next-line no-unused-vars, no-shadow
-enum Gender {
-  // eslint-disable-next-line no-unused-vars
-  MALE = 'Male',
-  // eslint-disable-next-line no-unused-vars
-  FEMALE = 'Female',
-  // eslint-disable-next-line no-unused-vars
-  PNTS = 'Prefer not to say',
-}
+import { Gender } from '../utils/model';
 
 @Entity()
 export default class Profile {
@@ -24,4 +20,7 @@ export default class Profile {
 
   @Column({ type: 'enum', enum: Gender, nullable: true })
   gender?: Gender;
+
+  @CreateDateColumn()
+  createdAt: Date;
 }
