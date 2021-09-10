@@ -24,3 +24,6 @@ export default class Profile {
   @CreateDateColumn()
   createdAt: Date;
 }
+
+export type UpdateProfile = Partial<Profile>;
+export type CreateProfile = Omit<Profile, 'id' | 'createdAt'>;

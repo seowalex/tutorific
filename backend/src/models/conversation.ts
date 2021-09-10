@@ -1,11 +1,4 @@
-import {
-  Entity,
-  PrimaryGeneratedColumn,
-  JoinColumn,
-  ManyToOne,
-  OneToOne,
-} from 'typeorm';
-import Message from './message';
+import { Entity, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
 import Profile from './profile';
 
 @Entity()
@@ -18,8 +11,4 @@ export default class Conversation {
 
   @ManyToOne(() => Profile, { nullable: false })
   secondProfile: Profile;
-
-  @OneToOne(() => Message)
-  @JoinColumn()
-  lastMessage: Message;
 }
