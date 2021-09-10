@@ -18,6 +18,7 @@ Fill in .env file
 3. Start the development server:
 
 ```bash
+npm run db:create
 npm run dev
 ```
 
@@ -25,6 +26,8 @@ npm run dev
 - npm run lint-fix (run eslint)
 - npm run format-fix (run prettier)
 - npm run build (check linting and formatting and recompile into js)
+- npm run db:create (create db)
+- npm run db:drop (drop db)
 
 
 ## How to use Koa

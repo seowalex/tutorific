@@ -5,13 +5,13 @@ import json from 'koa-json';
 import logger from 'koa-logger';
 import HttpStatus from 'http-status-codes';
 import helmet from 'koa-helmet';
-import databaseConnection from './config/connection';
+import dbConnection from './database/connection';
 import config from './config/index';
 import router from './routes/index';
 
 const app = new Koa();
 
-databaseConnection.then(() => {
+dbConnection.then(() => {
   // eslint-disable-next-line no-console
   console.info('db listening on port: ', config.dbPort);
 });
