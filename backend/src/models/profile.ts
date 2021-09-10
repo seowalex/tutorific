@@ -1,5 +1,5 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToOne } from 'typeorm';
-import User from './user';
+import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+// import User from './user';
 
 // eslint-disable-next-line no-unused-vars, no-shadow
 enum Gender {
@@ -11,8 +11,44 @@ enum Gender {
   PNTS = 'Prefer not to say',
 }
 
+interface ProfileJson {
+  id?: number;
+  name?: string;
+  description?: string;
+  gender?: string;
+}
+
 @Entity()
 export default class Profile {
+  constructor(profile: ProfileJson) {
+    if (profile === undefined) {
+      return;
+    }
+    if (profile.id !== undefined) {
+      this.id = profile.id;
+    }
+    if (profile.name !== undefined) {
+      this.name = profile.name;
+    }
+    if (profile.description !== undefined) {
+      this.description = profile.description;
+    }
+
+    switch (profile.gender) {
+      case 'Male':
+        this.gender = Gender.MALE;
+        break;
+      case 'Female':
+        this.gender = Gender.FEMALE;
+        break;
+      case 'Prefer not to say':
+        this.gender = Gender.PNTS;
+        break;
+      default:
+        break;
+    }
+  }
+
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -25,6 +61,6 @@ export default class Profile {
   @Column({ type: 'enum', enum: Gender, nullable: true })
   gender: Gender;
 
-  @OneToOne(() => User, (user) => user.profile)
-  user: User;
+  // @OneToOne(() => User, (user) => user.profile)
+  // user: User;
 }
