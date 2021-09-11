@@ -7,6 +7,7 @@ export enum Gender {
   PNTS = 'Prefer not to say',
 }
 
+// only used for FE
 export enum Subject {
   Math = 'Mathematics',
   English = 'English',

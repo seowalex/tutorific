@@ -6,7 +6,7 @@ import {
   CreateDateColumn,
 } from 'typeorm';
 import Profile from './profile';
-import { Subject, Level } from '../utils/model';
+import { Level } from '../utils/model';
 
 @Entity()
 export default class TutorListing {
@@ -28,8 +28,8 @@ export default class TutorListing {
   @Column('int', { array: true })
   timeSlots: number[];
 
-  @Column('enum', { array: true, enum: Subject })
-  subjects: Subject[];
+  @Column('text', { array: true })
+  subjects: string[];
 
   @Column('enum', { array: true, enum: Level })
   levels: Level[];
