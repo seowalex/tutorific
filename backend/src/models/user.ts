@@ -20,8 +20,8 @@ export default class User {
   @Column()
   password: string;
 
-  @Column({ nullable: true })
-  refreshToken: string;
+  @Column({ type: 'text', nullable: true })
+  refreshToken?: string | null;
 
   @OneToOne(() => Profile, { cascade: true, nullable: false })
   @JoinColumn()

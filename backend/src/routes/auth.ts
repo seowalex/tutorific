@@ -8,4 +8,8 @@ router.post('/register', authController.createUser);
 
 router.post('/login', authController.login);
 
+router.delete('/logout', authController.logout);
+
+router.post('/refresh', authController.refreshToken);
+
 export default router.routes();

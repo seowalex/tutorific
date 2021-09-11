@@ -1,6 +1,5 @@
 import Koa from 'koa';
 import HttpStatus from 'http-status-codes';
-import jwt from 'jsonwebtoken';
 import authUtil from '../utils/auth';
 import User from '../models/user';
 import profileService from '../services/profile';
@@ -14,15 +13,19 @@ const login = async (ctx: Koa.Context): Promise<void> => {
     throw new Exception(HttpStatus.BAD_REQUEST, 'Invalid email or password');
   }
 
-  const token = await jwt.sign(
-    { userId: user.id, email: user.email, profileId: user.profile.id },
-    process.env.JWT_SECRET
+  const jwtToken = await authUtil.generateJwtToken(
+    user.id,
+    email,
+    user.profile.id
   );
+  const refreshToken = authUtil.generateRefreshToken();
+  userService.storeRefreshToken(user.id, refreshToken);
 
   ctx.body = {
     data: {
       profileId: user.profile.id,
-      token,
+      jwtToken,
+      refreshToken,
     },
   };
 };
@@ -43,21 +46,40 @@ const createUser = async (ctx: Koa.Context): Promise<void> => {
     profile: newProfile,
   });
 
-  const token = await jwt.sign(
-    { userId: newUser.id, email: newUser.email, profileId: newProfile.id },
-    process.env.JWT_SECRET
+  const jwtToken = await authUtil.generateJwtToken(
+    newUser.id,
+    email,
+    newProfile.id
   );
+  const refreshToken = authUtil.generateRefreshToken();
+  userService.storeRefreshToken(newUser.id, refreshToken);
 
   ctx.body = {
     data: {
       profileId: newProfile.id,
-      token,
+      jwtToken,
+      refreshToken,
     },
   };
 };
 
+const logout = async (ctx: Koa.Context): Promise<void> => {
+  const { userId, refreshToken } = ctx.request.body;
+  const isSuccess = await userService.revokeRefreshToken(userId, refreshToken);
+  if (isSuccess) {
+    ctx.body = {
+      message: 'Logout Success!',
+    };
+  } else {
+    throw new Exception(401, 'Not Authorized');
+  }
+};
+
+const refreshToken = async (ctx: Koa.Context): Promise<void> => {};
+
 export default {
-  //   getUser,
   createUser,
   login,
+  logout,
+  refreshToken,
 };
