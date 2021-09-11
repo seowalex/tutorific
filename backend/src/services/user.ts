@@ -8,7 +8,7 @@ const createUser = async (user: Omit<User, 'id'>): Promise<User> =>
   getRepository(User).save(user);
 
 const getUserByEmail = async (email: string): Promise<User | undefined> =>
-  getRepository(User).findOne({ email });
+  getRepository(User).findOne({ email }, { relations: ['profile'] });
 
 export default {
   getUser,
