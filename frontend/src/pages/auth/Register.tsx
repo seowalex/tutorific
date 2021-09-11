@@ -77,9 +77,11 @@ const Register: React.FC = () => {
                   tutors/tutees.
                 </p>
               </div>
-              <form onSubmit={handleSubmit(onSubmit)}>
+              <form
+                className={styles.registerForm}
+                onSubmit={handleSubmit(onSubmit)}
+              >
                 <IonItem
-                  className="ion-margin-vertical"
                   fill="outline"
                   lines="full"
                   color={errors.email ? 'danger' : undefined}
@@ -99,7 +101,6 @@ const Register: React.FC = () => {
                   )}
                 </IonItem>
                 <IonItem
-                  className="ion-margin-vertical"
                   fill="outline"
                   lines="full"
                   color={errors.password ? 'danger' : undefined}
@@ -119,7 +120,6 @@ const Register: React.FC = () => {
                   )}
                 </IonItem>
                 <IonItem
-                  className="ion-margin-vertical"
                   fill="outline"
                   lines="full"
                   color={errors.confirm_password ? 'danger' : undefined}
@@ -143,16 +143,14 @@ const Register: React.FC = () => {
                     </IonNote>
                   )}
                 </IonItem>
-                <div className="ion-padding-top">
-                  <IonButton
-                    className="ion-margin-vertical"
-                    expand="block"
-                    type="submit"
-                    disabled={isSubmitting}
-                  >
-                    {isSubmitting ? <IonSpinner /> : 'Register'}
-                  </IonButton>
-                </div>
+                <IonButton
+                  className="ion-no-margin ion-margin-top"
+                  expand="block"
+                  type="submit"
+                  disabled={isSubmitting}
+                >
+                  {isSubmitting ? <IonSpinner /> : 'Register'}
+                </IonButton>
               </form>
             </IonCol>
           </IonRow>

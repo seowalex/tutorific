@@ -64,9 +64,11 @@ const Login: React.FC = () => {
                   Tutorific
                 </h1>
               </div>
-              <form onSubmit={handleSubmit(onSubmit)}>
+              <form
+                className={styles.loginForm}
+                onSubmit={handleSubmit(onSubmit)}
+              >
                 <IonItem
-                  className="ion-margin-vertical"
                   fill="outline"
                   lines="full"
                   color={errors.email ? 'danger' : undefined}
@@ -86,7 +88,6 @@ const Login: React.FC = () => {
                   )}
                 </IonItem>
                 <IonItem
-                  className="ion-margin-vertical"
                   fill="outline"
                   lines="full"
                   color={errors.password ? 'danger' : undefined}
@@ -105,25 +106,23 @@ const Login: React.FC = () => {
                     </IonNote>
                   )}
                 </IonItem>
-                <div className="ion-padding-top">
-                  <IonButton
-                    className="ion-margin-vertical"
-                    expand="block"
-                    type="submit"
-                    disabled={isSubmitting}
-                  >
-                    {isSubmitting ? <IonSpinner /> : 'Login'}
-                  </IonButton>
-                  <IonButton
-                    className="ion-margin-vertical"
-                    expand="block"
-                    color="light"
-                    routerLink="/register"
-                    disabled={isSubmitting}
-                  >
-                    Register
-                  </IonButton>
-                </div>
+                <IonButton
+                  className="ion-no-margin ion-margin-top"
+                  expand="block"
+                  type="submit"
+                  disabled={isSubmitting}
+                >
+                  {isSubmitting ? <IonSpinner /> : 'Login'}
+                </IonButton>
+                <IonButton
+                  className="ion-no-margin"
+                  expand="block"
+                  color="light"
+                  routerLink="/register"
+                  disabled={isSubmitting}
+                >
+                  Register
+                </IonButton>
               </form>
             </IonCol>
           </IonRow>
