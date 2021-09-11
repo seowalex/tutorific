@@ -6,7 +6,7 @@ import profileService from '../services/profile';
 
 const getConversations = async (ctx: Koa.Context): Promise<void> => {
   // TODO sender id take from token
-  const profile = await profileService.getProfile(5);
+  const profile = await profileService.getProfile(1);
   if (!profile) {
     return;
   }

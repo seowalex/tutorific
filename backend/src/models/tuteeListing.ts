@@ -13,7 +13,7 @@ export default class TuteeListing {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToOne(() => Profile, { nullable: false })
+  @ManyToOne(() => Profile, { nullable: false, eager: true })
   tutee: Profile;
 
   @Column('int')
