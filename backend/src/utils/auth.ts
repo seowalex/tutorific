@@ -19,7 +19,7 @@ const generateJwtToken = async (
   email: string,
   profileId: number
 ): Promise<string> =>
-  jwt.sign({ userId, email, profileId }, process.env.JWT_SECRET, {
+  jwt.sign({ userId, email, profileId }, process.env.JWT_SECRET ?? 'secret', {
     expiresIn: JWT_EXPIRY,
   });
 

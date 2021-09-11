@@ -44,7 +44,7 @@ app.use(async (ctx: Koa.Context, next: () => Promise<any>) => {
 
 app.use(
   jwt({ secret: process.env.JWT_SECRET ?? 'secret' }).unless({
-    path: [/^\/auth/],
+    path: [/^\/api\/auth/],
   })
 );
 

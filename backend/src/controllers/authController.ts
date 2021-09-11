@@ -6,6 +6,22 @@ import profileService from '../services/profile';
 import userService from '../services/user';
 import Exception from '../utils/exception';
 
+const onAuthSuccess = async (ctx: Koa.Context, user: User): Promise<void> => {
+  const jwtToken = await authUtil.generateJwtToken(
+    user.id,
+    user.email,
+    user.profile.id
+  );
+  const refreshToken = authUtil.generateRefreshToken();
+  userService.storeRefreshToken(user.id, refreshToken);
+
+  ctx.body = {
+    userId: user.id,
+    jwtToken,
+    refreshToken,
+  };
+};
+
 const login = async (ctx: Koa.Context): Promise<void> => {
   const { email, password } = ctx.request.body;
   const user = await userService.getUserByEmail(email);
@@ -13,24 +29,10 @@ const login = async (ctx: Koa.Context): Promise<void> => {
     throw new Exception(HttpStatus.BAD_REQUEST, 'Invalid email or password');
   }
 
-  const jwtToken = await authUtil.generateJwtToken(
-    user.id,
-    email,
-    user.profile.id
-  );
-  const refreshToken = authUtil.generateRefreshToken();
-  userService.storeRefreshToken(user.id, refreshToken);
-
-  ctx.body = {
-    data: {
-      profileId: user.profile.id,
-      jwtToken,
-      refreshToken,
-    },
-  };
+  onAuthSuccess(ctx, user);
 };
 
-const createUser = async (ctx: Koa.Context): Promise<void> => {
+const register = async (ctx: Koa.Context): Promise<void> => {
   const { email } = ctx.request.body;
   const duplicateUser = await userService.getUserByEmail(email);
   if (duplicateUser) {
@@ -46,21 +48,7 @@ const createUser = async (ctx: Koa.Context): Promise<void> => {
     profile: newProfile,
   });
 
-  const jwtToken = await authUtil.generateJwtToken(
-    newUser.id,
-    email,
-    newProfile.id
-  );
-  const refreshToken = authUtil.generateRefreshToken();
-  userService.storeRefreshToken(newUser.id, refreshToken);
-
-  ctx.body = {
-    data: {
-      profileId: newProfile.id,
-      jwtToken,
-      refreshToken,
-    },
-  };
+  onAuthSuccess(ctx, newUser);
 };
 
 const logout = async (ctx: Koa.Context): Promise<void> => {
@@ -99,7 +87,7 @@ const refreshJwt = async (ctx: Koa.Context): Promise<void> => {
 };
 
 export default {
-  createUser,
+  register,
   login,
   logout,
   refreshJwt,
