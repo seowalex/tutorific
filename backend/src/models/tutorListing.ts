@@ -37,3 +37,6 @@ export default class TutorListing {
   @CreateDateColumn()
   createdAt: Date;
 }
+
+export type UpdateTutorListing = Partial<TutorListing>;
+export type CreateTutorListing = Omit<TutorListing, 'id' | 'createdAt'>;

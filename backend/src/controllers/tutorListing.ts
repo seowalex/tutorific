@@ -1,0 +1,50 @@
+import Koa from 'koa';
+import HttpStatus from 'http-status-codes';
+import tutorListingService from '../services/tutorListing';
+
+const getTutorListings = async (ctx: Koa.Context): Promise<void> => {
+  const tutorListings = await tutorListingService.getTutorListings();
+  ctx.body = { data: tutorListings };
+};
+
+const getTutorListing = async (ctx: Koa.Context): Promise<void> => {
+  const tutorListing = await tutorListingService.getTutorListing(ctx.params.id);
+
+  if (!tutorListing) {
+    ctx.throw(HttpStatus.NOT_FOUND);
+  }
+  ctx.body = { data: tutorListing };
+};
+
+const createTutorListing = async (ctx: Koa.Context): Promise<void> => {
+  // note that the type is "tutor: int"
+  const newTutorListing = await tutorListingService.createTutorListing(
+    ctx.request.body
+  );
+  ctx.body = {
+    data: newTutorListing,
+  };
+};
+
+const updateTutorListing = async (ctx: Koa.Context): Promise<void> => {
+  const savedTutorListing = await tutorListingService.updateTutorListing(
+    ctx.params.id,
+    ctx.request.body
+  );
+  ctx.body = {
+    data: savedTutorListing,
+  };
+};
+
+const deleteTutorListing = async (ctx: Koa.Context): Promise<void> => {
+  await tutorListingService.deleteTutorListing(ctx.params.id);
+  ctx.status = HttpStatus.OK;
+};
+
+export default {
+  getTutorListings,
+  getTutorListing,
+  createTutorListing,
+  updateTutorListing,
+  deleteTutorListing,
+};
