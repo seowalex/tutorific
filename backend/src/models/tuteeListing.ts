@@ -6,14 +6,14 @@ import {
   CreateDateColumn,
 } from 'typeorm';
 import Profile from './profile';
-import { Subject, Level, Town } from '../utils/model';
+import { Gender, Level, Town } from '../utils/model';
 
 @Entity()
 export default class TuteeListing {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToOne(() => Profile, { nullable: false })
+  @ManyToOne(() => Profile, { nullable: false, eager: true })
   tutee: Profile;
 
   @Column('int')
@@ -28,11 +28,14 @@ export default class TuteeListing {
   @Column('int', { array: true })
   timeSlots: number[];
 
-  @Column('enum', { array: true, enum: Subject })
-  subjects: Subject[];
+  @Column('text', { array: true })
+  subjects: string[];
 
   @Column('enum', { enum: Level })
   level: Level;
+
+  @Column({ type: 'enum', enum: Gender })
+  gender: Gender;
 
   @Column('enum', { enum: Town })
   location: Town;
@@ -40,3 +43,6 @@ export default class TuteeListing {
   @CreateDateColumn()
   createdAt: Date;
 }
+
+export type UpdateTuteeListing = Partial<TuteeListing>;
+export type CreateTuteeListing = Omit<TuteeListing, 'id' | 'createdAt'>;

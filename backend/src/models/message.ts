@@ -4,6 +4,7 @@ import {
   Column,
   ManyToOne,
   CreateDateColumn,
+  RelationId,
 } from 'typeorm';
 import Conversation from './conversation';
 import Profile from './profile';
@@ -24,4 +25,11 @@ export default class Message {
 
   @CreateDateColumn()
   createdAt: Date;
+
+  // for some reason, typeorm does not automatically give foreign key ids on .find
+  // need to use https://github.com/typeorm/typeorm/blob/master/docs/decorator-reference.md#relationid
+  @RelationId((msg: Message) => msg.sender)
+  senderId?: number;
 }
+
+export type CreateMessage = Omit<Message, 'id' | 'createdAt'>;
