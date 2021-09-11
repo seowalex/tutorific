@@ -5,7 +5,13 @@ import messageService from '../services/message';
 import profileService from '../services/profile';
 
 const getConversations = async (ctx: Koa.Context): Promise<void> => {
-  const conversations = await conversationService.getConversations();
+  // TODO sender id take from token
+  const profile = await profileService.getProfile(5);
+  if (!profile) {
+    return;
+  }
+
+  const conversations = await conversationService.getConversations(profile.id);
 
   // append last message
   const conversationsWithLastMessage = await Promise.all(
