@@ -13,17 +13,17 @@ export default class Profile {
   id: number;
 
   @Column({ nullable: true })
-  name?: string;
+  name: string;
 
   @Column({ nullable: true })
-  description?: string;
+  description: string;
 
   @Column({ type: 'enum', enum: Gender, nullable: true })
-  gender?: Gender;
+  gender: Gender;
 
   @CreateDateColumn()
   createdAt: Date;
 }
 
 export type UpdateProfile = Partial<Profile>;
-export type CreateProfile = Omit<Profile, 'id' | 'createdAt'>;
+export type CreateProfile = {};
