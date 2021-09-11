@@ -9,8 +9,11 @@ const createMessage = async (ctx: Koa.Context): Promise<void> => {
     return;
   }
 
+  const message = ctx.request.body;
+
   const newMessage = await messageService.createMessage({
-    ...ctx.request.body,
+    ...message,
+    conversation: message.conversationId,
     sender: profile,
   });
   ctx.body = {
