@@ -4,7 +4,7 @@ import profileRouter from './profile';
 
 const router = new Router({ prefix: '/api' });
 
-router.use('/user', userRouter.routes);
-router.use('/profile', profileRouter.routes);
+router.use('/user', userRouter.routes());
+router.use('/profile', profileRouter.routes());
 
 export default router;
