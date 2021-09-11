@@ -10,6 +10,6 @@ router.post('/login', authController.login);
 
 router.delete('/logout', authController.logout);
 
-router.post('/refresh', authController.refreshToken);
+router.post('/refresh', authController.refreshJwt);
 
 export default router.routes();

@@ -75,11 +75,32 @@ const logout = async (ctx: Koa.Context): Promise<void> => {
   }
 };
 
-const refreshToken = async (ctx: Koa.Context): Promise<void> => {};
+const refreshJwt = async (ctx: Koa.Context): Promise<void> => {
+  const { userId, refreshToken } = ctx.request.body;
+  const fetchedUser = await userService.getUserByRefreshToken(
+    userId,
+    refreshToken
+  );
+  if (fetchedUser) {
+    const jwtToken = await authUtil.generateJwtToken(
+      fetchedUser.id,
+      fetchedUser.email,
+      fetchedUser.profile.id
+    );
+
+    ctx.body = {
+      data: {
+        jwtToken,
+      },
+    };
+  } else {
+    throw new Exception(401, 'Not Authorized');
+  }
+};
 
 export default {
   createUser,
   login,
   logout,
-  refreshToken,
+  refreshJwt,
 };

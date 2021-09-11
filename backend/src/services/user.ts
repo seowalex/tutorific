@@ -20,15 +20,23 @@ const storeRefreshToken = async (
   });
 };
 
+const getUserByRefreshToken = async (
+  userId: number,
+  refreshToken: string
+): Promise<User | undefined> =>
+  getRepository(User).findOne(
+    { id: userId, refreshToken },
+    { relations: ['profile'] }
+  );
+
 const revokeRefreshToken = async (
   userId: number,
   refreshToken: string
 ): Promise<Boolean> => {
-  const userRepo = getRepository(User);
-  const fetchedUser = await userRepo.findOne({ id: userId, refreshToken });
+  const fetchedUser = await getUserByRefreshToken(userId, refreshToken);
   if (fetchedUser) {
     fetchedUser.refreshToken = null;
-    await userRepo.save(fetchedUser);
+    await getRepository(User).save(fetchedUser);
     return true;
   }
   return false;
@@ -40,4 +48,5 @@ export default {
   getUserByEmail,
   storeRefreshToken,
   revokeRefreshToken,
+  getUserByRefreshToken,
 };
