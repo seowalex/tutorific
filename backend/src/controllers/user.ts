@@ -1,6 +1,6 @@
 import Koa from 'koa';
 import HttpStatus from 'http-status-codes';
-import hashPassword from '../utils/auth';
+import authUtil from '../utils/auth';
 import User from '../models/user';
 import profileService from '../services/profile';
 import userService from '../services/user';
@@ -21,7 +21,7 @@ const createUser = async (ctx: Koa.Context): Promise<void> => {
   const user: User = ctx.request.body;
   const newUser = await userService.createUser({
     ...user,
-    password: await hashPassword(user.password),
+    password: await authUtil.hashPassword(user.password),
     profile: newProfile,
   });
   await userService.createUser(newUser);

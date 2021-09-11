@@ -5,6 +5,8 @@ import json from 'koa-json';
 import logger from 'koa-logger';
 import HttpStatus from 'http-status-codes';
 import helmet from 'koa-helmet';
+import jwt from 'koa-jwt';
+import Exception from './utils/exception';
 import dbConnection from './database/connection';
 import config from './config/index';
 import router from './routes/index';
@@ -27,13 +29,24 @@ app.use(async (ctx: Koa.Context, next: () => Promise<any>) => {
   try {
     await next();
   } catch (error: any) {
-    ctx.status =
-      error.statusCode || error.status || HttpStatus.INTERNAL_SERVER_ERROR;
-    error.status = ctx.status;
-    ctx.body = { error };
-    ctx.app.emit('error', error, ctx);
+    if (error instanceof Exception) {
+      ctx.statusCode = error.statusCode;
+      ctx.body = error.toObject();
+    } else {
+      ctx.status =
+        error.statusCode || error.status || HttpStatus.INTERNAL_SERVER_ERROR;
+      error.status = ctx.status;
+      ctx.body = { error };
+      ctx.app.emit('error', error, ctx);
+    }
   }
 });
+
+app.use(
+  jwt({ secret: process.env.JWT_SECRET ?? 'secret' }).unless({
+    path: [/^\/api\/auth/],
+  })
+);
 
 app.use(router.routes()).use(router.allowedMethods());
 
