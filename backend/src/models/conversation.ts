@@ -1,10 +1,4 @@
-import {
-  Entity,
-  PrimaryGeneratedColumn,
-  JoinColumn,
-  ManyToOne,
-  OneToOne,
-} from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
 import Message from './message';
 import Profile from './profile';
 
@@ -13,13 +7,13 @@ export default class Conversation {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToOne(() => Profile, { nullable: false })
+  @ManyToOne(() => Profile, { nullable: false, eager: true })
   firstProfile: Profile;
 
-  @ManyToOne(() => Profile, { nullable: false })
+  @ManyToOne(() => Profile, { nullable: false, eager: true })
   secondProfile: Profile;
-
-  @OneToOne(() => Message)
-  @JoinColumn()
-  lastMessage: Message;
 }
+
+export type GetConversations = Conversation & { lastMessage: Message };
+export type GetConversation = Array<Message>;
+export type CreateConversation = Omit<Conversation, 'id'>;

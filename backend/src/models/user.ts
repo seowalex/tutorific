@@ -27,3 +27,5 @@ export default class User {
   @JoinColumn()
   profile: Profile;
 }
+
+export type CreateUser = Omit<User, 'id' | 'refreshToken'>;

@@ -16,8 +16,8 @@ router.delete('/:id', async (ctx: Koa.Context) => {
   ctx.body = 'DELETE';
 });
 
-router.patch('/:id', async (ctx: Koa.Context) => {
-  ctx.body = 'PATCH';
+router.post('/:id', async (ctx: Koa.Context) => {
+  ctx.body = 'POST';
 });
 
-export default router.routes();
+export default router;

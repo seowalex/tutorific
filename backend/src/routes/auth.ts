@@ -12,4 +12,4 @@ router.delete('/logout', authController.logout);
 
 router.post('/refresh', authController.refreshJwt);
 
-export default router.routes();
+export default router;

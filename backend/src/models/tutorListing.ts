@@ -6,14 +6,14 @@ import {
   CreateDateColumn,
 } from 'typeorm';
 import Profile from './profile';
-import { Subject, Level } from '../utils/model';
+import { Level } from '../utils/model';
 
 @Entity()
 export default class TutorListing {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToOne(() => Profile, { nullable: false })
+  @ManyToOne(() => Profile, { nullable: false, eager: true })
   tutor: Profile;
 
   @Column('int')
@@ -28,8 +28,8 @@ export default class TutorListing {
   @Column('int', { array: true })
   timeSlots: number[];
 
-  @Column('enum', { array: true, enum: Subject })
-  subjects: Subject[];
+  @Column('text', { array: true })
+  subjects: string[];
 
   @Column('enum', { array: true, enum: Level })
   levels: Level[];
@@ -37,3 +37,6 @@ export default class TutorListing {
   @CreateDateColumn()
   createdAt: Date;
 }
+
+export type UpdateTutorListing = Partial<TutorListing>;
+export type CreateTutorListing = Omit<TutorListing, 'id' | 'createdAt'>;

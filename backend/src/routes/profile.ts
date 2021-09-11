@@ -20,4 +20,4 @@ router.delete('/:id', async (ctx: Koa.Context) => {
   ctx.body = 'Delete profile';
 });
 
-export default router.routes();
+export default router;
