@@ -58,13 +58,18 @@ const createConversation = async (ctx: Koa.Context): Promise<void> => {
   if (!profile) {
     return;
   }
-  await messageService.createMessage({
+  const message = await messageService.createMessage({
     conversation: newConversation,
     sender: profile,
     content: conversation.firstMessage,
   });
+
+  // not sure what shld be returned?
   ctx.body = {
-    data: newConversation,
+    data: {
+      conversation: newConversation,
+      message,
+    },
   };
 };
 

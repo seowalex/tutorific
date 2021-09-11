@@ -17,10 +17,11 @@ const getTutorListing = async (ctx: Koa.Context): Promise<void> => {
 };
 
 const createTutorListing = async (ctx: Koa.Context): Promise<void> => {
-  // note that the type is "tutor: int"
-  const newTutorListing = await tutorListingService.createTutorListing(
-    ctx.request.body
-  );
+  const tutorListing = ctx.request.body;
+  const newTutorListing = await tutorListingService.createTutorListing({
+    ...tutorListing,
+    tutor: tutorListing.tutorId,
+  });
   ctx.body = {
     data: newTutorListing,
   };
