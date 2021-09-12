@@ -56,16 +56,7 @@ const login = async (ctx: Koa.Context): Promise<void> => {
   const { email, password } = ctx.request.body;
   const user = await userService.getUserByEmail(email);
   if (!user || !(await authUtil.comparePassword(password, user.password))) {
-    ctx.status = HttpStatus.UNAUTHORIZED;
-    ctx.body = {
-      errors: [
-        {
-          status: HttpStatus.UNAUTHORIZED,
-          detail: 'Invalid email or password',
-        },
-      ],
-    };
-    return;
+    ctx.throw(HttpStatus.UNAUTHORIZED, 'Invalid email or password');
   }
 
   onAuthSuccess(ctx, user);
@@ -77,7 +68,6 @@ const register = async (ctx: Koa.Context): Promise<void> => {
   // TODO use class-validator instead
   const duplicateUser = await userService.getUserByEmail(email);
   if (duplicateUser) {
-    // not sure correct code
     ctx.status = HttpStatus.CONFLICT;
     ctx.body = {
       errors: [
@@ -106,7 +96,7 @@ const logout = async (ctx: Koa.Context): Promise<void> => {
   if (isSuccess) {
     ctx.status = HttpStatus.OK;
   } else {
-    ctx.status = HttpStatus.UNAUTHORIZED;
+    ctx.throw(HttpStatus.UNAUTHORIZED);
   }
 };
 
@@ -114,8 +104,7 @@ const refreshJwt = async (ctx: Koa.Context): Promise<void> => {
   const { userId, refreshToken } = ctx.request.body;
   const fetchedUser = await getUserByIdAndRefreshToken(userId, refreshToken);
   if (!fetchedUser) {
-    ctx.status = HttpStatus.UNAUTHORIZED;
-    return;
+    ctx.throw(HttpStatus.UNAUTHORIZED);
   }
 
   const jwtToken = await authUtil.generateJwtToken(
