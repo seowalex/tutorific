@@ -29,3 +29,4 @@ export default class User {
 }
 
 export type CreateUser = Omit<User, 'id' | 'refreshToken'>;
+export type UpdateUser = Partial<User>;

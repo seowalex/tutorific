@@ -4,7 +4,8 @@ import authUtil from '../utils/auth';
 import User from '../models/user';
 import profileService from '../services/profile';
 import userService from '../services/user';
-import Exception from '../utils/exception';
+
+// helpers
 
 const onAuthSuccess = async (ctx: Koa.Context, user: User): Promise<void> => {
   const jwtToken = await authUtil.generateJwtToken(
@@ -13,7 +14,7 @@ const onAuthSuccess = async (ctx: Koa.Context, user: User): Promise<void> => {
     user.profile.id
   );
   const refreshToken = authUtil.generateRefreshToken();
-  userService.storeRefreshToken(user.id, refreshToken);
+  await userService.updateUser(user.id, { refreshToken });
 
   ctx.body = {
     userId: user.id,
@@ -22,11 +23,49 @@ const onAuthSuccess = async (ctx: Koa.Context, user: User): Promise<void> => {
   };
 };
 
+// returns user only if user exists and refreshToken matches
+const getUserByIdAndRefreshToken = async (
+  userId: number,
+  refreshToken: string
+): Promise<User | undefined> => {
+  const user = await userService.getUser(userId);
+
+  if (!user || user.refreshToken !== refreshToken) {
+    return undefined;
+  }
+
+  return user;
+};
+
+const revokeRefreshToken = async (
+  userId: number,
+  refreshToken: string
+): Promise<Boolean> => {
+  const fetchedUser = await getUserByIdAndRefreshToken(userId, refreshToken);
+  if (!fetchedUser) {
+    return false;
+  }
+
+  await userService.updateUser(userId, { refreshToken: null });
+  return true;
+};
+
+// controller methods
+
 const login = async (ctx: Koa.Context): Promise<void> => {
   const { email, password } = ctx.request.body;
   const user = await userService.getUserByEmail(email);
   if (!user || !(await authUtil.comparePassword(password, user.password))) {
-    throw new Exception(HttpStatus.BAD_REQUEST, 'Invalid email or password');
+    ctx.status = HttpStatus.UNAUTHORIZED;
+    ctx.body = {
+      errors: [
+        {
+          status: HttpStatus.UNAUTHORIZED,
+          detail: 'Invalid email or password',
+        },
+      ],
+    };
+    return;
   }
 
   onAuthSuccess(ctx, user);
@@ -34,10 +73,20 @@ const login = async (ctx: Koa.Context): Promise<void> => {
 
 const register = async (ctx: Koa.Context): Promise<void> => {
   const { email } = ctx.request.body;
+
+  // TODO use class-validator instead
   const duplicateUser = await userService.getUserByEmail(email);
   if (duplicateUser) {
     // not sure correct code
-    throw new Exception(HttpStatus.BAD_REQUEST, 'Email already in use');
+    ctx.status = HttpStatus.CONFLICT;
+    ctx.body = {
+      errors: [
+        {
+          status: HttpStatus.CONFLICT,
+          detail: 'Email already in use',
+        },
+      ],
+    };
   }
 
   const newProfile = await profileService.createProfile({});
@@ -53,37 +102,33 @@ const register = async (ctx: Koa.Context): Promise<void> => {
 
 const logout = async (ctx: Koa.Context): Promise<void> => {
   const { userId, refreshToken } = ctx.request.body;
-  const isSuccess = await userService.revokeRefreshToken(userId, refreshToken);
+  const isSuccess = await revokeRefreshToken(userId, refreshToken);
   if (isSuccess) {
-    ctx.body = {
-      message: 'Logout Success!',
-    };
+    ctx.status = HttpStatus.OK;
   } else {
-    throw new Exception(401, 'Not Authorized');
+    ctx.status = HttpStatus.UNAUTHORIZED;
   }
 };
 
 const refreshJwt = async (ctx: Koa.Context): Promise<void> => {
   const { userId, refreshToken } = ctx.request.body;
-  const fetchedUser = await userService.getUserByRefreshToken(
-    userId,
-    refreshToken
-  );
-  if (fetchedUser) {
-    const jwtToken = await authUtil.generateJwtToken(
-      fetchedUser.id,
-      fetchedUser.email,
-      fetchedUser.profile.id
-    );
-
-    ctx.body = {
-      data: {
-        jwtToken,
-      },
-    };
-  } else {
-    throw new Exception(401, 'Not Authorized');
+  const fetchedUser = await getUserByIdAndRefreshToken(userId, refreshToken);
+  if (!fetchedUser) {
+    ctx.status = HttpStatus.UNAUTHORIZED;
+    return;
   }
+
+  const jwtToken = await authUtil.generateJwtToken(
+    fetchedUser.id,
+    fetchedUser.email,
+    fetchedUser.profile.id
+  );
+
+  ctx.body = {
+    data: {
+      jwtToken,
+    },
+  };
 };
 
 export default {
