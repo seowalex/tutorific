@@ -2,16 +2,11 @@ import Koa from 'koa';
 import { CreateConversation } from '../models/conversation';
 import conversationService from '../services/conversation';
 import messageService from '../services/message';
-import profileService from '../services/profile';
 
 const getConversations = async (ctx: Koa.Context): Promise<void> => {
-  // TODO sender id take from token
-  const profile = await profileService.getProfile(1);
-  if (!profile) {
-    return;
-  }
+  const { profileId } = ctx.state.user;
 
-  const conversations = await conversationService.getConversations(profile.id);
+  const conversations = await conversationService.getConversations(profileId);
 
   // append last message
   const conversationsWithLastMessage = await Promise.all(
@@ -53,14 +48,11 @@ const createConversation = async (ctx: Koa.Context): Promise<void> => {
     conversationEntity
   );
 
-  // TODO sender id take from token
-  const profile = await profileService.getProfile(1);
-  if (!profile) {
-    return;
-  }
+  const { profileId } = ctx.state.user;
+
   const message = await messageService.createMessage({
     conversation: newConversation,
-    sender: profile,
+    sender: profileId,
     content: conversation.firstMessage,
   });
 

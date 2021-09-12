@@ -1,8 +1,6 @@
 import { getRepository } from 'typeorm';
 import Message, { CreateMessage } from '../models/message';
 
-// TODO check if this works
-
 const getMessages = async (conversationId: number): Promise<Array<Message>> =>
   getRepository(Message).find({
     where: { conversation: conversationId },
