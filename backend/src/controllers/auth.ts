@@ -114,9 +114,7 @@ const refreshJwt = async (ctx: Koa.Context): Promise<void> => {
   );
 
   ctx.body = {
-    data: {
-      jwtToken,
-    },
+    jwtToken,
   };
 };
 
