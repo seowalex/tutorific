@@ -59,12 +59,11 @@ const login = async (ctx: Koa.Context): Promise<void> => {
     ctx.throw(HttpStatus.UNAUTHORIZED, 'Invalid email or password');
   }
 
-  onAuthSuccess(ctx, user);
+  await onAuthSuccess(ctx, user);
 };
 
 const register = async (ctx: Koa.Context): Promise<void> => {
   const { email } = ctx.request.body;
-
   // TODO use class-validator instead
   const duplicateUser = await userService.getUserByEmail(email);
   if (duplicateUser) {
@@ -77,6 +76,7 @@ const register = async (ctx: Koa.Context): Promise<void> => {
         },
       ],
     };
+    return;
   }
 
   const newProfile = await profileService.createProfile({});
@@ -87,7 +87,7 @@ const register = async (ctx: Koa.Context): Promise<void> => {
     profile: newProfile,
   });
 
-  onAuthSuccess(ctx, newUser);
+  await onAuthSuccess(ctx, newUser);
 };
 
 const logout = async (ctx: Koa.Context): Promise<void> => {
@@ -114,9 +114,7 @@ const refreshJwt = async (ctx: Koa.Context): Promise<void> => {
   );
 
   ctx.body = {
-    data: {
-      jwtToken,
-    },
+    jwtToken,
   };
 };
 
