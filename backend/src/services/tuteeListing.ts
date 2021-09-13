@@ -1,8 +1,10 @@
 import { getRepository } from 'typeorm';
+import Exception from '../utils/exception';
 import TuteeListing, {
   CreateTuteeListing,
   UpdateTuteeListing,
 } from '../models/tuteeListing';
+import classValidate from '../utils/validate';
 
 const getTuteeListings = async (): Promise<Array<TuteeListing>> =>
   getRepository(TuteeListing).find();
@@ -12,7 +14,15 @@ const getTuteeListing = async (id: number): Promise<TuteeListing | undefined> =>
 
 const createTuteeListing = async (
   tuteeListing: CreateTuteeListing
-): Promise<TuteeListing> => getRepository(TuteeListing).save(tuteeListing);
+): Promise<TuteeListing> => {
+  const newTuteeListing = new TuteeListing();
+  Object.assign(newTuteeListing, tuteeListing);
+  const errors = await classValidate(newTuteeListing, true);
+  if (errors.length !== 0) {
+    throw new Exception(errors);
+  }
+  return getRepository(TuteeListing).save(tuteeListing);
+};
 
 const updateTuteeListing = async (
   id: number,

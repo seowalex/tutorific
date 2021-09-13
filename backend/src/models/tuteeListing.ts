@@ -5,6 +5,7 @@ import {
   ManyToOne,
   CreateDateColumn,
 } from 'typeorm';
+import { Min } from 'class-validator';
 import Profile from './profile';
 import { Gender, Level, Town } from '../utils/model';
 
@@ -17,15 +18,24 @@ export default class TuteeListing {
   tutee: Profile;
 
   @Column('int')
+  @Min(0, {
+    message: 'Price Min too low',
+  })
   priceMin: number;
 
   @Column('int')
+  @Min(0, {
+    message: 'Price Max too low',
+  })
   priceMax: number;
 
   @Column('text')
   description: string;
 
   @Column('int', { array: true })
+  @Min(0, {
+    each: true,
+  })
   timeSlots: number[];
 
   @Column('text', { array: true })

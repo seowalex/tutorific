@@ -6,6 +6,7 @@ import {
   OneToOne,
   JoinColumn,
 } from 'typeorm';
+import { UniqueEmail } from '../validations/user';
 import Profile from './profile';
 
 @Entity()
@@ -15,6 +16,9 @@ export default class User {
 
   @Column({ unique: true })
   @IsEmail()
+  @UniqueEmail('email', {
+    message: 'User with email $value already exists.',
+  })
   email: string;
 
   @Column()
