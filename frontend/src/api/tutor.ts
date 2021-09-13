@@ -16,16 +16,16 @@ const extendedApi = api.injectEndpoints({
     getTutorListings: builder.query<GetTutorListingsResponse, void>({
       query: () => ({
         url: 'tutor/',
-        transformResponse: (response: { data: GetTutorListingsResponse }) =>
-          response.data,
       }),
+      transformResponse: (response: { data: GetTutorListingsResponse }) =>
+        response.data,
     }),
     getTutorListing: builder.query<GetTutorListingResponse, number>({
       query: (id) => ({
         url: `tutor/${id}`,
-        transformResponse: (response: { data: GetTutorListingResponse }) =>
-          response.data,
       }),
+      transformResponse: (response: { data: GetTutorListingResponse }) =>
+        response.data,
     }),
     createTutorListing: builder.mutation<void, CreateTutorListingRequest>({
       query: (listing) => ({

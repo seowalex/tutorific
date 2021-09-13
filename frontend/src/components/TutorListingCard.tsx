@@ -1,4 +1,5 @@
 import React from 'react';
+import { useHistory } from 'react-router';
 import {
   IonCard,
   IonCardContent,
@@ -23,8 +24,10 @@ interface Props {
 const TutorListingCard: React.FC<Props> = (props: Props) => {
   const { listing } = props;
 
+  const history = useHistory();
+
   return (
-    <IonCard>
+    <IonCard button onClick={() => history.push(`/tutor/${listing.id}`)}>
       <IonCardHeader>
         <ProfileItem profile={listing.tutor} />
         <IonGrid className={styles.listingCardHeaderContainer}>

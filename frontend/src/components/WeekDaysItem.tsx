@@ -7,18 +7,23 @@ import { computeWeekDays, formatStringList } from '../app/utils';
 
 interface Props {
   timeSlots: number[];
+  detailed?: boolean;
 }
 
 const WeekDaysItem: React.FC<Props> = (props: Props) => {
-  const { timeSlots } = props;
+  const { timeSlots, detailed } = props;
   return (
     <IonItem color="none" lines="none">
       <IonIcon icon={todayOutline} slot="start" />
-      <IonLabel className={styles.weekDaysLabel}>
+      <IonLabel className={detailed ? '' : styles.weekDaysLabel}>
         {formatStringList(computeWeekDays(timeSlots))}
       </IonLabel>
     </IonItem>
   );
+};
+
+WeekDaysItem.defaultProps = {
+  detailed: false,
 };
 
 export default WeekDaysItem;

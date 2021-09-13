@@ -13,18 +13,15 @@ import {
 } from '@ionic/react';
 import { search } from 'ionicons/icons';
 
-import { useAppSelector } from '../app/hooks';
-import { selectCurrentUserId } from '../reducers/auth';
+import { useAppSelector } from '../../app/hooks';
+import { selectCurrentUserId } from '../../reducers/auth';
 
-import './Tutors.scss';
-import TutorListingCard from '../components/TutorListingCard';
-import { Gender, TutorListing } from '../app/types';
-import { useGetTutorListingsQuery } from '../api/tutor';
+import TutorListingCard from '../../components/TutorListingCard';
+import { useGetTutorListingsQuery } from '../../api/tutor';
 
 const Tutors: React.FC = () => {
   const userId = useAppSelector(selectCurrentUserId);
   const { data: listings } = useGetTutorListingsQuery();
-  console.log(listings);
 
   return (
     <IonPage>
