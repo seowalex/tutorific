@@ -17,13 +17,8 @@ interface LogoutRequest {
   refreshToken: string;
 }
 
-interface RefreshTokenResponse {
-  jwtToken: string;
-}
-
 type RegisterRequest = LoginRequest;
 type RegisterResponse = LoginResponse;
-type RefreshTokenRequest = LogoutRequest;
 
 const extendedApi = api.injectEndpoints({
   endpoints: (builder) => ({
@@ -61,25 +56,8 @@ const extendedApi = api.injectEndpoints({
         refreshToken: response.refreshToken,
       }),
     }),
-    refreshToken: builder.mutation<string, RefreshTokenRequest>({
-      query: (credentials) => ({
-        url: 'auth/refresh',
-        method: 'POST',
-        body: {
-          userId: credentials.id,
-          refreshToken: credentials.refreshToken,
-        },
-      }),
-      // TODO: Update when backend is normalised
-      transformResponse: (response: { data: RefreshTokenResponse }) =>
-        response.data.jwtToken,
-    }),
   }),
 });
 
-export const {
-  useLoginMutation,
-  useLogoutMutation,
-  useRegisterMutation,
-  useRefreshTokenMutation,
-} = extendedApi;
+export const { useLoginMutation, useLogoutMutation, useRegisterMutation } =
+  extendedApi;
