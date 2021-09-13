@@ -1,5 +1,5 @@
 import api from './base';
-import { AuthState } from '../reducers/authSlice';
+import { AuthState } from '../reducers/auth';
 
 interface LoginRequest {
   email: string;

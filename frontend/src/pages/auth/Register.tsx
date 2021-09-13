@@ -22,7 +22,7 @@ import { useForm } from 'react-hook-form';
 
 import { useAppDispatch } from '../../app/hooks';
 import { useRegisterMutation } from '../../api/auth';
-import { setCredentials } from '../../reducers/authSlice';
+import { setCredentials } from '../../reducers/auth';
 
 import styles from './Register.module.scss';
 

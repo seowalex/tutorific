@@ -14,7 +14,7 @@ import {
 import { search } from 'ionicons/icons';
 
 import { useAppSelector } from '../app/hooks';
-import { selectCurrentUserId } from '../reducers/authSlice';
+import { selectCurrentUserId } from '../reducers/auth';
 
 import './Tutors.scss';
 import TutorListingCard from '../components/TutorListingCard';

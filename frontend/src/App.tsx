@@ -20,7 +20,7 @@ import Tutees from './pages/Tutees';
 import Chat from './pages/Chat';
 import Profile from './pages/profile/Profile';
 import { useAppSelector } from './app/hooks';
-import { selectCurrentUserId } from './reducers/authSlice';
+import { selectCurrentUserId } from './reducers/auth';
 
 import './styles/main.scss';
 

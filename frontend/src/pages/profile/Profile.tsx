@@ -19,16 +19,18 @@ import { male, search } from 'ionicons/icons';
 import { useHistory } from 'react-router';
 
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
-import { selectCurrentUser, unsetCredentials } from '../../reducers/authSlice';
+import { selectCurrentUser, unsetCredentials } from '../../reducers/auth';
+import { useLogoutMutation } from '../../api/auth';
+import { useGetUserQuery } from '../../api/user';
 
 import styles from './Profile.module.scss';
-import { useLogoutMutation } from '../../api/auth';
 
 const Profile: React.FC = () => {
   const dispatch = useAppDispatch();
   const user = useAppSelector(selectCurrentUser);
   const [logout] = useLogoutMutation();
   const history = useHistory();
+  const { data: profile } = useGetUserQuery(user.id ?? 0);
 
   const handleLogout = async () => {
     try {
@@ -71,20 +73,11 @@ const Profile: React.FC = () => {
             <IonAvatar className={styles.profileAvatar}>
               <img src="https://ui-avatars.com/api/?name=Seow+Alex&background=random" />
             </IonAvatar>
-            <h1 className={styles.profileName}>Seow Alex</h1>
-            <IonIcon
-              className={styles.profileGender}
-              icon={male}
-              size="large"
-              color="secondary"
-            />
+            <h1 className={styles.profileName}>{profile?.name}</h1>
+            <h2>{profile?.gender}</h2>
           </div>
 
-          <p>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi
-            convallis ullamcorper tristique. Duis accumsan rhoncus dolor eget
-            laoreet.
-          </p>
+          <p>{profile?.description}</p>
         </div>
 
         <IonButton onClick={handleLogout}>Logout</IonButton>
