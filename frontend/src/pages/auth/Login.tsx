@@ -15,6 +15,10 @@ import {
 import { useHistory } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 
+import { useAppDispatch } from '../../app/hooks';
+import { useLoginMutation } from '../../api/auth';
+import { setCredentials } from '../../reducers/authSlice';
+
 import styles from './Login.module.scss';
 
 interface LoginData {
@@ -23,33 +27,27 @@ interface LoginData {
 }
 
 const Login: React.FC = () => {
+  const dispatch = useAppDispatch();
+  const [login, { isLoading }] = useLoginMutation();
+
   const history = useHistory();
   const {
     register,
-    formState: { isSubmitting, errors },
+    formState: { errors },
     handleSubmit,
-    setError,
   } = useForm<LoginData>();
 
-  const onSubmit = (data: LoginData) => {
-    console.log(data);
+  const onSubmit = async (data: LoginData) => {
+    try {
+      const result = await login(data);
 
-    return new Promise<void>((resolve) => {
-      setTimeout(() => {
-        if (data.password === 'password') {
-          history.push('/tutors');
-        } else {
-          setError('email', {
-            message: 'Email or password is invalid',
-          });
-          setError('password', {
-            message: 'Email or password is invalid',
-          });
-        }
-
-        resolve();
-      }, 2000);
-    });
+      if ('data' in result && result.data) {
+        dispatch(setCredentials(result.data));
+        history.push('/tutors');
+      }
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   return (
@@ -72,7 +70,7 @@ const Login: React.FC = () => {
                   fill="outline"
                   lines="full"
                   color={errors.email ? 'danger' : undefined}
-                  disabled={isSubmitting}
+                  disabled={isLoading}
                 >
                   <IonLabel position="floating">Email</IonLabel>
                   <IonInput
@@ -91,7 +89,7 @@ const Login: React.FC = () => {
                   fill="outline"
                   lines="full"
                   color={errors.password ? 'danger' : undefined}
-                  disabled={isSubmitting}
+                  disabled={isLoading}
                 >
                   <IonLabel position="floating">Password</IonLabel>
                   <IonInput
@@ -110,16 +108,16 @@ const Login: React.FC = () => {
                   className="ion-no-margin ion-margin-top"
                   expand="block"
                   type="submit"
-                  disabled={isSubmitting}
+                  disabled={isLoading}
                 >
-                  {isSubmitting ? <IonSpinner /> : 'Login'}
+                  {isLoading ? <IonSpinner /> : 'Login'}
                 </IonButton>
                 <IonButton
                   className="ion-no-margin"
                   expand="block"
                   color="light"
                   routerLink="/register"
-                  disabled={isSubmitting}
+                  disabled={isLoading}
                 >
                   Register
                 </IonButton>

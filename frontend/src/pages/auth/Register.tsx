@@ -20,6 +20,10 @@ import {
 import { useHistory } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 
+import { useAppDispatch } from '../../app/hooks';
+import { useRegisterMutation } from '../../api/auth';
+import { setCredentials } from '../../reducers/authSlice';
+
 import styles from './Register.module.scss';
 
 interface RegisterData {
@@ -29,31 +33,28 @@ interface RegisterData {
 }
 
 const Register: React.FC = () => {
+  const dispatch = useAppDispatch();
+  const [registerUser, { isLoading }] = useRegisterMutation();
+
   const history = useHistory();
   const {
     register,
-    formState: { isSubmitting, errors },
+    formState: { errors },
     handleSubmit,
-    setError,
     getValues,
   } = useForm<RegisterData>();
 
-  const onSubmit = (data: RegisterData) => {
-    console.log(data);
+  const onSubmit = async (data: RegisterData) => {
+    try {
+      const result = await registerUser(data);
 
-    return new Promise<void>((resolve) => {
-      setTimeout(() => {
-        if (data.email === 'test@example.com') {
-          history.push('/tutors');
-        } else {
-          setError('email', {
-            message: 'Email has already been taken',
-          });
-        }
-
-        resolve();
-      }, 2000);
-    });
+      if ('data' in result && result.data) {
+        dispatch(setCredentials(result.data));
+        history.push('/tutors');
+      }
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   return (
@@ -61,7 +62,7 @@ const Register: React.FC = () => {
       <IonHeader>
         <IonToolbar>
           <IonButtons slot="start">
-            <IonBackButton defaultHref="/login" disabled={isSubmitting} />
+            <IonBackButton defaultHref="/login" disabled={isLoading} />
           </IonButtons>
           <IonTitle>Register</IonTitle>
         </IonToolbar>
@@ -85,7 +86,7 @@ const Register: React.FC = () => {
                   fill="outline"
                   lines="full"
                   color={errors.email ? 'danger' : undefined}
-                  disabled={isSubmitting}
+                  disabled={isLoading}
                 >
                   <IonLabel position="floating">Email</IonLabel>
                   <IonInput
@@ -104,7 +105,7 @@ const Register: React.FC = () => {
                   fill="outline"
                   lines="full"
                   color={errors.password ? 'danger' : undefined}
-                  disabled={isSubmitting}
+                  disabled={isLoading}
                 >
                   <IonLabel position="floating">Password</IonLabel>
                   <IonInput
@@ -123,7 +124,7 @@ const Register: React.FC = () => {
                   fill="outline"
                   lines="full"
                   color={errors.confirm_password ? 'danger' : undefined}
-                  disabled={isSubmitting}
+                  disabled={isLoading}
                 >
                   <IonLabel position="floating">Confirm Password</IonLabel>
                   <IonInput
@@ -147,9 +148,9 @@ const Register: React.FC = () => {
                   className="ion-no-margin ion-margin-top"
                   expand="block"
                   type="submit"
-                  disabled={isSubmitting}
+                  disabled={isLoading}
                 >
-                  {isSubmitting ? <IonSpinner /> : 'Register'}
+                  {isLoading ? <IonSpinner /> : 'Register'}
                 </IonButton>
               </form>
             </IonCol>
