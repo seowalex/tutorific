@@ -17,6 +17,7 @@ const onAuthSuccess = async (ctx: Koa.Context, user: User): Promise<void> => {
   await userService.updateUser(user.id, { refreshToken });
 
   ctx.body = {
+    profileId: user.profile.id,
     userId: user.id,
     jwtToken,
     refreshToken,
