@@ -9,7 +9,7 @@ export function UniqueEmail(
 ) {
   return function (object: Object, propertyName: string) {
     registerDecorator({
-      name: 'hasDuplicateUser',
+      name: 'UniqueEmail',
       target: object.constructor,
       propertyName,
       constraints: [property],

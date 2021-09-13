@@ -17,7 +17,7 @@ const createUser = async (user: CreateUser): Promise<User> => {
   if (errors.length !== 0) {
     throw new Exception(errors);
   }
-  return getRepository(User).save(user);
+  return getRepository(User).save(newUser);
 };
 
 const updateUser = async (id: number, user: UpdateUser): Promise<User> =>

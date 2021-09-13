@@ -5,9 +5,10 @@ import {
   ManyToOne,
   CreateDateColumn,
 } from 'typeorm';
-import { Min } from 'class-validator';
+import { IsNotEmpty, Min } from 'class-validator';
 import Profile from './profile';
 import { Gender, Level, Town } from '../utils/model';
+import { IsBiggerThan } from '../validations/common';
 
 @Entity()
 export default class TuteeListing {
@@ -27,18 +28,23 @@ export default class TuteeListing {
   @Min(0, {
     message: 'Price Max too low',
   })
+  @IsBiggerThan('priceMin', {
+    message: 'Price Max must be larger than Price Min',
+  })
   priceMax: number;
 
   @Column('text')
   description: string;
 
   @Column('int', { array: true })
-  @Min(0, {
-    each: true,
-  })
+  // TODO add some range
   timeSlots: number[];
 
   @Column('text', { array: true })
+  @IsNotEmpty({
+    each: true,
+    message: 'Each value in subjects should not be empty',
+  })
   subjects: string[];
 
   @Column('enum', { enum: Level })
