@@ -1,9 +1,9 @@
 import api from './base';
 
 enum Gender {
-  Male,
-  Female,
-  PNTS,
+  Male = 'Male',
+  Female = 'Female',
+  PNTS = 'Prefer not to say',
 }
 
 interface User {
@@ -19,13 +19,13 @@ const extendedApi = api.injectEndpoints({
     getUser: builder.query<User, number>({
       query: (id) => ({
         url: `profile/${id}`,
-        // transformResponse: (response: { data: User }) => response.data,
       }),
+      transformResponse: (response: { data: User }) => response.data,
     }),
     updateUser: builder.mutation<void, Partial<User> & Pick<User, 'id'>>({
       query: ({ id, ...update }) => ({
         url: `profile/${id}`,
-        method: 'POST',
+        method: 'PUT',
         body: update,
       }),
     }),

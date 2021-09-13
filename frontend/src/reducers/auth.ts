@@ -18,15 +18,14 @@ const slice = createSlice({
   initialState,
   reducers: {
     setCredentials: (_, action: PayloadAction<AuthState>) => action.payload,
-    unsetCredentials: () => ({
-      id: null,
-      token: null,
-      refreshToken: null,
-    }),
+    unsetCredentials: () => initialState,
+    setToken: (state, action: PayloadAction<string>) => {
+      state.token = action.payload;
+    },
   },
 });
 
-export const { setCredentials, unsetCredentials } = slice.actions;
+export const { setCredentials, unsetCredentials, setToken } = slice.actions;
 
 export const selectCurrentUser = (state: RootState) => state.auth;
 export const selectCurrentUserId = (state: RootState) => state.auth.id;

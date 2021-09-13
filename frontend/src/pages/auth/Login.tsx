@@ -17,7 +17,7 @@ import { useForm } from 'react-hook-form';
 
 import { useAppDispatch } from '../../app/hooks';
 import { useLoginMutation } from '../../api/auth';
-import { setCredentials } from '../../reducers/authSlice';
+import { setCredentials } from '../../reducers/auth';
 
 import styles from './Login.module.scss';
 

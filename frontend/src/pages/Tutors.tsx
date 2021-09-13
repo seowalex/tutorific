@@ -13,7 +13,7 @@ import { search } from 'ionicons/icons';
 import ExploreContainer from '../components/ExploreContainer';
 
 import { useAppSelector } from '../app/hooks';
-import { selectCurrentUserId } from '../reducers/authSlice';
+import { selectCurrentUserId } from '../reducers/auth';
 
 import './Tutors.scss';
 
