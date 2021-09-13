@@ -5,20 +5,26 @@ import {
   IonContent,
   IonHeader,
   IonIcon,
+  IonInfiniteScroll,
+  IonInfiniteScrollContent,
   IonPage,
   IonTitle,
   IonToolbar,
 } from '@ionic/react';
 import { search } from 'ionicons/icons';
-import ExploreContainer from '../components/ExploreContainer';
 
 import { useAppSelector } from '../app/hooks';
 import { selectCurrentUserId } from '../reducers/authSlice';
 
 import './Tutors.scss';
+import TutorListingCard from '../components/TutorListingCard';
+import { Gender, TutorListing } from '../app/types';
+import { useGetTutorListingsQuery } from '../api/tutor';
 
 const Tutors: React.FC = () => {
   const userId = useAppSelector(selectCurrentUserId);
+  const { data: listings } = useGetTutorListingsQuery();
+  console.log(listings);
 
   return (
     <IonPage>
@@ -33,17 +39,13 @@ const Tutors: React.FC = () => {
         </IonToolbar>
       </IonHeader>
       <IonContent fullscreen>
-        <IonHeader collapse="condense">
-          <IonToolbar>
-            <IonTitle size="large">{JSON.stringify(userId)}</IonTitle>
-            <IonButtons slot="primary">
-              <IonButton>
-                <IonIcon slot="icon-only" icon={search} />
-              </IonButton>
-            </IonButtons>
-          </IonToolbar>
-        </IonHeader>
-        <ExploreContainer />
+        <IonInfiniteScroll>
+          <IonInfiniteScrollContent>
+            {listings?.map((listing) => (
+              <TutorListingCard listing={listing} />
+            ))}
+          </IonInfiniteScrollContent>
+        </IonInfiniteScroll>
       </IonContent>
     </IonPage>
   );
