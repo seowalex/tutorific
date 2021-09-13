@@ -4,7 +4,7 @@ import TutorListing, {
   UpdateTutorListing,
 } from '../models/tutorListing';
 
-const getTutorListings = async (): Promise<Array<TutorListing>> =>
+const getTutorListings = async (): Promise<Array<TutorListing>> => 
   getRepository(TutorListing).find();
 
 const getTutorListing = async (id: number): Promise<TutorListing | undefined> =>

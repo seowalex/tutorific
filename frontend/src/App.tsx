@@ -15,7 +15,7 @@ import { bulb, chatbubbles, person, school } from 'ionicons/icons';
 
 import Login from './pages/auth/Login';
 import Register from './pages/auth/Register';
-import Tutors from './pages/Tutors';
+import Tutors from './pages/tutors/Tutors';
 import Tutees from './pages/Tutees';
 import Chat from './pages/Chat';
 import Profile from './pages/profile/Profile';
@@ -23,6 +23,7 @@ import { useAppSelector } from './app/hooks';
 import { selectCurrentUserId } from './reducers/auth';
 
 import './styles/main.scss';
+import Tutor from './pages/tutors/Tutor';
 
 const App: React.FC = () => {
   const userId = useAppSelector(selectCurrentUserId);
@@ -45,7 +46,6 @@ const App: React.FC = () => {
                     <IonIcon icon={school} />
                     <IonLabel>Tutors</IonLabel>
                   </IonTabButton>
-
                   <IonTabButton tab="tutees" href="/tutees">
                     <IonIcon icon={bulb} />
                     <IonLabel>Tutees</IonLabel>
@@ -76,6 +76,7 @@ const App: React.FC = () => {
                   <Route path="/profile">
                     <Profile />
                   </Route>
+                  <Route path="/tutor/:id" component={Tutor} />
                 </IonRouterOutlet>
               </IonTabs>
             </Route>

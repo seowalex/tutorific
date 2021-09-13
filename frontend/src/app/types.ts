@@ -36,34 +36,46 @@ export enum Town {
   YIS = 'Yishun',
 }
 
-export interface TutorListingDetails {
-  tutor_id: number;
-  subjects: [string];
-  levels: [string];
-  price_min: number;
-  price_max: number;
-  time_slots: [number];
+export enum WeekDay {
+  Monday = 'Mon',
+  Tuesday = 'Tue',
+  Wednesday = 'Wed',
+  Thursday = 'Thu',
+  Friday = 'Fri',
+  Saturday = 'Sat',
+  Sunday = 'Sun',
+}
+
+export interface Profile {
+  id: number;
+  name: string;
   description: string;
+  gender: Gender;
+  createdAt: Date;
 }
 
 export interface TutorListing {
   id: number;
-  details: TutorListingDetails;
-}
-
-export interface TuteeListingDetails {
-  tutor_id: number;
-  subjects: [string];
-  levels: [string];
-  price_min: number;
-  price_max: number;
-  time_slots: [number];
+  tutor: Profile;
+  priceMin: number;
+  priceMax: number;
   description: string;
-  gender: Gender;
-  location: Town;
+  timeSlots: number[];
+  subjects: string[];
+  levels: string[];
+  createdAt: Date;
 }
 
 export interface TuteeListing {
   id: number;
-  details: TuteeListingDetails;
+  tutee: Profile;
+  priceMin: number;
+  priceMax: number;
+  description: string;
+  timeSlots: number[];
+  subjects: string[];
+  level: string;
+  gender: Gender;
+  location: Town;
+  createdAt: Date;
 }
