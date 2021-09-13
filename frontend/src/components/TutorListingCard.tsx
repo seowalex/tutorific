@@ -24,10 +24,8 @@ interface Props {
 const TutorListingCard: React.FC<Props> = (props: Props) => {
   const { listing } = props;
 
-  const history = useHistory();
-
   return (
-    <IonCard button onClick={() => history.push(`/tutor/${listing.id}`)}>
+    <IonCard button routerLink={`/tutor/${listing.id}`}>
       <IonCardHeader>
         <ProfileItem profile={listing.tutor} />
         <IonGrid className={styles.listingCardHeaderContainer}>

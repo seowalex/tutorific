@@ -1,13 +1,14 @@
 import React from 'react';
+import { RefresherEventDetail } from '@ionic/core';
 import {
   IonButton,
   IonButtons,
   IonContent,
   IonHeader,
   IonIcon,
-  IonInfiniteScroll,
-  IonInfiniteScrollContent,
   IonPage,
+  IonRefresher,
+  IonRefresherContent,
   IonTitle,
   IonToolbar,
 } from '@ionic/react';
@@ -21,7 +22,15 @@ import { useGetTutorListingsQuery } from '../../api/tutor';
 
 const Tutors: React.FC = () => {
   const userId = useAppSelector(selectCurrentUserId);
-  const { data: listings } = useGetTutorListingsQuery();
+  const { data: listings, refetch } = useGetTutorListingsQuery();
+
+  const doRefresh = (event: CustomEvent<RefresherEventDetail>) => {
+    refetch();
+
+    setTimeout(() => {
+      event.detail.complete();
+    }, 1000);
+  };
 
   return (
     <IonPage>
@@ -36,13 +45,12 @@ const Tutors: React.FC = () => {
         </IonToolbar>
       </IonHeader>
       <IonContent fullscreen>
-        <IonInfiniteScroll>
-          <IonInfiniteScrollContent>
-            {listings?.map((listing) => (
-              <TutorListingCard listing={listing} />
-            ))}
-          </IonInfiniteScrollContent>
-        </IonInfiniteScroll>
+        <IonRefresher slot="fixed" onIonRefresh={doRefresh}>
+          <IonRefresherContent />
+        </IonRefresher>
+        {listings?.map((listing) => (
+          <TutorListingCard listing={listing} />
+        ))}
       </IonContent>
     </IonPage>
   );
