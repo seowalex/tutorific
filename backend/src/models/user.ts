@@ -20,13 +20,13 @@ export default class User {
   @Column()
   password: string;
 
-  @Column({ type: 'text', nullable: true })
-  refreshToken?: string | null;
+  @Column({ type: 'text', array: true })
+  refreshToken: string[];
 
   @OneToOne(() => Profile, { cascade: true, nullable: false, eager: true })
   @JoinColumn()
   profile: Profile;
 }
 
-export type CreateUser = Omit<User, 'id' | 'refreshToken'>;
+export type CreateUser = Omit<User, 'id'>;
 export type UpdateUser = Partial<User>;

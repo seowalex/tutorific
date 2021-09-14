@@ -14,7 +14,8 @@ const onAuthSuccess = async (ctx: Koa.Context, user: User): Promise<void> => {
     user.profile.id
   );
   const refreshToken = authUtil.generateRefreshToken();
-  await userService.updateUser(user.id, { refreshToken });
+  user.refreshToken.push(refreshToken);
+  await userService.updateUser(user.id, { refreshToken: user.refreshToken });
 
   ctx.body = {
     profileId: user.profile.id,
@@ -31,7 +32,7 @@ const getUserByIdAndRefreshToken = async (
 ): Promise<User | undefined> => {
   const user = await userService.getUser(userId);
 
-  if (!user || user.refreshToken !== refreshToken) {
+  if (!user || !user.refreshToken.includes(refreshToken)) {
     return undefined;
   }
 
@@ -46,8 +47,10 @@ const revokeRefreshToken = async (
   if (!fetchedUser) {
     return false;
   }
-
-  await userService.updateUser(userId, { refreshToken: null });
+  const newRefreshTokenArr = fetchedUser.refreshToken.filter(
+    (token) => token !== refreshToken
+  );
+  await userService.updateUser(userId, { refreshToken: newRefreshTokenArr });
   return true;
 };
 
@@ -85,6 +88,7 @@ const register = async (ctx: Koa.Context): Promise<void> => {
   const newUser = await userService.createUser({
     ...user,
     password: await authUtil.hashPassword(user.password),
+    refreshToken: [],
     profile: newProfile,
   });
 
