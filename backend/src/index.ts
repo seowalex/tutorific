@@ -10,6 +10,7 @@ import Exception from './utils/exception';
 import dbConnection from './database/connection';
 import config from './config/index';
 import router from './routes/index';
+import authUtil from './utils/auth';
 
 const app = new Koa();
 
@@ -44,7 +45,8 @@ app.use(async (ctx: Koa.Context, next: () => Promise<any>) => {
 
 app.use(
   jwt({ secret: process.env.JWT_SECRET ?? 'secret' }).unless({
-    path: [/^\/api\/auth/],
+    custom: (ctx: Koa.Context): boolean =>
+      authUtil.isOpenRoute(ctx.method, ctx.url),
   })
 );
 
