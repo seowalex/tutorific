@@ -1,5 +1,11 @@
 import React from 'react';
-import { IonItem, IonItemDivider, IonItemGroup, IonLabel } from '@ionic/react';
+import {
+  IonItem,
+  IonItemDivider,
+  IonItemGroup,
+  IonLabel,
+  IonText,
+} from '@ionic/react';
 import styles from './ListingDetail.module.scss';
 
 interface Props {
@@ -18,7 +24,7 @@ const ListingDetail: React.FC<Props> = (props: Props) => {
       </IonItemDivider>
       {label ? (
         <IonItem>
-          <IonLabel className={styles.itemLabel}>{label}</IonLabel>
+          <IonText className={styles.itemText}>{label}</IonText>
         </IonItem>
       ) : (
         children
