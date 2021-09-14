@@ -14,9 +14,7 @@ import {
 } from '@ionic/react';
 import React from 'react';
 import { NestedValue, SubmitHandler, useForm } from 'react-hook-form';
-import { useAppSelector } from '../../app/hooks';
 import { TutorListing } from '../../app/types';
-import { selectCurrentUserId } from '../../reducers/auth';
 
 import styles from './TutorListingForm.module.scss';
 
@@ -39,7 +37,6 @@ interface Props {
 
 const TutorListingForm: React.FC<Props> = (props: Props) => {
   const { onSubmit, submitButtonText, currentData } = props;
-  const userId = useAppSelector(selectCurrentUserId);
   const {
     register,
     formState: { errors, isSubmitting },
@@ -61,33 +58,6 @@ const TutorListingForm: React.FC<Props> = (props: Props) => {
       : {},
   });
   // const watchPrice = watch('price', { lower: 0, upper: 0 });
-
-  // const onSubmit: SubmitHandler<TutorListingFormData> = async (data) => {
-  //   if (userId == null) {
-  //     console.log('User is not logged in');
-  //     return;
-  //   }
-
-  //   try {
-  //     const { price, ...details } = data;
-  //     const listingData = {
-  //       tutorId: userId,
-  //       priceMin: price.lower,
-  //       priceMax: price.upper,
-  //       description: details.description,
-  //       subjects: details.subjects as string[],
-  //       levels: details.levels as string[],
-  //       timeSlots: details.timeSlots as number[],
-  //     };
-  //     const result = await createTutorListing(listingData);
-
-  //     if ('data' in result && result.data) {
-  //       history.push('/tutors');
-  //     }
-  //   } catch (err) {
-  //     console.log(err);
-  //   }
-  // };
 
   return (
     <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
