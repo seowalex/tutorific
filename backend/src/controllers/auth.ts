@@ -24,7 +24,8 @@ const onAuthSuccess = async (ctx: Koa.Context, user: User): Promise<void> => {
 };
 
 // returns user only if user exists and refreshToken matches
-const getUserByIdAndRefreshToken = async (
+
+const getUserByIdAndCheckRefreshToken = async (
   userId: number,
   refreshToken: string
 ): Promise<User | undefined> => {
@@ -41,7 +42,10 @@ const revokeRefreshToken = async (
   userId: number,
   refreshToken: string
 ): Promise<Boolean> => {
-  const fetchedUser = await getUserByIdAndRefreshToken(userId, refreshToken);
+  const fetchedUser = await getUserByIdAndCheckRefreshToken(
+    userId,
+    refreshToken
+  );
   if (!fetchedUser) {
     return false;
   }
@@ -63,27 +67,11 @@ const login = async (ctx: Koa.Context): Promise<void> => {
 };
 
 const register = async (ctx: Koa.Context): Promise<void> => {
-  const { email } = ctx.request.body;
-  // TODO use class-validator instead
-  const duplicateUser = await userService.getUserByEmail(email);
-  if (duplicateUser) {
-    ctx.status = HttpStatus.CONFLICT;
-    ctx.body = {
-      errors: [
-        {
-          status: HttpStatus.CONFLICT,
-          detail: 'Email already in use',
-        },
-      ],
-    };
-    return;
-  }
-
+  // TODO make atomic
   const newProfile = await profileService.createProfile({});
   const user: User = ctx.request.body;
   const newUser = await userService.createUser({
     ...user,
-    password: await authUtil.hashPassword(user.password),
     profile: newProfile,
   });
 
@@ -102,7 +90,10 @@ const logout = async (ctx: Koa.Context): Promise<void> => {
 
 const refreshJwt = async (ctx: Koa.Context): Promise<void> => {
   const { userId, refreshToken } = ctx.request.body;
-  const fetchedUser = await getUserByIdAndRefreshToken(userId, refreshToken);
+  const fetchedUser = await getUserByIdAndCheckRefreshToken(
+    userId,
+    refreshToken
+  );
   if (!fetchedUser) {
     ctx.throw(HttpStatus.UNAUTHORIZED);
   }

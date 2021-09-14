@@ -1,3 +1,4 @@
+import { IsNotEmpty } from 'class-validator';
 import {
   Entity,
   PrimaryGeneratedColumn,
@@ -21,6 +22,9 @@ export default class Message {
   sender: Profile;
 
   @Column('text')
+  @IsNotEmpty({
+    message: 'Message content should not be empty',
+  })
   content: string;
 
   @CreateDateColumn()

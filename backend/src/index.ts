@@ -30,14 +30,16 @@ app.use(async (ctx: Koa.Context, next: () => Promise<any>) => {
     await next();
   } catch (error: any) {
     if (error instanceof Exception) {
-      ctx.statusCode = error.statusCode;
-      ctx.body = error.toObject();
+      // model validator errors
+      ctx.status = HttpStatus.BAD_REQUEST;
+      ctx.body = error;
     } else {
+      // ctx.throw errors
       ctx.status =
         error.statusCode || error.status || HttpStatus.INTERNAL_SERVER_ERROR;
-      error.status = ctx.status;
-      ctx.body = { error };
-      ctx.app.emit('error', error, ctx);
+      if (error.message) {
+        ctx.body = { errors: [{ detail: [error.message] }] };
+      }
     }
   }
 });

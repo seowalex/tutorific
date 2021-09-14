@@ -1,4 +1,5 @@
 import { getRepository } from 'typeorm';
+import classValidate from '../utils/validate';
 import Message, { CreateMessage } from '../models/message';
 
 const getMessages = async (conversationId: number): Promise<Array<Message>> =>
@@ -7,8 +8,12 @@ const getMessages = async (conversationId: number): Promise<Array<Message>> =>
     order: { createdAt: 'DESC' },
   });
 
-const createMessage = async (message: CreateMessage): Promise<Message> =>
-  getRepository(Message).save(message);
+const createMessage = async (message: CreateMessage): Promise<Message> => {
+  const newMessage = new Message();
+  Object.assign(newMessage, message);
+  await classValidate(newMessage, true);
+  return getRepository(Message).save(newMessage);
+};
 
 // helpers
 
