@@ -11,6 +11,7 @@ import {
   IonRefresherContent,
   IonTitle,
   IonToolbar,
+  useIonViewWillEnter,
 } from '@ionic/react';
 import { addOutline, search } from 'ionicons/icons';
 
@@ -31,6 +32,10 @@ const Tutors: React.FC = () => {
       event.detail.complete();
     }, 1000);
   };
+
+  useIonViewWillEnter(() => {
+    refetch();
+  });
 
   return (
     <IonPage>

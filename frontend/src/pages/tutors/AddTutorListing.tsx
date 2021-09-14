@@ -21,9 +21,11 @@ import {
   IonToolbar,
 } from '@ionic/react';
 import React from 'react';
-import { useForm } from 'react-hook-form';
+import { NestedValue, SubmitHandler, useForm } from 'react-hook-form';
 import { useHistory } from 'react-router';
 import { useCreateTutorListingMutation } from '../../api/tutor';
+import { useAppSelector } from '../../app/hooks';
+import { selectCurrentUserId } from '../../reducers/auth';
 
 import styles from './AddTutorListing.module.scss';
 
@@ -33,30 +35,52 @@ interface TutorListingData {
     upper: number;
   };
   description: string;
-  timeSlots: number[];
-  subjects: string[];
-  levels: string[];
+  timeSlots: NestedValue<number[]>;
+  subjects: NestedValue<string[]>;
+  levels: NestedValue<string[]>;
 }
 
 const AddTutorListing: React.FC = () => {
+  const userId = useAppSelector(selectCurrentUserId);
   const [createTutorListing, { isLoading }] = useCreateTutorListingMutation();
   const history = useHistory();
   const {
     register,
     formState: { errors },
-    handleSubmit,
     watch,
-  } = useForm<TutorListingData>();
+    handleSubmit,
+    getValues,
+  } = useForm<TutorListingData>({
+    defaultValues: {
+      price: {
+        lower: 0,
+        upper: 0,
+      },
+      timeSlots: [],
+      subjects: [],
+      levels: [],
+    },
+  });
   // const watchPrice = watch('price', { lower: 0, upper: 0 });
 
-  const onSubmit = async (data: TutorListingData) => {
+  const onSubmit: SubmitHandler<TutorListingData> = async (data) => {
+    if (userId == null) {
+      console.log('User is not logged in');
+      return;
+    }
+
     try {
-      const { price, ...listingData } = data;
-      const result = await createTutorListing({
-        ...listingData,
+      const { price, ...details } = data;
+      const listingData = {
+        tutorId: userId,
         priceMin: price.lower,
         priceMax: price.upper,
-      });
+        description: details.description,
+        subjects: details.subjects as string[],
+        levels: details.levels as string[],
+        timeSlots: details.timeSlots as number[],
+      };
+      const result = await createTutorListing(listingData);
 
       if ('data' in result && result.data) {
         history.push('/tutors');
@@ -98,6 +122,7 @@ const AddTutorListing: React.FC = () => {
                             value: 0,
                             message: 'Min Price must be positive',
                           },
+                          valueAsNumber: true,
                         })}
                       />
                       {errors.price?.lower && (
@@ -122,6 +147,12 @@ const AddTutorListing: React.FC = () => {
                           min: {
                             value: 0,
                             message: 'Max Price must be positive',
+                          },
+                          valueAsNumber: true,
+                          validate: {
+                            atLeastMin: (value) =>
+                              getValues('price.lower') <= value ||
+                              'Max Price must be at least Min Price',
                           },
                         })}
                       />
@@ -169,7 +200,7 @@ const AddTutorListing: React.FC = () => {
                       </IonSelect>
                       {errors.subjects && (
                         <IonNote slot="helper" color="danger">
-                          {errors.subjects[0]}
+                          {errors.subjects.message}
                         </IonNote>
                       )}
                     </IonItem>
@@ -214,7 +245,7 @@ const AddTutorListing: React.FC = () => {
                       </IonSelect>
                       {errors.levels && (
                         <IonNote slot="helper" color="danger">
-                          {errors.levels[0]}
+                          {errors.levels.message}
                         </IonNote>
                       )}
                     </IonItem>
@@ -251,7 +282,7 @@ const AddTutorListing: React.FC = () => {
                       </IonSelect>
                       {errors.timeSlots && (
                         <IonNote slot="helper" color="danger">
-                          {errors.timeSlots[0]}
+                          {errors.timeSlots.message}
                         </IonNote>
                       )}
                     </IonItem>
