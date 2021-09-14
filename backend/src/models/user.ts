@@ -28,10 +28,14 @@ export default class User {
   @MinLength(8)
   password: string;
 
-  @Column({ type: 'text', nullable: true })
-  refreshToken?: string | null;
+  @Column({ type: 'text', array: true })
+  refreshToken: string[];
 
-  @OneToOne(() => Profile, { cascade: true, nullable: false, eager: true })
+  @OneToOne(() => Profile, {
+    cascade: true,
+    nullable: true,
+    eager: true,
+  })
   @JoinColumn()
   profile: Profile;
 
@@ -44,5 +48,5 @@ export default class User {
   }
 }
 
-export type CreateUser = Omit<User, 'id' | 'refreshToken' | 'hashPassword'>;
+export type CreateUser = Omit<User, 'id' | 'hashPassword'>;
 export type UpdateUser = Partial<User>;

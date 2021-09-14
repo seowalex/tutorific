@@ -2,7 +2,6 @@ import Koa from 'koa';
 import HttpStatus from 'http-status-codes';
 import authUtil from '../utils/auth';
 import User from '../models/user';
-import profileService from '../services/profile';
 import userService from '../services/user';
 
 // helpers
@@ -11,12 +10,14 @@ const onAuthSuccess = async (ctx: Koa.Context, user: User): Promise<void> => {
   const jwtToken = await authUtil.generateJwtToken(
     user.id,
     user.email,
-    user.profile.id
+    user.profile ? user.profile.id : null
   );
   const refreshToken = authUtil.generateRefreshToken();
-  await userService.updateUser(user.id, { refreshToken });
+  user.refreshToken.push(refreshToken);
+  await userService.updateUser(user.id, { refreshToken: user.refreshToken });
 
   ctx.body = {
+    profileId: user.profile ? user.profile.id : null,
     userId: user.id,
     jwtToken,
     refreshToken,
@@ -31,7 +32,7 @@ const getUserByIdAndCheckRefreshToken = async (
 ): Promise<User | undefined> => {
   const user = await userService.getUser(userId);
 
-  if (!user || user.refreshToken !== refreshToken) {
+  if (!user || !user.refreshToken.includes(refreshToken)) {
     return undefined;
   }
 
@@ -49,8 +50,10 @@ const revokeRefreshToken = async (
   if (!fetchedUser) {
     return false;
   }
-
-  await userService.updateUser(userId, { refreshToken: null });
+  const newRefreshTokenArr = fetchedUser.refreshToken.filter(
+    (token) => token !== refreshToken
+  );
+  await userService.updateUser(userId, { refreshToken: newRefreshTokenArr });
   return true;
 };
 
@@ -67,12 +70,26 @@ const login = async (ctx: Koa.Context): Promise<void> => {
 };
 
 const register = async (ctx: Koa.Context): Promise<void> => {
+  const { email } = ctx.request.body;
+  // TODO use class-validator instead
+  const duplicateUser = await userService.getUserByEmail(email);
+  if (duplicateUser) {
+    ctx.status = HttpStatus.CONFLICT;
+    ctx.body = {
+      errors: [
+        {
+          status: HttpStatus.CONFLICT,
+          detail: 'Email already in use',
+        },
+      ],
+    };
+    return;
+  }
   // TODO make atomic
-  const newProfile = await profileService.createProfile({});
   const user: User = ctx.request.body;
   const newUser = await userService.createUser({
     ...user,
-    profile: newProfile,
+    refreshToken: [],
   });
 
   await onAuthSuccess(ctx, newUser);
@@ -101,7 +118,7 @@ const refreshJwt = async (ctx: Koa.Context): Promise<void> => {
   const jwtToken = await authUtil.generateJwtToken(
     fetchedUser.id,
     fetchedUser.email,
-    fetchedUser.profile.id
+    fetchedUser.profile ? fetchedUser.profile.id : null
   );
 
   ctx.body = {
