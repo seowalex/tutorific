@@ -40,6 +40,7 @@ const updateTuteeListing = async (ctx: Koa.Context): Promise<void> => {
 const deleteTuteeListing = async (ctx: Koa.Context): Promise<void> => {
   await tuteeListingService.deleteTuteeListing(ctx.params.id);
   ctx.status = HttpStatus.OK;
+  ctx.body = {};
 };
 
 export default {
