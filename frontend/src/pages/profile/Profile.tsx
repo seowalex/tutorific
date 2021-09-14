@@ -15,7 +15,7 @@ import {
   IonTitle,
   IonToolbar,
 } from '@ionic/react';
-import { male, search } from 'ionicons/icons';
+import { search } from 'ionicons/icons';
 import { useHistory } from 'react-router';
 
 import { useAppDispatch, useAppSelector } from '../../app/hooks';

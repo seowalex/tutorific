@@ -12,7 +12,7 @@ import {
   IonTitle,
   IonToolbar,
 } from '@ionic/react';
-import { search } from 'ionicons/icons';
+import { addOutline, search } from 'ionicons/icons';
 
 import { useAppSelector } from '../../app/hooks';
 import { selectCurrentUserId } from '../../reducers/auth';
@@ -38,6 +38,9 @@ const Tutors: React.FC = () => {
         <IonToolbar>
           <IonTitle>{JSON.stringify(userId)}</IonTitle>
           <IonButtons slot="primary" collapse>
+            <IonButton routerLink="/addtutor">
+              <IonIcon slot="icon-only" icon={addOutline} />
+            </IonButton>
             <IonButton>
               <IonIcon slot="icon-only" icon={search} />
             </IonButton>

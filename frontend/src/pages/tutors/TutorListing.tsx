@@ -1,17 +1,16 @@
 import React from 'react';
 import {
+  IonBackButton,
   IonButton,
   IonButtons,
   IonContent,
   IonHeader,
   IonIcon,
-  IonItem,
   IonPage,
-  IonText,
   IonTitle,
   IonToolbar,
 } from '@ionic/react';
-import { arrowBackOutline, chatbubbleOutline } from 'ionicons/icons';
+import { chatbubbleOutline } from 'ionicons/icons';
 import { RouteComponentProps, useHistory } from 'react-router';
 import { useGetTutorListingQuery } from '../../api/tutor';
 import { useAppSelector } from '../../app/hooks';
@@ -21,12 +20,14 @@ import { formatPriceRange, formatStringList } from '../../app/utils';
 import WeekDaysItem from '../../components/WeekDaysItem';
 import ListingDetail from '../../components/ListingDetail';
 
-const Tutor: React.FC<RouteComponentProps<{ id: string }>> = ({ match }) => {
+const TutorListing: React.FC<RouteComponentProps<{ id: string }>> = ({
+  match,
+}) => {
   const { id } = match.params;
   // eslint-disable-next-line radix
   const listingId = parseInt(id);
   const userId = useAppSelector(selectCurrentUserId);
-  const { data: listing } = useGetTutorListingQuery(listingId);
+  const { data: listing, isLoading } = useGetTutorListingQuery(listingId);
 
   const history = useHistory();
 
@@ -35,9 +36,7 @@ const Tutor: React.FC<RouteComponentProps<{ id: string }>> = ({ match }) => {
       <IonHeader>
         <IonToolbar>
           <IonButtons slot="secondary" collapse>
-            <IonButton onClick={() => history.goBack()}>
-              <IonIcon slot="icon-only" icon={arrowBackOutline} />
-            </IonButton>
+            <IonBackButton defaultHref="/tutors" disabled={isLoading} />
           </IonButtons>
           <IonTitle>{JSON.stringify(listingId)}</IonTitle>
           <IonButtons slot="primary" collapse>
@@ -65,15 +64,11 @@ const Tutor: React.FC<RouteComponentProps<{ id: string }>> = ({ match }) => {
           <ListingDetail header="Available Times">
             <WeekDaysItem timeSlots={listing.timeSlots} detailed />
           </ListingDetail>
-          <ListingDetail header="Description">
-            <IonItem>
-              <IonText>{listing.description}</IonText>
-            </IonItem>
-          </ListingDetail>
+          <ListingDetail header="Description" label={listing.description} />
         </IonContent>
       ) : null}
     </IonPage>
   );
 };
 
-export default Tutor;
+export default TutorListing;
