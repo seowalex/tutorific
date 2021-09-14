@@ -12,16 +12,25 @@ import {
 } from '@ionic/react';
 import React from 'react';
 import { SubmitHandler } from 'react-hook-form';
-import { useHistory } from 'react-router';
-import { useCreateTutorListingMutation } from '../../api/tutor';
+import { RouteComponentProps, useHistory } from 'react-router';
+import {
+  useGetTutorListingQuery,
+  useUpdateTutorListingMutation,
+} from '../../api/tutor';
 import { useAppSelector } from '../../app/hooks';
 import { selectCurrentUserId } from '../../reducers/auth';
 
 import TutorListingForm, { TutorListingFormData } from './TutorListingForm';
 
-const AddTutorListing: React.FC = () => {
+const EditTutorListing: React.FC<RouteComponentProps<{ id: string }>> = ({
+  match,
+}) => {
+  const { id } = match.params;
+  // eslint-disable-next-line radix
+  const listingId = parseInt(id);
   const userId = useAppSelector(selectCurrentUserId);
-  const [createTutorListing] = useCreateTutorListingMutation();
+  const { data: listing } = useGetTutorListingQuery(listingId);
+  const [updateTutorListing] = useUpdateTutorListingMutation();
   const history = useHistory();
 
   const onSubmit: SubmitHandler<TutorListingFormData> = async (data) => {
@@ -33,6 +42,7 @@ const AddTutorListing: React.FC = () => {
     try {
       const { price, ...details } = data;
       const listingData = {
+        id: listingId,
         tutorId: userId,
         priceMin: price.lower,
         priceMax: price.upper,
@@ -41,10 +51,10 @@ const AddTutorListing: React.FC = () => {
         levels: details.levels as string[],
         timeSlots: details.timeSlots as number[],
       };
-      const result = await createTutorListing(listingData);
+      const result = await updateTutorListing(listingData);
 
       if ('data' in result && result.data) {
-        history.push('/tutors');
+        history.push(`/tutor/${id}`);
       }
     } catch (err) {
       console.log(err);
@@ -55,9 +65,9 @@ const AddTutorListing: React.FC = () => {
     <IonPage>
       <IonHeader>
         <IonToolbar>
-          <IonTitle>New Tutor Listing</IonTitle>
+          <IonTitle>Edit Tutor Listing</IonTitle>
           <IonButtons slot="start">
-            <IonBackButton defaultHref="/tutors" />
+            <IonBackButton defaultHref={`/tutor/${id}`} />
           </IonButtons>
         </IonToolbar>
       </IonHeader>
@@ -67,7 +77,8 @@ const AddTutorListing: React.FC = () => {
             <IonCol className="ion-no-padding">
               <TutorListingForm
                 onSubmit={onSubmit}
-                submitButtonText="Create Listing"
+                submitButtonText="Edit Listing"
+                currentData={listing}
               />
             </IonCol>
           </IonRow>
@@ -77,4 +88,4 @@ const AddTutorListing: React.FC = () => {
   );
 };
 
-export default AddTutorListing;
+export default EditTutorListing;

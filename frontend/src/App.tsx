@@ -16,7 +16,7 @@ import { bulb, chatbubbles, person, school } from 'ionicons/icons';
 import Login from './pages/auth/Login';
 import Register from './pages/auth/Register';
 import Tutors from './pages/tutors/Tutors';
-import Tutees from './pages/Tutees';
+import Tutees from './pages/tutees/Tutees';
 import Chat from './pages/Chat';
 import Profile from './pages/profile/Profile';
 import { useAppSelector } from './app/hooks';
@@ -25,6 +25,10 @@ import { selectCurrentUserId } from './reducers/auth';
 import './styles/main.scss';
 import TutorListing from './pages/tutors/TutorListing';
 import AddTutorListing from './pages/tutors/AddTutorListing';
+import EditTutorListing from './pages/tutors/EditTutorListing';
+import TuteeListing from './pages/tutees/TuteeListing';
+import AddTuteeListing from './pages/tutees/AddTuteeListing';
+import EditTuteeListing from './pages/tutees/EditTuteeListing';
 
 const App: React.FC = () => {
   const userId = useAppSelector(selectCurrentUserId);
@@ -68,19 +72,25 @@ const App: React.FC = () => {
                   <Route path="/tutors">
                     <Tutors />
                   </Route>
+                  <Route path="/tutor/:id" component={TutorListing} />
+                  <Route path="/addtutor">
+                    <AddTutorListing />
+                  </Route>
+                  <Route path="/edittutor/:id" component={EditTutorListing} />
                   <Route path="/tutees">
                     <Tutees />
                   </Route>
+                  <Route path="/tutee/:id" component={TuteeListing} />
+                  <Route path="/addtutee">
+                    <AddTuteeListing />
+                  </Route>
+                  <Route path="/edittutee/:id" component={EditTuteeListing} />
                   <Route path="/chat">
                     <Chat />
                   </Route>
                   <Route path="/profile">
                     <Profile />
                   </Route>
-                  <Route path="/addtutor">
-                    <AddTutorListing />
-                  </Route>
-                  <Route path="/tutor/:id" component={TutorListing} />
                 </IonRouterOutlet>
               </IonTabs>
             </Route>

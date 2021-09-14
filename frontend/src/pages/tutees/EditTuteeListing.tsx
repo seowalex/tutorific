@@ -12,19 +12,28 @@ import {
 } from '@ionic/react';
 import React from 'react';
 import { SubmitHandler } from 'react-hook-form';
-import { useHistory } from 'react-router';
-import { useCreateTutorListingMutation } from '../../api/tutor';
+import { RouteComponentProps, useHistory } from 'react-router';
+import {
+  useGetTuteeListingQuery,
+  useUpdateTuteeListingMutation,
+} from '../../api/tutee';
 import { useAppSelector } from '../../app/hooks';
 import { selectCurrentUserId } from '../../reducers/auth';
 
-import TutorListingForm, { TutorListingFormData } from './TutorListingForm';
+import TuteeListingForm, { TuteeListingFormData } from './TuteeListingForm';
 
-const AddTutorListing: React.FC = () => {
+const EditTuteeListing: React.FC<RouteComponentProps<{ id: string }>> = ({
+  match,
+}) => {
+  const { id } = match.params;
+  // eslint-disable-next-line radix
+  const listingId = parseInt(id);
   const userId = useAppSelector(selectCurrentUserId);
-  const [createTutorListing] = useCreateTutorListingMutation();
+  const { data: listing } = useGetTuteeListingQuery(listingId);
+  const [updateTuteeListing] = useUpdateTuteeListingMutation();
   const history = useHistory();
 
-  const onSubmit: SubmitHandler<TutorListingFormData> = async (data) => {
+  const onSubmit: SubmitHandler<TuteeListingFormData> = async (data) => {
     if (userId == null) {
       console.log('User is not logged in');
       return;
@@ -33,18 +42,18 @@ const AddTutorListing: React.FC = () => {
     try {
       const { price, ...details } = data;
       const listingData = {
-        tutorId: userId,
+        ...details,
+        id: listingId,
+        tuteeId: userId,
         priceMin: price.lower,
         priceMax: price.upper,
-        description: details.description,
         subjects: details.subjects as string[],
-        levels: details.levels as string[],
         timeSlots: details.timeSlots as number[],
       };
-      const result = await createTutorListing(listingData);
+      const result = await updateTuteeListing(listingData);
 
       if ('data' in result && result.data) {
-        history.push('/tutors');
+        history.push(`/tutee/${id}`);
       }
     } catch (err) {
       console.log(err);
@@ -55,9 +64,9 @@ const AddTutorListing: React.FC = () => {
     <IonPage>
       <IonHeader>
         <IonToolbar>
-          <IonTitle>New Tutor Listing</IonTitle>
+          <IonTitle>Edit Tutee Listing</IonTitle>
           <IonButtons slot="start">
-            <IonBackButton defaultHref="/tutors" />
+            <IonBackButton defaultHref={`/tutee/${id}`} />
           </IonButtons>
         </IonToolbar>
       </IonHeader>
@@ -65,9 +74,10 @@ const AddTutorListing: React.FC = () => {
         <IonGrid className="ion-no-padding">
           <IonRow>
             <IonCol className="ion-no-padding">
-              <TutorListingForm
+              <TuteeListingForm
                 onSubmit={onSubmit}
-                submitButtonText="Create Listing"
+                submitButtonText="Edit Listing"
+                currentData={listing}
               />
             </IonCol>
           </IonRow>
@@ -77,4 +87,4 @@ const AddTutorListing: React.FC = () => {
   );
 };
 
-export default AddTutorListing;
+export default EditTuteeListing;

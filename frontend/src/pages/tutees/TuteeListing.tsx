@@ -26,9 +26,9 @@ import {
 } from 'ionicons/icons';
 import { RouteComponentProps, useHistory } from 'react-router';
 import {
-  useDeleteTutorListingMutation,
-  useGetTutorListingQuery,
-} from '../../api/tutor';
+  useDeleteTuteeListingMutation,
+  useGetTuteeListingQuery,
+} from '../../api/tutee';
 import { useAppSelector } from '../../app/hooks';
 import ProfileItem from '../../components/ProfileItem';
 import { selectCurrentUserId } from '../../reducers/auth';
@@ -39,7 +39,7 @@ import {
 } from '../../app/utils';
 import ListingDetail from '../../components/ListingDetail';
 
-const TutorListing: React.FC<RouteComponentProps<{ id: string }>> = ({
+const TuteeListing: React.FC<RouteComponentProps<{ id: string }>> = ({
   match,
 }) => {
   const { id } = match.params;
@@ -50,23 +50,23 @@ const TutorListing: React.FC<RouteComponentProps<{ id: string }>> = ({
     data: listing,
     isLoading,
     refetch,
-  } = useGetTutorListingQuery(listingId);
+  } = useGetTuteeListingQuery(listingId);
   const history = useHistory();
 
-  const isOwnListing = userId === listing?.tutor.id;
+  const isOwnListing = userId === listing?.tutee.id;
   const [popoverState, setShowPopover] = useState({
     showPopover: false,
     event: undefined,
   });
   const [presentDeleteAlert] = useIonAlert();
-  const [deleteTutorListing] = useDeleteTutorListingMutation();
+  const [deleteTuteeListing] = useDeleteTuteeListingMutation();
 
   const handleDeleteListing = async () => {
     try {
-      const result = await deleteTutorListing(listingId);
+      const result = await deleteTuteeListing(listingId);
 
       if ('data' in result && result.data) {
-        history.push('/tutors');
+        history.push('/tutees');
         setShowPopover({ showPopover: false, event: undefined });
       }
     } catch (err) {
@@ -83,7 +83,7 @@ const TutorListing: React.FC<RouteComponentProps<{ id: string }>> = ({
       <IonHeader>
         <IonToolbar>
           <IonButtons slot="secondary" collapse>
-            <IonButton routerLink="/tutors" disabled={isLoading}>
+            <IonButton routerLink="/tutees" disabled={isLoading}>
               <IonIcon slot="icon-only" icon={arrowBackOutline} />
             </IonButton>
           </IonButtons>
@@ -108,15 +108,12 @@ const TutorListing: React.FC<RouteComponentProps<{ id: string }>> = ({
       </IonHeader>
       {listing ? (
         <IonContent fullscreen>
-          <ProfileItem profile={listing.tutor} />
+          <ProfileItem profile={listing.tutee} />
           <ListingDetail
             header="Subjects"
             label={formatStringList(listing.subjects)}
           />
-          <ListingDetail
-            header="Levels"
-            label={formatStringList(listing.levels)}
-          />
+          <ListingDetail header="Levels" label={listing.level} />
           <ListingDetail
             header="Hourly Rate"
             label={formatPriceRange(listing.priceMin, listing.priceMax)}
@@ -125,6 +122,8 @@ const TutorListing: React.FC<RouteComponentProps<{ id: string }>> = ({
             header="Available Times"
             label={formatStringList(computeWeekDays(listing.timeSlots))}
           />
+          <ListingDetail header="Gender" label={listing.gender} />
+          <ListingDetail header="Location" label={listing.location} />
           <ListingDetail header="Description" label={listing.description} />
         </IonContent>
       ) : null}
@@ -143,7 +142,7 @@ const TutorListing: React.FC<RouteComponentProps<{ id: string }>> = ({
           <IonItem
             button
             detail={false}
-            routerLink={`/edittutor/${listingId}`}
+            routerLink={`/edittutee/${listingId}`}
             onClick={() => {
               setShowPopover({ showPopover: false, event: undefined });
             }}
@@ -178,4 +177,4 @@ const TutorListing: React.FC<RouteComponentProps<{ id: string }>> = ({
   );
 };
 
-export default TutorListing;
+export default TuteeListing;
