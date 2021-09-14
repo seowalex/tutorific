@@ -10,9 +10,7 @@ router.get('/', async (ctx: Koa.Context) => {
 
 router.get('/:id', profileController.getProfile);
 
-router.post('/', async (ctx: Koa.Context) => {
-  ctx.body = 'Create profile';
-});
+router.post('/', profileController.createProfile);
 
 router.put('/:id', profileController.updateProfile);
 

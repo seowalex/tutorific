@@ -5,9 +5,8 @@ import User, { CreateUser, UpdateUser } from '../models/user';
 const getUser = async (id: number): Promise<User | undefined> =>
   getRepository(User).findOne(id);
 
-// why is there relations here?
 const getUserByEmail = async (email: string): Promise<User | undefined> =>
-  getRepository(User).findOne({ email }, { relations: ['profile'] });
+  getRepository(User).findOne({ email });
 
 const createUser = async (user: CreateUser): Promise<User> => {
   const newUser = new User();
