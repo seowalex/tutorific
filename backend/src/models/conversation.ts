@@ -1,4 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
+import { UniqueConversation } from '../validations/conversation';
 import Message from './message';
 import Profile from './profile';
 
@@ -11,6 +12,9 @@ export default class Conversation {
   firstProfile: Profile;
 
   @ManyToOne(() => Profile, { nullable: false, eager: true })
+  @UniqueConversation('firstProfile', {
+    message: 'Already have a conversation with other person',
+  })
   secondProfile: Profile;
 }
 

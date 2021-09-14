@@ -1,7 +1,6 @@
 import { getRepository } from 'typeorm';
 import classValidate from '../utils/validate';
 import User, { CreateUser, UpdateUser } from '../models/user';
-import Exception from '../utils/exception';
 
 const getUser = async (id: number): Promise<User | undefined> =>
   getRepository(User).findOne(id);
@@ -13,15 +12,17 @@ const getUserByEmail = async (email: string): Promise<User | undefined> =>
 const createUser = async (user: CreateUser): Promise<User> => {
   const newUser = new User();
   Object.assign(newUser, user);
-  const errors = await classValidate(newUser, true);
-  if (errors.length !== 0) {
-    throw new Exception(errors);
-  }
+  await classValidate(newUser, true);
   return getRepository(User).save(newUser);
 };
 
-const updateUser = async (id: number, user: UpdateUser): Promise<User> =>
-  getRepository(User).save({ id: Number(id), ...user });
+const updateUser = async (id: number, user: UpdateUser): Promise<User> => {
+  const updatedUser = new User();
+  Object.assign(updatedUser, user);
+  updatedUser.id = Number(id);
+  await classValidate(updatedUser, false);
+  return getRepository(User).save(updatedUser);
+};
 
 export default {
   getUser,

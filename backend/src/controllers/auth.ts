@@ -74,7 +74,6 @@ const register = async (ctx: Koa.Context): Promise<void> => {
     ...user,
     profile: newProfile,
   });
-  //     // password: await authUtil.hashPassword(user.password),
 
   await onAuthSuccess(ctx, newUser);
 };

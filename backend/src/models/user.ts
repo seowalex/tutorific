@@ -37,8 +37,10 @@ export default class User {
 
   @BeforeInsert()
   @BeforeUpdate()
-  async hashPassword() {
-    this.password = await authUtil.hashPassword(this.password);
+  async hashPassword(): Promise<void> {
+    if (this.password) {
+      this.password = await authUtil.hashPassword(this.password);
+    }
   }
 }
 

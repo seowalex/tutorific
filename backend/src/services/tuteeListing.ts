@@ -1,5 +1,4 @@
 import { getRepository } from 'typeorm';
-import Exception from '../utils/exception';
 import TuteeListing, {
   CreateTuteeListing,
   UpdateTuteeListing,
@@ -17,18 +16,20 @@ const createTuteeListing = async (
 ): Promise<TuteeListing> => {
   const newTuteeListing = new TuteeListing();
   Object.assign(newTuteeListing, tuteeListing);
-  const errors = await classValidate(newTuteeListing, true);
-  if (errors.length !== 0) {
-    throw new Exception(errors);
-  }
-  return getRepository(TuteeListing).save(tuteeListing);
+  await classValidate(newTuteeListing, true);
+  return getRepository(TuteeListing).save(newTuteeListing);
 };
 
 const updateTuteeListing = async (
   id: number,
   tuteeListing: UpdateTuteeListing
-): Promise<TuteeListing> =>
-  getRepository(TuteeListing).save({ id: Number(id), ...tuteeListing });
+): Promise<TuteeListing> => {
+  const updatedTuteeListing = new TuteeListing();
+  Object.assign(updatedTuteeListing, tuteeListing);
+  updatedTuteeListing.id = Number(id);
+  await classValidate(updatedTuteeListing, false);
+  return getRepository(TuteeListing).save(updatedTuteeListing);
+};
 
 const deleteTuteeListing = async (id: number): Promise<void> => {
   getRepository(TuteeListing).delete(id);
