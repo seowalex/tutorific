@@ -1,15 +1,10 @@
+type ErrorField = { field: string; detail: Array<string> };
+
 export default class Exception extends Error {
-  statusCode: number;
+  errors: Array<ErrorField>;
 
-  constructor(statusCode: number, message: string) {
-    super(message);
-    this.statusCode = statusCode;
-  }
-
-  toObject(): Object {
-    return {
-      statusCode: this.statusCode,
-      message: this.message,
-    };
+  constructor(errors: Array<ErrorField>) {
+    super('Error');
+    this.errors = errors;
   }
 }

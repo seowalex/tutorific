@@ -1,4 +1,5 @@
 import { getRepository } from 'typeorm';
+import classValidate from '../utils/validate';
 import Conversation, { CreateConversation } from '../models/conversation';
 
 const getConversations = async (
@@ -10,7 +11,12 @@ const getConversations = async (
 
 const createConversation = async (
   conversation: Omit<CreateConversation, 'firstMessage'>
-): Promise<Conversation> => getRepository(Conversation).save(conversation);
+): Promise<Conversation> => {
+  const newConversation = new Conversation();
+  Object.assign(newConversation, conversation);
+  await classValidate(newConversation, true);
+  return getRepository(Conversation).save(newConversation);
+};
 
 export default {
   getConversations,
