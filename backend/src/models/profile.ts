@@ -4,7 +4,6 @@ import {
   Column,
   CreateDateColumn,
 } from 'typeorm';
-// import User from './user';
 import { Gender } from '../utils/model';
 
 @Entity()
@@ -12,7 +11,7 @@ export default class Profile {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ nullable: true })
+  @Column()
   name: string;
 
   @Column({ nullable: true })
@@ -26,4 +25,4 @@ export default class Profile {
 }
 
 export type UpdateProfile = Partial<Profile>;
-export type CreateProfile = {};
+export type CreateProfile = Omit<Profile, 'id' | 'createdAt'>;

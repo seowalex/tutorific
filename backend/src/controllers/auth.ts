@@ -2,7 +2,6 @@ import Koa from 'koa';
 import HttpStatus from 'http-status-codes';
 import authUtil from '../utils/auth';
 import User from '../models/user';
-import profileService from '../services/profile';
 import userService from '../services/user';
 
 // helpers
@@ -11,14 +10,14 @@ const onAuthSuccess = async (ctx: Koa.Context, user: User): Promise<void> => {
   const jwtToken = await authUtil.generateJwtToken(
     user.id,
     user.email,
-    user.profile.id
+    user.profile ? user.profile.id : null
   );
   const refreshToken = authUtil.generateRefreshToken();
   user.refreshToken.push(refreshToken);
   await userService.updateUser(user.id, { refreshToken: user.refreshToken });
 
   ctx.body = {
-    profileId: user.profile.id,
+    profileId: user.profile ? user.profile.id : null,
     userId: user.id,
     jwtToken,
     refreshToken,
@@ -83,13 +82,11 @@ const register = async (ctx: Koa.Context): Promise<void> => {
     return;
   }
 
-  const newProfile = await profileService.createProfile({});
   const user: User = ctx.request.body;
   const newUser = await userService.createUser({
     ...user,
     password: await authUtil.hashPassword(user.password),
     refreshToken: [],
-    profile: newProfile,
   });
 
   await onAuthSuccess(ctx, newUser);
@@ -115,7 +112,7 @@ const refreshJwt = async (ctx: Koa.Context): Promise<void> => {
   const jwtToken = await authUtil.generateJwtToken(
     fetchedUser.id,
     fetchedUser.email,
-    fetchedUser.profile.id
+    fetchedUser.profile ? fetchedUser.profile.id : null
   );
 
   ctx.body = {

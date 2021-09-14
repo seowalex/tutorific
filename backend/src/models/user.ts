@@ -23,7 +23,11 @@ export default class User {
   @Column({ type: 'text', array: true })
   refreshToken: string[];
 
-  @OneToOne(() => Profile, { cascade: true, nullable: false, eager: true })
+  @OneToOne(() => Profile, {
+    cascade: true,
+    nullable: true,
+    eager: true,
+  })
   @JoinColumn()
   profile: Profile;
 }
