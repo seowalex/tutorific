@@ -1,0 +1,17 @@
+.profileHeader {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    .profileAvatar, .profileGender {
+      flex-shrink: 0;
+    }
+
+    .profileAvatar {
+      margin-right: 12px;
+    }
+
+    .profileName {
+      margin: 0;
+    }
+}

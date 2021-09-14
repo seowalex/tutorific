@@ -10,9 +10,9 @@ import {
   IonToolbar,
 } from '@ionic/react';
 import { search } from 'ionicons/icons';
-import ExploreContainer from '../components/ExploreContainer';
 
 import './Tutees.scss';
+import ExploreContainer from '../components/ExploreContainer';
 
 const Tutees: React.FC = () => (
   <IonPage>

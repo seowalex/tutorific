@@ -44,10 +44,7 @@ const Chat: React.FC = () => (
         {[...Array(16)].map((_e, i) => (
           <IonItem href="/">
             <IonAvatar slot="start">
-              <img
-                src={`https://placekitten.com/200/200?image=${i}`}
-                alt="Profile"
-              />
+              <img src={`https://placekitten.com/200/200?image=${i}`} />
             </IonAvatar>
             <IonLabel>
               <h2>Han</h2>

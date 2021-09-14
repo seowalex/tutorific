@@ -1,3 +1,4 @@
+import { IsString } from 'class-validator';
 import {
   Entity,
   PrimaryGeneratedColumn,
@@ -12,9 +13,11 @@ export default class Profile {
   id: number;
 
   @Column()
+  @IsString()
   name: string;
 
   @Column({ nullable: true })
+  @IsString()
   description: string;
 
   @Column({ type: 'enum', enum: Gender, nullable: true })

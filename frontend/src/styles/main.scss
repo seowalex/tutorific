@@ -14,5 +14,12 @@
 @import '@ionic/react/css/flex-utils.css';
 @import '@ionic/react/css/display.css';
 
+/* Base styles */
+@import './base/forms.scss';
+
+/* Layout utils */
+@import './layout/utils.scss';
+
 /* Theme variables */
+@import './theme/fonts.scss';
 @import './theme/variables.scss';

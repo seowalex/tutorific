@@ -1,0 +1,21 @@
+.welcomeHeader {
+  margin: 20px 0;
+
+  .welcomeImg {
+    display: block;
+    margin: auto;
+    width: 100%;
+    max-width: 240px;
+  }
+
+  .welcomeText {
+    text-align: center;
+    margin: 40px 0;
+  }
+}
+
+.registerForm {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
