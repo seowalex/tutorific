@@ -25,6 +25,7 @@ import { selectCurrentUserId } from './reducers/auth';
 import './styles/main.scss';
 import TutorListing from './pages/tutors/TutorListing';
 import AddTutorListing from './pages/tutors/AddTutorListing';
+import EditTutorListing from './pages/tutors/EditTutorListing';
 
 const App: React.FC = () => {
   const userId = useAppSelector(selectCurrentUserId);
@@ -80,6 +81,7 @@ const App: React.FC = () => {
                   <Route path="/addtutor">
                     <AddTutorListing />
                   </Route>
+                  <Route path="/edittutor/:id" component={EditTutorListing} />
                   <Route path="/tutor/:id" component={TutorListing} />
                 </IonRouterOutlet>
               </IonTabs>

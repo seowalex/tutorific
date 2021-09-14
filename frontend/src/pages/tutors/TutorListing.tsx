@@ -14,8 +14,10 @@ import {
   IonTitle,
   IonToolbar,
   useIonAlert,
+  useIonViewWillEnter,
 } from '@ionic/react';
 import {
+  arrowBackOutline,
   chatbubbleOutline,
   createOutline,
   ellipsisVertical,
@@ -45,7 +47,11 @@ const TutorListing: React.FC<RouteComponentProps<{ id: string }>> = ({
   // eslint-disable-next-line radix
   const listingId = parseInt(id);
   const userId = useAppSelector(selectCurrentUserId);
-  const { data: listing, isLoading } = useGetTutorListingQuery(listingId);
+  const {
+    data: listing,
+    isLoading,
+    refetch,
+  } = useGetTutorListingQuery(listingId);
   const history = useHistory();
 
   const isOwnListing = userId === listing?.tutor.id;
@@ -69,12 +75,18 @@ const TutorListing: React.FC<RouteComponentProps<{ id: string }>> = ({
     }
   };
 
+  useIonViewWillEnter(() => {
+    refetch();
+  });
+
   return (
     <IonPage>
       <IonHeader>
         <IonToolbar>
           <IonButtons slot="secondary" collapse>
-            <IonBackButton defaultHref="/tutors" disabled={isLoading} />
+            <IonButton routerLink="/tutors" disabled={isLoading}>
+              <IonIcon slot="icon-only" icon={arrowBackOutline} />
+            </IonButton>
           </IonButtons>
           <IonTitle>{JSON.stringify(listingId)}</IonTitle>
           <IonButtons slot="primary" collapse>
@@ -129,7 +141,14 @@ const TutorListing: React.FC<RouteComponentProps<{ id: string }>> = ({
             <IonIcon icon={shareSocialOutline} slot="end" />
             <IonLabel>Share Listing</IonLabel>
           </IonItem>
-          <IonItem button detail={false}>
+          <IonItem
+            button
+            detail={false}
+            routerLink={`/edittutor/${listingId}`}
+            onClick={() => {
+              setShowPopover({ showPopover: false, event: undefined });
+            }}
+          >
             <IonIcon icon={createOutline} slot="end" />
             <IonLabel>Edit Listing</IonLabel>
           </IonItem>
