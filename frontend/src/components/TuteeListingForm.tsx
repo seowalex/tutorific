@@ -70,7 +70,7 @@ const TuteeListingForm: React.FC<Props> = (props: Props) => {
             color={errors.price?.lower ? 'danger' : undefined}
             disabled={isSubmitting}
           >
-            <IonLabel position="floating">Min Price</IonLabel>
+            <IonLabel position="stacked">Min Price</IonLabel>
             <IonInput
               type="number"
               {...register('price.lower', {
@@ -96,7 +96,7 @@ const TuteeListingForm: React.FC<Props> = (props: Props) => {
             color={errors.price?.upper ? 'danger' : undefined}
             disabled={isSubmitting}
           >
-            <IonLabel position="floating">Max Price</IonLabel>
+            <IonLabel position="stacked">Max Price</IonLabel>
             <IonInput
               type="number"
               {...register('price.upper', {
@@ -129,7 +129,7 @@ const TuteeListingForm: React.FC<Props> = (props: Props) => {
             color={errors.subjects ? 'danger' : undefined}
             disabled={isSubmitting}
           >
-            <IonLabel position="floating">Subjects</IonLabel>
+            <IonLabel position="stacked">Subjects</IonLabel>
             <IonSelect
               multiple
               cancelText="Cancel"
@@ -163,7 +163,7 @@ const TuteeListingForm: React.FC<Props> = (props: Props) => {
             color={errors.level ? 'danger' : undefined}
             disabled={isSubmitting}
           >
-            <IonLabel position="floating">Education Level</IonLabel>
+            <IonLabel position="stacked">Education Level</IonLabel>
             <IonSelect
               cancelText="Cancel"
               okText="OK"
@@ -203,7 +203,7 @@ const TuteeListingForm: React.FC<Props> = (props: Props) => {
             color={errors.timeSlots ? 'danger' : undefined}
             disabled={isSubmitting}
           >
-            <IonLabel position="floating">Available Days</IonLabel>
+            <IonLabel position="stacked">Available Days</IonLabel>
             <IonSelect
               multiple
               cancelText="Cancel"
@@ -240,7 +240,7 @@ const TuteeListingForm: React.FC<Props> = (props: Props) => {
             color={errors.gender ? 'danger' : undefined}
             disabled={isSubmitting}
           >
-            <IonLabel position="floating">Gender</IonLabel>
+            <IonLabel position="stacked">Gender</IonLabel>
             <IonSelect
               cancelText="Cancel"
               okText="OK"
@@ -270,7 +270,7 @@ const TuteeListingForm: React.FC<Props> = (props: Props) => {
             color={errors.location ? 'danger' : undefined}
             disabled={isSubmitting}
           >
-            <IonLabel position="floating">Location</IonLabel>
+            <IonLabel position="stacked">Location</IonLabel>
             <IonSelect
               cancelText="Cancel"
               okText="OK"
@@ -300,7 +300,7 @@ const TuteeListingForm: React.FC<Props> = (props: Props) => {
             color={errors.description ? 'danger' : undefined}
             disabled={isSubmitting}
           >
-            <IonLabel position="floating">Description</IonLabel>
+            <IonLabel position="stacked">Description</IonLabel>
             <IonTextarea rows={5} {...register('description')} />
             {errors.description && (
               <IonNote slot="helper" color="danger">
