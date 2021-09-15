@@ -40,6 +40,7 @@ const updateTutorListing = async (ctx: Koa.Context): Promise<void> => {
 const deleteTutorListing = async (ctx: Koa.Context): Promise<void> => {
   await tutorListingService.deleteTutorListing(ctx.params.id);
   ctx.status = HttpStatus.OK;
+  ctx.body = {};
 };
 
 export default {

@@ -15,11 +15,11 @@ import {
 } from '@ionic/react';
 import { addOutline, search } from 'ionicons/icons';
 
-import TutorListingCard from '../../components/TutorListingCard';
-import { useGetTutorListingsQuery } from '../../api/tutor';
+import TuteeListingCard from '../../components/TuteeListingCard';
+import { useGetTuteeListingsQuery } from '../../api/tutee';
 
-const Tutors: React.FC = () => {
-  const { data: listings, refetch } = useGetTutorListingsQuery();
+const Tutees: React.FC = () => {
+  const { data: listings, refetch } = useGetTuteeListingsQuery();
 
   const doRefresh = (event: CustomEvent<RefresherEventDetail>) => {
     refetch();
@@ -37,9 +37,9 @@ const Tutors: React.FC = () => {
     <IonPage>
       <IonHeader>
         <IonToolbar>
-          <IonTitle>Tutor Listings</IonTitle>
+          <IonTitle>Tutee Listings</IonTitle>
           <IonButtons slot="primary" collapse>
-            <IonButton routerLink="/addtutor">
+            <IonButton routerLink="/addtutee">
               <IonIcon slot="icon-only" icon={addOutline} />
             </IonButton>
             <IonButton>
@@ -53,11 +53,11 @@ const Tutors: React.FC = () => {
           <IonRefresherContent />
         </IonRefresher>
         {listings?.map((listing) => (
-          <TutorListingCard listing={listing} />
+          <TuteeListingCard listing={listing} />
         ))}
       </IonContent>
     </IonPage>
   );
 };
 
-export default Tutors;
+export default Tutees;

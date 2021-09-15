@@ -6,7 +6,7 @@ type GetTutorListingResponse = TutorListing;
 type CreateTutorListingRequest = Omit<
   TutorListing,
   'id' | 'tutor' | 'createdAt'
->;
+> & { tutorId: number };
 type UpdateTutorListingRequest = Partial<
   Omit<TutorListing, 'tutor' | 'createdAt'>
 >;

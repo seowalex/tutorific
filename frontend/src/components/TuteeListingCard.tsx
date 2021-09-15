@@ -7,26 +7,30 @@ import {
   IonCardTitle,
   IonCol,
   IonGrid,
+  IonIcon,
+  IonItem,
+  IonLabel,
   IonRow,
 } from '@ionic/react';
+import { locationOutline } from 'ionicons/icons';
 
 import styles from './ListingCard.module.scss';
 import ProfileItem from './ProfileItem';
 import WeekDaysItem from './WeekDaysItem';
-import { TutorListing } from '../app/types';
+import { TuteeListing } from '../app/types';
 import { formatPriceRange, formatStringList } from '../app/utils';
 
 interface Props {
-  listing: TutorListing;
+  listing: TuteeListing;
 }
 
-const TutorListingCard: React.FC<Props> = (props: Props) => {
+const TuteeListingCard: React.FC<Props> = (props: Props) => {
   const { listing } = props;
 
   return (
-    <IonCard button routerLink={`/tutor/${listing.id}`}>
+    <IonCard button routerLink={`/tutee/${listing.id}`}>
       <IonCardHeader>
-        <ProfileItem profile={listing.tutor} />
+        <ProfileItem profile={listing.tutee} />
         <IonGrid className={styles.listingCardHeaderContainer}>
           <IonRow>
             <IonCol>
@@ -46,7 +50,7 @@ const TutorListingCard: React.FC<Props> = (props: Props) => {
           <IonRow>
             <IonCol>
               <IonCardSubtitle class="ion-text-start">
-                {formatStringList(listing.levels)}
+                {`${listing.level}\n${listing.gender} Student`}
               </IonCardSubtitle>
             </IonCol>
             <IonCol>
@@ -56,6 +60,10 @@ const TutorListingCard: React.FC<Props> = (props: Props) => {
         </IonGrid>
       </IonCardHeader>
       <WeekDaysItem timeSlots={listing.timeSlots} />
+      <IonItem color="none" lines="none">
+        <IonIcon icon={locationOutline} slot="start" />
+        <IonLabel className={styles.itemLabel}>{listing.location}</IonLabel>
+      </IonItem>
       <IonCardContent className={styles.listingCardDescription}>
         {listing.description}
       </IonCardContent>
@@ -63,4 +71,4 @@ const TutorListingCard: React.FC<Props> = (props: Props) => {
   );
 };
 
-export default TutorListingCard;
+export default TuteeListingCard;

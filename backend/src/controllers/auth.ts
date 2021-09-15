@@ -70,21 +70,6 @@ const login = async (ctx: Koa.Context): Promise<void> => {
 };
 
 const register = async (ctx: Koa.Context): Promise<void> => {
-  const { email } = ctx.request.body;
-  // TODO use class-validator instead
-  const duplicateUser = await userService.getUserByEmail(email);
-  if (duplicateUser) {
-    ctx.status = HttpStatus.CONFLICT;
-    ctx.body = {
-      errors: [
-        {
-          status: HttpStatus.CONFLICT,
-          detail: 'Email already in use',
-        },
-      ],
-    };
-    return;
-  }
   // TODO make atomic
   const user: User = ctx.request.body;
   const newUser = await userService.createUser({
@@ -100,6 +85,7 @@ const logout = async (ctx: Koa.Context): Promise<void> => {
   const isSuccess = await revokeRefreshToken(userId, refreshToken);
   if (isSuccess) {
     ctx.status = HttpStatus.OK;
+    ctx.body = {};
   } else {
     ctx.throw(HttpStatus.UNAUTHORIZED);
   }
