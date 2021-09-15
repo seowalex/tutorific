@@ -14,7 +14,7 @@ import {
 } from '@ionic/react';
 import React from 'react';
 import { NestedValue, SubmitHandler, useForm } from 'react-hook-form';
-import { Gender, Town, TuteeListing } from '../../app/types';
+import { Gender, Town, TuteeListing } from '../app/types';
 
 import styles from './TuteeListingForm.module.scss';
 

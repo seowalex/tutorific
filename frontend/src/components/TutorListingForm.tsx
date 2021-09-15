@@ -14,7 +14,7 @@ import {
 } from '@ionic/react';
 import React from 'react';
 import { NestedValue, SubmitHandler, useForm } from 'react-hook-form';
-import { TutorListing } from '../../app/types';
+import { TutorListing } from '../app/types';
 
 import styles from './TutorListingForm.module.scss';
 

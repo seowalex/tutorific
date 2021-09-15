@@ -20,7 +20,9 @@ import {
 import { useAppSelector } from '../../app/hooks';
 import { selectCurrentUserId } from '../../reducers/auth';
 
-import TutorListingForm, { TutorListingFormData } from './TutorListingForm';
+import TutorListingForm, {
+  TutorListingFormData,
+} from '../../components/TutorListingForm';
 
 const EditTutorListing: React.FC<RouteComponentProps<{ id: string }>> = ({
   match,
