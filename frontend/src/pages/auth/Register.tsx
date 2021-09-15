@@ -19,10 +19,12 @@ import {
 } from '@ionic/react';
 import { useHistory } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
+import type { FetchBaseQueryError } from '@reduxjs/toolkit/query/react';
 
 import { useAppDispatch } from '../../app/hooks';
 import { useRegisterMutation } from '../../api/auth';
 import { setCredentials } from '../../reducers/auth';
+import type { ErrorResponse } from '../../types/error';
 
 import styles from './Register.module.scss';
 
@@ -41,19 +43,37 @@ const Register: React.FC = () => {
     register,
     formState: { errors },
     handleSubmit,
+    setError,
     getValues,
   } = useForm<RegisterData>();
 
   const onSubmit = async (data: RegisterData) => {
     try {
-      const result = await registerUser(data);
+      const credentials = await registerUser(data).unwrap();
 
-      if ('data' in result && result.data) {
-        dispatch(setCredentials(result.data));
-        history.push('/tutors');
+      dispatch(setCredentials(credentials));
+      history.push('/tutors');
+    } catch (error) {
+      const { errors: errorResponse } = (error as FetchBaseQueryError)
+        .data as ErrorResponse;
+      const emailErrorMessage = errorResponse
+        .find((errorMessage) => errorMessage.field === 'email')
+        ?.detail.join(', ');
+      const passwordErrorMessage = errorResponse
+        .find((errorMessage) => errorMessage.field === 'password')
+        ?.detail.join(', ');
+
+      if (emailErrorMessage) {
+        setError('email', {
+          message: emailErrorMessage,
+        });
       }
-    } catch (err) {
-      console.log(err);
+
+      if (passwordErrorMessage) {
+        setError('password', {
+          message: passwordErrorMessage,
+        });
+      }
     }
   };
 

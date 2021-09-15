@@ -14,10 +14,12 @@ import {
 } from '@ionic/react';
 import { useHistory } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
+import type { FetchBaseQueryError } from '@reduxjs/toolkit/query/react';
 
 import { useAppDispatch } from '../../app/hooks';
 import { useLoginMutation } from '../../api/auth';
 import { setCredentials } from '../../reducers/auth';
+import type { ErrorResponse } from '../../types/error';
 
 import styles from './Login.module.scss';
 
@@ -35,18 +37,24 @@ const Login: React.FC = () => {
     register,
     formState: { errors },
     handleSubmit,
+    setError,
   } = useForm<LoginData>();
 
   const onSubmit = async (data: LoginData) => {
     try {
-      const result = await login(data);
+      const credentials = await login(data).unwrap();
 
-      if ('data' in result && result.data) {
-        dispatch(setCredentials(result.data));
-        history.push('/tutors');
-      }
-    } catch (err) {
-      console.log(err);
+      dispatch(setCredentials(credentials));
+      history.push('/tutors');
+    } catch (error) {
+      const { errors: errorResponse } = (error as FetchBaseQueryError)
+        .data as ErrorResponse;
+      const message = errorResponse
+        .flatMap((errorMessage) => errorMessage.detail)
+        .join(', ');
+
+      setError('email', { message });
+      setError('password', { message });
     }
   };
 

@@ -3,12 +3,14 @@ import type { RootState } from '../app/store';
 
 export interface AuthState {
   id: number | null;
+  profileId: number | null;
   token: string | null;
   refreshToken: string | null;
 }
 
 const initialState: AuthState = {
   id: null,
+  profileId: null,
   token: null,
   refreshToken: null,
 };
