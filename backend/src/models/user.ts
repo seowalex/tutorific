@@ -19,7 +19,7 @@ export default class User {
 
   @Column({ unique: true })
   @IsEmail()
-  @UniqueEmail('email', {
+  @UniqueEmail('id', {
     message: 'User with email $value already exists.',
   })
   email: string;

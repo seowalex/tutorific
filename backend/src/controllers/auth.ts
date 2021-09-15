@@ -85,6 +85,7 @@ const logout = async (ctx: Koa.Context): Promise<void> => {
   const isSuccess = await revokeRefreshToken(userId, refreshToken);
   if (isSuccess) {
     ctx.status = HttpStatus.OK;
+    ctx.body = {};
   } else {
     ctx.throw(HttpStatus.UNAUTHORIZED);
   }
