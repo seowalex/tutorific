@@ -47,9 +47,9 @@ const Login: React.FC = () => {
       dispatch(setCredentials(credentials));
       history.push('/tutors');
     } catch (error) {
-      const { errors: errorResponse } = (error as FetchBaseQueryError)
-        .data as ErrorResponse;
-      const message = errorResponse
+      const message = (
+        (error as FetchBaseQueryError).data as ErrorResponse
+      ).errors
         .flatMap((errorMessage) => errorMessage.detail)
         .join(', ');
 
@@ -66,9 +66,7 @@ const Login: React.FC = () => {
             <IonCol className="ion-no-padding">
               <div className={styles.brandHeader}>
                 <img className={styles.brandImg} src="/assets/icon/icon.png" />
-                <h1 className={`${styles.brandName} ion-text-center`}>
-                  Tutorific
-                </h1>
+                <h1 className={styles.brandName}>Tutorific</h1>
               </div>
               <form
                 className={styles.loginForm}

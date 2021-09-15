@@ -21,15 +21,19 @@ const slice = createSlice({
   reducers: {
     setCredentials: (_, action: PayloadAction<AuthState>) => action.payload,
     unsetCredentials: () => initialState,
+    setProfileId: (state, action: PayloadAction<number>) => {
+      state.profileId = action.payload;
+    },
     setToken: (state, action: PayloadAction<string>) => {
       state.token = action.payload;
     },
   },
 });
 
-export const { setCredentials, unsetCredentials, setToken } = slice.actions;
+export const { setCredentials, unsetCredentials, setProfileId, setToken } =
+  slice.actions;
 
 export const selectCurrentUser = (state: RootState) => state.auth;
-export const selectCurrentUserId = (state: RootState) => state.auth.id;
+export const selectCurrentUserId = (state: RootState) => state.auth.profileId;
 
 export default slice.reducer;

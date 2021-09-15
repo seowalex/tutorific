@@ -12,36 +12,73 @@ import {
   IonHeader,
   IonIcon,
   IonPage,
+  IonText,
   IonTitle,
   IonToolbar,
+  useIonToast,
 } from '@ionic/react';
-import { search } from 'ionicons/icons';
-import { useHistory } from 'react-router';
+import { useHistory, useRouteMatch } from 'react-router-dom';
+import type { FetchBaseQueryError } from '@reduxjs/toolkit/query/react';
+import { closeCircle, female, logOutOutline, male } from 'ionicons/icons';
 
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
-import { selectCurrentUser, unsetCredentials } from '../../reducers/auth';
 import { useLogoutMutation } from '../../api/auth';
-import { useGetUserQuery } from '../../api/user';
+import { useGetProfileQuery } from '../../api/profile';
+import { selectCurrentUser, unsetCredentials } from '../../reducers/auth';
+import type { ErrorResponse } from '../../types/error';
+import { Gender } from '../../types/profile';
 
 import styles from './Profile.module.scss';
 
+interface Params {
+  id: string;
+}
+
 const Profile: React.FC = () => {
-  const dispatch = useAppDispatch();
-  const user = useAppSelector(selectCurrentUser);
-  const [logout] = useLogoutMutation();
   const history = useHistory();
-  const { data: profile } = useGetUserQuery(user.id ?? 0);
+  const {
+    params: { id },
+  } = useRouteMatch<Params>();
+  const [present] = useIonToast();
+
+  const dispatch = useAppDispatch();
+  const [logout] = useLogoutMutation();
+  const user = useAppSelector(selectCurrentUser);
+  const { data: profile } = useGetProfileQuery(parseInt(id, 10));
+  const hasListings = false;
 
   const handleLogout = async () => {
     try {
       if (user.id && user.refreshToken) {
-        await logout({ id: user.id, refreshToken: user.refreshToken });
+        await logout({ id: user.id, refreshToken: user.refreshToken }).unwrap();
         dispatch(unsetCredentials());
         history.push('/login');
       }
-    } catch (err) {
-      console.log(err);
+    } catch (error) {
+      const message = (
+        (error as FetchBaseQueryError).data as ErrorResponse
+      ).errors
+        .flatMap((errorMessage) => errorMessage.detail)
+        .join(', ');
+
+      present({
+        message,
+        color: 'danger',
+        duration: 2000,
+      });
     }
+  };
+
+  const GenderIcon = () => {
+    if (profile?.gender === Gender.Male) {
+      return <IonIcon icon={male} />;
+    }
+
+    if (profile?.gender === Gender.Female) {
+      return <IonIcon icon={female} />;
+    }
+
+    return null;
   };
 
   return (
@@ -50,8 +87,8 @@ const Profile: React.FC = () => {
         <IonToolbar>
           <IonTitle>Profile</IonTitle>
           <IonButtons slot="primary" collapse>
-            <IonButton>
-              <IonIcon slot="icon-only" icon={search} />
+            <IonButton onClick={handleLogout}>
+              <IonIcon slot="icon-only" icon={logOutOutline} />
             </IonButton>
           </IonButtons>
         </IonToolbar>
@@ -61,39 +98,95 @@ const Profile: React.FC = () => {
           <IonToolbar>
             <IonTitle size="large">Profile</IonTitle>
             <IonButtons slot="primary">
-              <IonButton>
-                <IonIcon slot="icon-only" icon={search} />
+              <IonButton onClick={handleLogout}>
+                <IonIcon slot="icon-only" icon={logOutOutline} />
               </IonButton>
             </IonButtons>
           </IonToolbar>
         </IonHeader>
 
-        <div className="ion-margin">
-          <div className={styles.profileHeader}>
-            <IonAvatar className={styles.profileAvatar}>
-              <img src="https://ui-avatars.com/api/?name=Seow+Alex&background=random" />
-            </IonAvatar>
-            <h1 className={styles.profileName}>{profile?.name}</h1>
-            <h2>{profile?.gender}</h2>
+        <div
+          className={`${styles.profileContainer} ${
+            hasListings ? '' : styles.empty
+          }`}
+        >
+          <div className="ion-margin">
+            <div className={styles.profileHeader}>
+              <IonAvatar className={styles.profileAvatar}>
+                <img src="https://ui-avatars.com/api/?name=Seow+Alex&background=random" />
+              </IonAvatar>
+              <div>
+                <h1 className="ion-no-margin">{profile?.name}</h1>
+                <IonText color="dark">
+                  {profile?.gender} <GenderIcon />
+                </IonText>
+              </div>
+            </div>
+
+            <p>{profile?.description}</p>
           </div>
 
-          <p>{profile?.description}</p>
+          {hasListings ? (
+            <>
+              <IonCard>
+                <IonCardHeader>
+                  <IonCardTitle>Math, Science, English</IonCardTitle>
+                  <IonCardSubtitle>Upper Primary</IonCardSubtitle>
+                </IonCardHeader>
+
+                <IonCardContent>
+                  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi
+                  convallis ullamcorper tristique. Duis accumsan rhoncus dolor
+                  eget laoreet.
+                </IonCardContent>
+              </IonCard>
+
+              <IonCard>
+                <IonCardHeader>
+                  <IonCardTitle>Math, Science, English</IonCardTitle>
+                  <IonCardSubtitle>Upper Primary</IonCardSubtitle>
+                </IonCardHeader>
+
+                <IonCardContent>
+                  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi
+                  convallis ullamcorper tristique. Duis accumsan rhoncus dolor
+                  eget laoreet.
+                </IonCardContent>
+              </IonCard>
+
+              <IonCard>
+                <IonCardHeader>
+                  <IonCardTitle>Math, Science, English</IonCardTitle>
+                  <IonCardSubtitle>Upper Primary</IonCardSubtitle>
+                </IonCardHeader>
+
+                <IonCardContent>
+                  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi
+                  convallis ullamcorper tristique. Duis accumsan rhoncus dolor
+                  eget laoreet.
+                </IonCardContent>
+              </IonCard>
+
+              <IonCard>
+                <IonCardHeader>
+                  <IonCardTitle>Math, Science, English</IonCardTitle>
+                  <IonCardSubtitle>Upper Primary</IonCardSubtitle>
+                </IonCardHeader>
+
+                <IonCardContent>
+                  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi
+                  convallis ullamcorper tristique. Duis accumsan rhoncus dolor
+                  eget laoreet.
+                </IonCardContent>
+              </IonCard>
+            </>
+          ) : (
+            <div className={styles.emptyMessage}>
+              <IonIcon className={styles.closeIcon} icon={closeCircle} />
+              <p className="ion-no-margin">You have no tutor/tutee listings.</p>
+            </div>
+          )}
         </div>
-
-        <IonButton onClick={handleLogout}>Logout</IonButton>
-
-        <IonCard>
-          <IonCardHeader>
-            <IonCardTitle>Math, Science, English</IonCardTitle>
-            <IonCardSubtitle>Upper Primary</IonCardSubtitle>
-          </IonCardHeader>
-
-          <IonCardContent>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi
-            convallis ullamcorper tristique. Duis accumsan rhoncus dolor eget
-            laoreet.
-          </IonCardContent>
-        </IonCard>
       </IonContent>
     </IonPage>
   );
