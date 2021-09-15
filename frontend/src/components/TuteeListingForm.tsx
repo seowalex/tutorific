@@ -5,7 +5,6 @@ import {
   IonItem,
   IonLabel,
   IonNote,
-  IonRange,
   IonRow,
   IonSelect,
   IonSelectOption,
@@ -16,7 +15,7 @@ import React from 'react';
 import { NestedValue, SubmitHandler, useForm } from 'react-hook-form';
 import { Gender, Town, TuteeListing } from '../app/types';
 
-import styles from './TuteeListingForm.module.scss';
+import styles from './ListingForm.module.scss';
 
 export interface TuteeListingFormData {
   price: {
@@ -42,7 +41,6 @@ const TuteeListingForm: React.FC<Props> = (props: Props) => {
   const {
     register,
     formState: { errors, isSubmitting },
-    watch,
     handleSubmit,
     getValues,
   } = useForm<TuteeListingFormData>({
@@ -61,11 +59,10 @@ const TuteeListingForm: React.FC<Props> = (props: Props) => {
         }
       : {},
   });
-  // const watchPrice = watch('price', { lower: 0, upper: 0 });
 
   return (
     <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
-      <IonRow>
+      <IonRow className={styles.priceInputsRow}>
         <IonCol>
           <IonItem
             fill="outline"

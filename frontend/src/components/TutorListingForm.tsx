@@ -15,7 +15,7 @@ import React from 'react';
 import { NestedValue, SubmitHandler, useForm } from 'react-hook-form';
 import { TutorListing } from '../app/types';
 
-import styles from './TutorListingForm.module.scss';
+import styles from './ListingForm.module.scss';
 
 export interface TutorListingFormData {
   price: {
