@@ -5,7 +5,6 @@ import {
   IonItem,
   IonLabel,
   IonNote,
-  IonRange,
   IonRow,
   IonSelect,
   IonSelectOption,
@@ -40,7 +39,6 @@ const TutorListingForm: React.FC<Props> = (props: Props) => {
   const {
     register,
     formState: { errors, isSubmitting },
-    watch,
     handleSubmit,
     getValues,
   } = useForm<TutorListingFormData>({
@@ -57,11 +55,10 @@ const TutorListingForm: React.FC<Props> = (props: Props) => {
         }
       : {},
   });
-  // const watchPrice = watch('price', { lower: 0, upper: 0 });
 
   return (
     <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
-      <IonRow>
+      <IonRow className={styles.priceInputsRow}>
         <IonCol>
           <IonItem
             fill="outline"
@@ -69,7 +66,7 @@ const TutorListingForm: React.FC<Props> = (props: Props) => {
             color={errors.price?.lower ? 'danger' : undefined}
             disabled={isSubmitting}
           >
-            <IonLabel position="floating">Min Price</IonLabel>
+            <IonLabel position="stacked">Min Price</IonLabel>
             <IonInput
               type="number"
               {...register('price.lower', {
@@ -95,7 +92,7 @@ const TutorListingForm: React.FC<Props> = (props: Props) => {
             color={errors.price?.upper ? 'danger' : undefined}
             disabled={isSubmitting}
           >
-            <IonLabel position="floating">Max Price</IonLabel>
+            <IonLabel position="stacked">Max Price</IonLabel>
             <IonInput
               type="number"
               {...register('price.upper', {
@@ -128,7 +125,7 @@ const TutorListingForm: React.FC<Props> = (props: Props) => {
             color={errors.subjects ? 'danger' : undefined}
             disabled={isSubmitting}
           >
-            <IonLabel position="floating">Subjects</IonLabel>
+            <IonLabel position="stacked">Subjects</IonLabel>
             <IonSelect
               multiple
               cancelText="Cancel"
@@ -162,7 +159,7 @@ const TutorListingForm: React.FC<Props> = (props: Props) => {
             color={errors.levels ? 'danger' : undefined}
             disabled={isSubmitting}
           >
-            <IonLabel position="floating">Education Levels</IonLabel>
+            <IonLabel position="stacked">Education Levels</IonLabel>
             <IonSelect
               multiple
               cancelText="Cancel"
@@ -207,7 +204,7 @@ const TutorListingForm: React.FC<Props> = (props: Props) => {
             color={errors.timeSlots ? 'danger' : undefined}
             disabled={isSubmitting}
           >
-            <IonLabel position="floating">Available Days</IonLabel>
+            <IonLabel position="stacked">Available Days</IonLabel>
             <IonSelect
               multiple
               cancelText="Cancel"
@@ -244,7 +241,7 @@ const TutorListingForm: React.FC<Props> = (props: Props) => {
             color={errors.description ? 'danger' : undefined}
             disabled={isSubmitting}
           >
-            <IonLabel position="floating">Description</IonLabel>
+            <IonLabel position="stacked">Description</IonLabel>
             <IonTextarea rows={5} {...register('description')} />
             {errors.description && (
               <IonNote slot="helper" color="danger">
@@ -257,14 +254,6 @@ const TutorListingForm: React.FC<Props> = (props: Props) => {
       <IonButton expand="block" type="submit" disabled={isSubmitting}>
         {isSubmitting ? <IonSpinner /> : submitButtonText}
       </IonButton>
-      {/* <IonRange
-        dualKnobs
-        min={0} 
-        max={150} 
-        pin 
-        value={watchPrice} 
-        {...register('price')}
-      /> */}
     </form>
   );
 };

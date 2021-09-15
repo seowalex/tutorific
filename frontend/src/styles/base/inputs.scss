@@ -7,3 +7,7 @@ input[type=number]::-webkit-outer-spin-button {
 input[type=number] {
   -moz-appearance: textfield !important;
 }
+
+ion-select::part(text) {
+  white-space: normal;
+}
