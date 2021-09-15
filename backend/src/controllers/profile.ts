@@ -24,9 +24,10 @@ const updateProfile = async (ctx: Koa.Context): Promise<void> => {
 };
 
 const createProfile = async (ctx: Koa.Context): Promise<void> => {
-  const { userId, email, profileId } = ctx.state.user;
+  const { userId, email } = ctx.state.user;
   // disallow creating profile more than once
-  if (profileId != null) {
+  const user = await userService.getUser(userId);
+  if (user?.profile !== null) {
     ctx.throw(HttpStatus.CONFLICT);
   }
   const newProfile = await profileService.createProfile(ctx.request.body);
