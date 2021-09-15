@@ -2,6 +2,7 @@ import Koa from 'koa';
 import HttpStatus from 'http-status-codes';
 import profileService from '../services/profile';
 import userService from '../services/user';
+import authService from '../utils/auth';
 
 const getProfile = async (ctx: Koa.Context): Promise<void> => {
   const profile = await profileService.getProfile(ctx.params.id);
@@ -23,16 +24,22 @@ const updateProfile = async (ctx: Koa.Context): Promise<void> => {
 };
 
 const createProfile = async (ctx: Koa.Context): Promise<void> => {
-  const { userId } = ctx.state.user;
+  const { userId, email } = ctx.state.user;
+  // disallow creating profile more than once
   const user = await userService.getUser(userId);
-  if (!user) {
-    ctx.throw(HttpStatus.INTERNAL_SERVER_ERROR);
+  if (user?.profile !== null) {
+    ctx.throw(HttpStatus.CONFLICT);
   }
   const newProfile = await profileService.createProfile(ctx.request.body);
-  user.profile = newProfile;
-  await userService.updateUser(userId, user);
+  await userService.updateUser(userId, {
+    profile: newProfile,
+  });
+
+  // create new jwt and pass to FE
+  const newJwt = authService.generateJwtToken(userId, email, newProfile.id);
   ctx.body = {
     profileId: newProfile.id,
+    jwtToken: newJwt,
   };
 };
 
