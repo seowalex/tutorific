@@ -36,7 +36,11 @@ const createProfile = async (ctx: Koa.Context): Promise<void> => {
   });
 
   // create new jwt and pass to FE
-  const newJwt = authService.generateJwtToken(userId, email, newProfile.id);
+  const newJwt = await authService.generateJwtToken(
+    userId,
+    email,
+    newProfile.id
+  );
   ctx.body = {
     profileId: newProfile.id,
     jwtToken: newJwt,
