@@ -63,4 +63,6 @@ export type QueryTutorListing = {
   subjects?: string[];
   levels?: Level[];
   gender?: Gender;
+  skip?: number;
+  limit?: number;
 };

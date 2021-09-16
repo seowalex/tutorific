@@ -15,7 +15,7 @@ import classValidate from '../utils/validate';
 
 const getTuteeListings = async (
   queries: QueryTuteeListing
-): Promise<Array<TuteeListing>> => {
+): Promise<[Array<TuteeListing>, number]> => {
   const conditions: FindConditions<TuteeListing> = {};
   if (queries.priceMin) {
     conditions.priceMin = MoreThanOrEqual(Number(queries.priceMin));
@@ -55,9 +55,12 @@ const getTuteeListings = async (
     conditions.gender = queries.gender;
   }
 
-  return getRepository(TuteeListing).find({
+  return getRepository(TuteeListing).findAndCount({
     relations: ['tutee'],
     where: conditions,
+    cache: true,
+    skip: queries.skip ?? 0,
+    take: queries.limit ?? 10,
   });
 };
 

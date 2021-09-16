@@ -70,4 +70,6 @@ export type QueryTuteeListing = {
   levels?: Level[];
   gender?: Gender;
   locations?: Town[];
+  skip?: number;
+  limit?: number;
 };

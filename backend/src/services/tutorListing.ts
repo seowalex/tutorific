@@ -14,7 +14,7 @@ import TutorListing, {
 
 const getTutorListings = async (
   queries: QueryTutorListing
-): Promise<Array<TutorListing>> => {
+): Promise<[Array<TutorListing>, number]> => {
   const conditions: FindConditions<TutorListing> = {};
   if (queries.priceMin) {
     conditions.priceMin = MoreThanOrEqual(Number(queries.priceMin));
@@ -51,9 +51,12 @@ const getTutorListings = async (
     };
   }
 
-  return getRepository(TutorListing).find({
+  return getRepository(TutorListing).findAndCount({
     relations: ['tutor'],
     where: conditions,
+    cache: true,
+    skip: queries.skip ?? 0,
+    take: queries.limit ?? 10,
   });
 };
 const getTutorListing = async (id: number): Promise<TutorListing | undefined> =>
