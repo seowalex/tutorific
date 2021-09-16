@@ -7,7 +7,7 @@ import {
 } from 'typeorm';
 import { IsNotEmpty, Min } from 'class-validator';
 import Profile from './profile';
-import { Level } from '../utils/model';
+import { Gender, Level } from '../utils/model';
 import { IsBiggerThan } from '../validations/common';
 
 @Entity()
@@ -56,3 +56,13 @@ export default class TutorListing {
 
 export type UpdateTutorListing = Partial<TutorListing>;
 export type CreateTutorListing = Omit<TutorListing, 'id' | 'createdAt'>;
+export type QueryTutorListing = {
+  priceMin?: number;
+  priceMax?: number;
+  timeSlots?: number[];
+  subjects?: string[];
+  levels?: Level[];
+  gender?: Gender;
+  skip?: number;
+  limit?: number;
+};
