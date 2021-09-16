@@ -3,7 +3,7 @@ import HttpStatus from 'http-status-codes';
 import tuteeListingService from '../services/tuteeListing';
 
 const getTuteeListings = async (ctx: Koa.Context): Promise<void> => {
-  const tuteeListings = await tuteeListingService.getTuteeListings();
+  const tuteeListings = await tuteeListingService.getTuteeListings(ctx.query);
   ctx.body = { data: tuteeListings };
 };
 

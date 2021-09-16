@@ -62,3 +62,12 @@ export default class TuteeListing {
 
 export type UpdateTuteeListing = Partial<TuteeListing>;
 export type CreateTuteeListing = Omit<TuteeListing, 'id' | 'createdAt'>;
+export type QueryTuteeListing = {
+  priceMin?: Number;
+  priceMax?: Number;
+  timeSlots?: Number[];
+  subjects?: string[];
+  levels?: Level[];
+  gender?: Gender;
+  locations?: Town[];
+};
