@@ -57,9 +57,9 @@ export default class TutorListing {
 export type UpdateTutorListing = Partial<TutorListing>;
 export type CreateTutorListing = Omit<TutorListing, 'id' | 'createdAt'>;
 export type QueryTutorListing = {
-  priceMin?: Number;
-  priceMax?: Number;
-  timeSlots?: Number[];
+  priceMin?: number;
+  priceMax?: number;
+  timeSlots?: number[];
   subjects?: string[];
   levels?: Level[];
   gender?: Gender;

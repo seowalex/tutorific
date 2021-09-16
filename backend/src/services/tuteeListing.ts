@@ -48,7 +48,10 @@ const getTuteeListings = async (
   }
 
   if (queries.locations) {
-    conditions.location = In(queries.locations);
+    conditions.location =
+      typeof queries.locations === 'string'
+        ? In([queries.locations])
+        : In(queries.locations);
   }
 
   if (queries.gender) {
@@ -56,7 +59,6 @@ const getTuteeListings = async (
   }
 
   return getRepository(TuteeListing).findAndCount({
-    relations: ['tutee'],
     where: conditions,
     cache: true,
     skip: queries.skip ?? 0,
