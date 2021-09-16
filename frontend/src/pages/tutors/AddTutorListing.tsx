@@ -17,7 +17,9 @@ import { useCreateTutorListingMutation } from '../../api/tutor';
 import { useAppSelector } from '../../app/hooks';
 import { selectCurrentUserId } from '../../reducers/auth';
 
-import TutorListingForm, { TutorListingFormData } from './TutorListingForm';
+import TutorListingForm, {
+  TutorListingFormData,
+} from '../../components/TutorListingForm';
 
 const AddTutorListing: React.FC = () => {
   const userId = useAppSelector(selectCurrentUserId);

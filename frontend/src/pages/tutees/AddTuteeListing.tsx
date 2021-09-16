@@ -17,7 +17,9 @@ import { useCreateTuteeListingMutation } from '../../api/tutee';
 import { useAppSelector } from '../../app/hooks';
 import { selectCurrentUserId } from '../../reducers/auth';
 
-import TuteeListingForm, { TuteeListingFormData } from './TuteeListingForm';
+import TuteeListingForm, {
+  TuteeListingFormData,
+} from '../../components/TuteeListingForm';
 
 const AddTuteeListing: React.FC = () => {
   const userId = useAppSelector(selectCurrentUserId);

@@ -5,7 +5,6 @@ import {
   IonItem,
   IonLabel,
   IonNote,
-  IonRange,
   IonRow,
   IonSelect,
   IonSelectOption,
@@ -14,11 +13,11 @@ import {
 } from '@ionic/react';
 import React from 'react';
 import { NestedValue, SubmitHandler, useForm } from 'react-hook-form';
-import { TutorListing } from '../../app/types';
+import { Gender, Town, TuteeListing } from '../app/types';
 
-import styles from './TutorListingForm.module.scss';
+import styles from './ListingForm.module.scss';
 
-export interface TutorListingFormData {
+export interface TuteeListingFormData {
   price: {
     lower: number;
     upper: number;
@@ -26,24 +25,25 @@ export interface TutorListingFormData {
   description: string;
   timeSlots: NestedValue<number[]>;
   subjects: NestedValue<string[]>;
-  levels: NestedValue<string[]>;
+  level: string;
+  gender: Gender;
+  location: Town;
 }
 
 interface Props {
-  onSubmit: SubmitHandler<TutorListingFormData>;
+  onSubmit: SubmitHandler<TuteeListingFormData>;
   submitButtonText?: string;
-  currentData?: TutorListing;
+  currentData?: TuteeListing;
 }
 
-const TutorListingForm: React.FC<Props> = (props: Props) => {
+const TuteeListingForm: React.FC<Props> = (props: Props) => {
   const { onSubmit, submitButtonText, currentData } = props;
   const {
     register,
     formState: { errors, isSubmitting },
-    watch,
     handleSubmit,
     getValues,
-  } = useForm<TutorListingFormData>({
+  } = useForm<TuteeListingFormData>({
     defaultValues: currentData
       ? {
           price: {
@@ -53,15 +53,16 @@ const TutorListingForm: React.FC<Props> = (props: Props) => {
           description: currentData.description,
           timeSlots: currentData.timeSlots,
           subjects: currentData.subjects,
-          levels: currentData.levels,
+          level: currentData.level,
+          gender: currentData.gender,
+          location: currentData.location,
         }
       : {},
   });
-  // const watchPrice = watch('price', { lower: 0, upper: 0 });
 
   return (
     <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
-      <IonRow>
+      <IonRow className={styles.priceInputsRow}>
         <IonCol>
           <IonItem
             fill="outline"
@@ -69,7 +70,7 @@ const TutorListingForm: React.FC<Props> = (props: Props) => {
             color={errors.price?.lower ? 'danger' : undefined}
             disabled={isSubmitting}
           >
-            <IonLabel position="floating">Min Price</IonLabel>
+            <IonLabel position="stacked">Min Price</IonLabel>
             <IonInput
               type="number"
               {...register('price.lower', {
@@ -95,7 +96,7 @@ const TutorListingForm: React.FC<Props> = (props: Props) => {
             color={errors.price?.upper ? 'danger' : undefined}
             disabled={isSubmitting}
           >
-            <IonLabel position="floating">Max Price</IonLabel>
+            <IonLabel position="stacked">Max Price</IonLabel>
             <IonInput
               type="number"
               {...register('price.upper', {
@@ -128,7 +129,7 @@ const TutorListingForm: React.FC<Props> = (props: Props) => {
             color={errors.subjects ? 'danger' : undefined}
             disabled={isSubmitting}
           >
-            <IonLabel position="floating">Subjects</IonLabel>
+            <IonLabel position="stacked">Subjects</IonLabel>
             <IonSelect
               multiple
               cancelText="Cancel"
@@ -159,20 +160,15 @@ const TutorListingForm: React.FC<Props> = (props: Props) => {
           <IonItem
             fill="outline"
             lines="full"
-            color={errors.levels ? 'danger' : undefined}
+            color={errors.level ? 'danger' : undefined}
             disabled={isSubmitting}
           >
-            <IonLabel position="floating">Education Levels</IonLabel>
+            <IonLabel position="stacked">Education Level</IonLabel>
             <IonSelect
-              multiple
               cancelText="Cancel"
               okText="OK"
-              {...register('levels', {
-                required: 'Please select at least one level',
-                minLength: {
-                  value: 1,
-                  message: 'Please select at least one level',
-                },
+              {...register('level', {
+                required: 'Please select a level',
               })}
             >
               <IonSelectOption value="Lower Primary">
@@ -191,9 +187,9 @@ const TutorListingForm: React.FC<Props> = (props: Props) => {
                 Junior College
               </IonSelectOption>
             </IonSelect>
-            {errors.levels && (
+            {errors.level && (
               <IonNote slot="helper" color="danger">
-                {errors.levels.message}
+                {errors.level.message}
               </IonNote>
             )}
           </IonItem>
@@ -207,7 +203,7 @@ const TutorListingForm: React.FC<Props> = (props: Props) => {
             color={errors.timeSlots ? 'danger' : undefined}
             disabled={isSubmitting}
           >
-            <IonLabel position="floating">Available Days</IonLabel>
+            <IonLabel position="stacked">Available Days</IonLabel>
             <IonSelect
               multiple
               cancelText="Cancel"
@@ -241,10 +237,70 @@ const TutorListingForm: React.FC<Props> = (props: Props) => {
           <IonItem
             fill="outline"
             lines="full"
+            color={errors.gender ? 'danger' : undefined}
+            disabled={isSubmitting}
+          >
+            <IonLabel position="stacked">Gender</IonLabel>
+            <IonSelect
+              cancelText="Cancel"
+              okText="OK"
+              {...register('gender', {
+                required: 'Please select a gender',
+              })}
+            >
+              <IonSelectOption value="Male">Male</IonSelectOption>
+              <IonSelectOption value="Female">Female</IonSelectOption>
+              <IonSelectOption value="Prefer not to say">
+                Prefer not to say
+              </IonSelectOption>
+            </IonSelect>
+            {errors.gender && (
+              <IonNote slot="helper" color="danger">
+                {errors.gender.message}
+              </IonNote>
+            )}
+          </IonItem>
+        </IonCol>
+      </IonRow>
+      <IonRow>
+        <IonCol>
+          <IonItem
+            fill="outline"
+            lines="full"
+            color={errors.location ? 'danger' : undefined}
+            disabled={isSubmitting}
+          >
+            <IonLabel position="stacked">Location</IonLabel>
+            <IonSelect
+              cancelText="Cancel"
+              okText="OK"
+              {...register('location', {
+                required: 'Please select a location',
+              })}
+            >
+              {Object.values(Town).map((value) => (
+                <IonSelectOption value={value.toString()}>
+                  {value.toString()}
+                </IonSelectOption>
+              ))}
+            </IonSelect>
+            {errors.location && (
+              <IonNote slot="helper" color="danger">
+                {errors.location.message}
+              </IonNote>
+            )}
+          </IonItem>
+        </IonCol>
+      </IonRow>
+      <IonRow>
+        <IonCol>
+          <IonItem
+            fill="outline"
+            lines="full"
             color={errors.description ? 'danger' : undefined}
             disabled={isSubmitting}
           >
-            <IonLabel position="floating">Description</IonLabel>
+            <IonLabel position="stacked">Description</IonLabel>
             <IonTextarea rows={5} {...register('description')} />
             {errors.description && (
               <IonNote slot="helper" color="danger">
@@ -269,9 +325,9 @@ const TutorListingForm: React.FC<Props> = (props: Props) => {
   );
 };
 
-TutorListingForm.defaultProps = {
+TuteeListingForm.defaultProps = {
   submitButtonText: 'Submit',
   currentData: undefined,
 };
 
-export default TutorListingForm;
+export default TuteeListingForm;
