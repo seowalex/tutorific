@@ -3,7 +3,7 @@ import HttpStatus from 'http-status-codes';
 import tutorListingService from '../services/tutorListing';
 
 const getTutorListings = async (ctx: Koa.Context): Promise<void> => {
-  const tutorListings = await tutorListingService.getTutorListings();
+  const tutorListings = await tutorListingService.getTutorListings(ctx.query);
   ctx.body = { data: tutorListings };
 };
 
