@@ -29,6 +29,7 @@ import EditTutorListing from './pages/tutors/EditTutorListing';
 import TuteeListing from './pages/tutees/TuteeListing';
 import AddTuteeListing from './pages/tutees/AddTuteeListing';
 import EditTuteeListing from './pages/tutees/EditTuteeListing';
+import FilterTutorListings from './pages/tutors/FilterTutorListings';
 
 const App: React.FC = () => {
   const userId = useAppSelector(selectCurrentUserId);
@@ -77,6 +78,9 @@ const App: React.FC = () => {
                     <AddTutorListing />
                   </Route>
                   <Route path="/edittutor/:id" component={EditTutorListing} />
+                  <Route path="/searchtutor">
+                    <FilterTutorListings />
+                  </Route>
                   <Route path="/tutees">
                     <Tutees />
                   </Route>

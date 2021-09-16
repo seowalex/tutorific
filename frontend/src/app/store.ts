@@ -20,6 +20,7 @@ import storage from 'redux-persist/lib/storage';
 import api from '../api/base';
 /* eslint-disable import/no-cycle */
 import auth from '../reducers/auth';
+import tutorFilters from '../reducers/tutorFilters';
 /* eslint-enable import/no-cycle */
 
 const persistConfig = {
@@ -31,6 +32,7 @@ const persistConfig = {
 const rootReducer = combineReducers({
   [api.reducerPath]: api.reducer,
   auth,
+  tutorFilters,
 });
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 

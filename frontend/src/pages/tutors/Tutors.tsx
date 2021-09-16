@@ -17,8 +17,11 @@ import { addOutline, search } from 'ionicons/icons';
 
 import TutorListingCard from '../../components/TutorListingCard';
 import { useGetTutorListingsQuery } from '../../api/tutor';
+import { selectTutorFilters } from '../../reducers/tutorFilters';
+import { useAppSelector } from '../../app/hooks';
 
 const Tutors: React.FC = () => {
+  const filters = useAppSelector(selectTutorFilters);
   const { data: listings, refetch } = useGetTutorListingsQuery();
 
   const doRefresh = (event: CustomEvent<RefresherEventDetail>) => {
@@ -42,7 +45,7 @@ const Tutors: React.FC = () => {
             <IonButton routerLink="/addtutor">
               <IonIcon slot="icon-only" icon={addOutline} />
             </IonButton>
-            <IonButton>
+            <IonButton routerLink="/searchtutor">
               <IonIcon slot="icon-only" icon={search} />
             </IonButton>
           </IonButtons>
