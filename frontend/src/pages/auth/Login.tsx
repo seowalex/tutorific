@@ -29,9 +29,6 @@ interface LoginData {
 }
 
 const Login: React.FC = () => {
-  const dispatch = useAppDispatch();
-  const [login, { isLoading }] = useLoginMutation();
-
   const history = useHistory();
   const {
     register,
@@ -39,6 +36,9 @@ const Login: React.FC = () => {
     handleSubmit,
     setError,
   } = useForm<LoginData>();
+
+  const dispatch = useAppDispatch();
+  const [login, { isLoading }] = useLoginMutation();
 
   const onSubmit = async (data: LoginData) => {
     try {

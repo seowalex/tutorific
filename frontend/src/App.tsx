@@ -30,7 +30,9 @@ import AddTuteeListing from './pages/tutees/AddTuteeListing';
 import EditTuteeListing from './pages/tutees/EditTuteeListing';
 
 import Chat from './pages/Chat';
+
 import Profile from './pages/profile/Profile';
+import EditProfile from './pages/profile/EditProfile';
 
 import './styles/main.scss';
 
@@ -106,8 +108,11 @@ const App: React.FC = () => {
                   <Route path="/chat">
                     <Chat />
                   </Route>
-                  <Route path="/profile/:id">
+                  <Route exact path="/profile/:id">
                     <Profile />
+                  </Route>
+                  <Route exact path="/profile/:id/edit">
+                    <EditProfile />
                   </Route>
                   <Redirect exact path="/" to="/tutors" />
                   <Redirect to="/tutors" />

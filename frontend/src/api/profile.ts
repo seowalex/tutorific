@@ -7,6 +7,7 @@ const extendedApi = api.injectEndpoints({
       query: (id) => ({
         url: `profile/${id}`,
       }),
+      providesTags: (result, error, arg) => [{ type: 'Profile', id: arg }],
       transformResponse: (response: { data: Profile }) => response.data,
     }),
     updateProfile: builder.mutation<
@@ -18,6 +19,9 @@ const extendedApi = api.injectEndpoints({
         method: 'PUT',
         body,
       }),
+      invalidatesTags: (result, error, arg) => [
+        { type: 'Profile', id: arg.id },
+      ],
     }),
   }),
 });

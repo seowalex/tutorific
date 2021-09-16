@@ -35,9 +35,6 @@ interface RegisterData {
 }
 
 const Register: React.FC = () => {
-  const dispatch = useAppDispatch();
-  const [registerUser, { isLoading }] = useRegisterMutation();
-
   const history = useHistory();
   const {
     register,
@@ -46,6 +43,9 @@ const Register: React.FC = () => {
     setError,
     getValues,
   } = useForm<RegisterData>();
+
+  const dispatch = useAppDispatch();
+  const [registerUser, { isLoading }] = useRegisterMutation();
 
   const onSubmit = async (data: RegisterData) => {
     try {

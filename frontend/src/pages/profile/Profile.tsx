@@ -19,7 +19,13 @@ import {
 } from '@ionic/react';
 import { useHistory, useRouteMatch } from 'react-router-dom';
 import type { FetchBaseQueryError } from '@reduxjs/toolkit/query/react';
-import { closeCircle, female, logOutOutline, male } from 'ionicons/icons';
+import {
+  closeCircle,
+  createOutline,
+  female,
+  logOutOutline,
+  male,
+} from 'ionicons/icons';
 
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { useLogoutMutation } from '../../api/auth';
@@ -87,6 +93,11 @@ const Profile: React.FC = () => {
         <IonToolbar>
           <IonTitle>Profile</IonTitle>
           <IonButtons slot="primary" collapse>
+            {user.profileId === parseInt(id, 10) ? (
+              <IonButton routerLink={`/profile/${id}/edit`}>
+                <IonIcon slot="icon-only" icon={createOutline} />
+              </IonButton>
+            ) : null}
             <IonButton onClick={handleLogout}>
               <IonIcon slot="icon-only" icon={logOutOutline} />
             </IonButton>
@@ -98,6 +109,11 @@ const Profile: React.FC = () => {
           <IonToolbar>
             <IonTitle size="large">Profile</IonTitle>
             <IonButtons slot="primary">
+              {user.profileId === parseInt(id, 10) ? (
+                <IonButton routerLink={`/profile/${id}/edit`}>
+                  <IonIcon slot="icon-only" icon={createOutline} />
+                </IonButton>
+              ) : null}
               <IonButton onClick={handleLogout}>
                 <IonIcon slot="icon-only" icon={logOutOutline} />
               </IonButton>
@@ -105,15 +121,15 @@ const Profile: React.FC = () => {
           </IonToolbar>
         </IonHeader>
 
-        <div
-          className={`${styles.profileContainer} ${
-            hasListings ? '' : styles.empty
-          }`}
-        >
+        <div className={hasListings ? '' : styles.emptyProfileContainer}>
           <div className="ion-margin">
             <div className={styles.profileHeader}>
               <IonAvatar className={styles.profileAvatar}>
-                <img src="https://ui-avatars.com/api/?name=Seow+Alex&background=random" />
+                <img
+                  src={`https://ui-avatars.com/api/?name=${encodeURIComponent(
+                    profile?.name ?? ''
+                  )}&background=random`}
+                />
               </IonAvatar>
               <div>
                 <h1 className="ion-no-margin">{profile?.name}</h1>
