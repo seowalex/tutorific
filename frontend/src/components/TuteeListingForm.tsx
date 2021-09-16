@@ -13,7 +13,14 @@ import {
 } from '@ionic/react';
 import React from 'react';
 import { NestedValue, SubmitHandler, useForm } from 'react-hook-form';
-import { Gender, Town, TuteeListing } from '../app/types';
+import {
+  Gender,
+  Level,
+  Subject,
+  Town,
+  TuteeListing,
+  WeekDay,
+} from '../app/types';
 
 import styles from './ListingForm.module.scss';
 
@@ -25,7 +32,7 @@ export interface TuteeListingFormData {
   description: string;
   timeSlots: NestedValue<number[]>;
   subjects: NestedValue<string[]>;
-  level: string;
+  level: Level;
   gender: Gender;
   location: Town;
 }
@@ -142,10 +149,11 @@ const TuteeListingForm: React.FC<Props> = (props: Props) => {
                 },
               })}
             >
-              <IonSelectOption value="Math">Mathematics</IonSelectOption>
-              <IonSelectOption value="Science">Science</IonSelectOption>
-              <IonSelectOption value="English">English</IonSelectOption>
-              <IonSelectOption value="Chinese">Chinese</IonSelectOption>
+              {Object.keys(Subject).map((key) => (
+                <IonSelectOption value={key}>
+                  {Object(Subject)[key]}
+                </IonSelectOption>
+              ))}
             </IonSelect>
             {errors.subjects && (
               <IonNote slot="helper" color="danger">
@@ -171,21 +179,9 @@ const TuteeListingForm: React.FC<Props> = (props: Props) => {
                 required: 'Please select a level',
               })}
             >
-              <IonSelectOption value="Lower Primary">
-                Lower Primary
-              </IonSelectOption>
-              <IonSelectOption value="Upper Primary">
-                Upper Primary
-              </IonSelectOption>
-              <IonSelectOption value="Lower Secondary">
-                Lower Secondary
-              </IonSelectOption>
-              <IonSelectOption value="Upper Secondary">
-                Upper Secondary
-              </IonSelectOption>
-              <IonSelectOption value="Junior College">
-                Junior College
-              </IonSelectOption>
+              {Object.values(Level).map((value) => (
+                <IonSelectOption value={value}>{value}</IonSelectOption>
+              ))}
             </IonSelect>
             {errors.level && (
               <IonNote slot="helper" color="danger">
@@ -216,13 +212,9 @@ const TuteeListingForm: React.FC<Props> = (props: Props) => {
                 },
               })}
             >
-              <IonSelectOption value={0}>Mon</IonSelectOption>
-              <IonSelectOption value={48}>Tue</IonSelectOption>
-              <IonSelectOption value={96}>Wed</IonSelectOption>
-              <IonSelectOption value={144}>Thu</IonSelectOption>
-              <IonSelectOption value={192}>Fri</IonSelectOption>
-              <IonSelectOption value={240}>Sat</IonSelectOption>
-              <IonSelectOption value={288}>Sun</IonSelectOption>
+              {Object.keys(WeekDay).map((key, index) => (
+                <IonSelectOption value={index * 48}>{key}</IonSelectOption>
+              ))}
             </IonSelect>
             {errors.timeSlots && (
               <IonNote slot="helper" color="danger">
@@ -248,11 +240,9 @@ const TuteeListingForm: React.FC<Props> = (props: Props) => {
                 required: 'Please select a gender',
               })}
             >
-              <IonSelectOption value="Male">Male</IonSelectOption>
-              <IonSelectOption value="Female">Female</IonSelectOption>
-              <IonSelectOption value="Prefer not to say">
-                Prefer not to say
-              </IonSelectOption>
+              {Object.values(Gender).map((value) => (
+                <IonSelectOption value={value}>{value}</IonSelectOption>
+              ))}
             </IonSelect>
             {errors.gender && (
               <IonNote slot="helper" color="danger">
@@ -313,14 +303,6 @@ const TuteeListingForm: React.FC<Props> = (props: Props) => {
       <IonButton expand="block" type="submit" disabled={isSubmitting}>
         {isSubmitting ? <IonSpinner /> : submitButtonText}
       </IonButton>
-      {/* <IonRange
-        dualKnobs
-        min={0} 
-        max={150} 
-        pin 
-        value={watchPrice} 
-        {...register('price')}
-      /> */}
     </form>
   );
 };

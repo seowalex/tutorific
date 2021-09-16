@@ -20,6 +20,7 @@ import { selectCurrentUserId } from '../../reducers/auth';
 import TutorListingForm, {
   TutorListingFormData,
 } from '../../components/TutorListingForm';
+import { Level } from '../../app/types';
 
 const AddTutorListing: React.FC = () => {
   const userId = useAppSelector(selectCurrentUserId);
@@ -40,7 +41,7 @@ const AddTutorListing: React.FC = () => {
         priceMax: price.upper,
         description: details.description,
         subjects: details.subjects as string[],
-        levels: details.levels as string[],
+        levels: details.levels as Level[],
         timeSlots: details.timeSlots as number[],
       };
       const result = await createTutorListing(listingData);

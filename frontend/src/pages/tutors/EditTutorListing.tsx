@@ -23,6 +23,7 @@ import { selectCurrentUserId } from '../../reducers/auth';
 import TutorListingForm, {
   TutorListingFormData,
 } from '../../components/TutorListingForm';
+import { Level } from '../../app/types';
 
 const EditTutorListing: React.FC<RouteComponentProps<{ id: string }>> = ({
   match,
@@ -50,7 +51,7 @@ const EditTutorListing: React.FC<RouteComponentProps<{ id: string }>> = ({
         priceMax: price.upper,
         description: details.description,
         subjects: details.subjects as string[],
-        levels: details.levels as string[],
+        levels: details.levels as Level[],
         timeSlots: details.timeSlots as number[],
       };
       const result = await updateTutorListing(listingData);
