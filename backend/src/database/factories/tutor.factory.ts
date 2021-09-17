@@ -9,25 +9,37 @@ const TutorListingSeed = (context?: { tutor: Profile }) => {
 
   tutorListing.description = faker.lorem.paragraph(2);
 
-  const hours = faker.random.arrayElements(
-    Array.from(Array(7 * 24).keys()),
-    faker.datatype.number({ min: 2, max: 80 })
-  );
+  const hours = faker.random
+    .arrayElements(
+      Array.from(Array(7 * 24).keys()),
+      faker.datatype.number({ min: 2, max: 80 })
+    )
+    .sort();
   tutorListing.timeSlots = [];
   hours.forEach((hour) => {
     tutorListing.timeSlots.push(hour * 2);
     tutorListing.timeSlots.push(hour * 2 + 1);
   });
 
-  tutorListing.subjects = faker.random.arrayElements(
-    Object.values(Subject),
-    faker.datatype.number({ min: 1, max: 3 })
-  );
+  tutorListing.subjects = faker.random
+    .arrayElements(
+      Object.values(Subject),
+      faker.datatype.number({ min: 1, max: 3 })
+    )
+    .sort(
+      (a, b) =>
+        Object.values(Subject).indexOf(a) - Object.values(Subject).indexOf(b)
+    );
 
-  tutorListing.levels = faker.random.arrayElements(
-    Object.values(Level),
-    faker.datatype.number({ min: 1, max: Object.values(Level).length })
-  );
+  tutorListing.levels = faker.random
+    .arrayElements(
+      Object.values(Level),
+      faker.datatype.number({ min: 1, max: Object.values(Level).length })
+    )
+    .sort(
+      (a, b) =>
+        Object.values(Level).indexOf(a) - Object.values(Level).indexOf(b)
+    );
 
   const expectedPriceRange = {
     [Level.LowerPrimary]: [20, 25],

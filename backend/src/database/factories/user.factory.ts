@@ -17,10 +17,9 @@ const UserSeed = (context?: { isTutor: boolean }) => {
     genderNum = 0;
   }
 
+  // TODO not singaporean names
   const firstName = faker.name.firstName(genderNum);
-  faker.locale = 'zh_CN';
   const lastName = faker.name.lastName(genderNum);
-
   const user = new User();
   user.email = faker.internet.email(firstName, lastName);
   user.password = faker.random.words(3); // ensure that more than 8 char long

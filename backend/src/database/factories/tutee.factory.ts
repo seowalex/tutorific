@@ -9,20 +9,27 @@ const TuteeListingSeed = (context?: { tutee: Profile }) => {
 
   tuteeListing.description = faker.lorem.paragraph(2);
 
-  const hours = faker.random.arrayElements(
-    Array.from(Array(7 * 24).keys()),
-    faker.datatype.number({ min: 2, max: 80 })
-  );
+  const hours = faker.random
+    .arrayElements(
+      Array.from(Array(7 * 24).keys()),
+      faker.datatype.number({ min: 2, max: 80 })
+    )
+    .sort();
   tuteeListing.timeSlots = [];
   hours.forEach((hour) => {
     tuteeListing.timeSlots.push(hour * 2);
     tuteeListing.timeSlots.push(hour * 2 + 1);
   });
 
-  tuteeListing.subjects = faker.random.arrayElements(
-    Object.values(Subject),
-    faker.datatype.number({ min: 1, max: Object.values(Subject).length })
-  );
+  tuteeListing.subjects = faker.random
+    .arrayElements(
+      Object.values(Subject),
+      faker.datatype.number({ min: 1, max: Object.values(Subject).length })
+    )
+    .sort(
+      (a, b) =>
+        Object.values(Subject).indexOf(a) - Object.values(Subject).indexOf(b)
+    );
 
   tuteeListing.level = faker.random.arrayElement(Object.values(Level));
 

@@ -18,7 +18,7 @@ Fill in .env file
 3. Start the development server:
 
 ```bash
-npm run db:create
+npm run db:create or npm run db:seed
 npm run dev
 ```
 
@@ -28,6 +28,7 @@ npm run dev
 - npm run build (check linting and formatting and recompile into js)
 - npm run db:create (create db)
 - npm run db:drop (drop db)
+- npm run db:seed (drops, creates and seed)
 
 
 ## How to use Koa
