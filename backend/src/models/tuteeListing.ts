@@ -5,7 +5,7 @@ import {
   ManyToOne,
   CreateDateColumn,
 } from 'typeorm';
-import { IsNotEmpty, Min } from 'class-validator';
+import { ArrayNotEmpty, IsNotEmpty, Max, Min } from 'class-validator';
 import Profile from './profile';
 import { Gender, Level, Town } from '../utils/model';
 import { IsBiggerThan } from '../validations/common';
@@ -37,13 +37,26 @@ export default class TuteeListing {
   description: string;
 
   @Column('int', { array: true })
-  // TODO add some range
+  @Min(0, {
+    each: true,
+    message: 'Not a valid timeslot',
+  })
+  @Max(7 * 24 * 2, {
+    each: true,
+    message: 'Not a valid timeslot',
+  })
+  @ArrayNotEmpty({
+    message: 'Should have at least 1 timeslot',
+  })
   timeSlots: number[];
 
   @Column('text', { array: true })
   @IsNotEmpty({
     each: true,
     message: 'Each value in subjects should not be empty',
+  })
+  @ArrayNotEmpty({
+    message: 'Should have at least 1 subject',
   })
   subjects: string[];
 

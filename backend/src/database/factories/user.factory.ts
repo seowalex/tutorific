@@ -22,7 +22,7 @@ const UserSeed = (context?: { isTutor: boolean }) => {
   const lastName = faker.name.lastName(genderNum);
   const user = new User();
   user.email = faker.internet.email(firstName, lastName);
-  user.password = faker.random.words(3); // ensure that more than 8 char long
+  user.password = 'hello123!';
   user.refreshToken = [];
   user.profile = ProfileSeed({
     name: `${firstName} ${lastName}`,
