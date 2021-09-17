@@ -15,11 +15,13 @@ import {
   IonText,
   IonTitle,
   IonToolbar,
+  useIonRouter,
   useIonToast,
 } from '@ionic/react';
-import { useHistory, useRouteMatch } from 'react-router-dom';
+import { useRouteMatch } from 'react-router-dom';
 import type { FetchBaseQueryError } from '@reduxjs/toolkit/query/react';
 import {
+  chatbubbleOutline,
   closeCircle,
   createOutline,
   female,
@@ -29,10 +31,9 @@ import {
 
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { useLogoutMutation } from '../../api/auth';
-import { useGetProfileQuery } from '../../api/profile';
+import { Gender, useGetProfileQuery } from '../../api/profile';
 import { selectCurrentUser, unsetCredentials } from '../../reducers/auth';
 import type { ErrorResponse } from '../../types/error';
-import { Gender } from '../../types/profile';
 
 import styles from './Profile.module.scss';
 
@@ -41,11 +42,9 @@ interface Params {
 }
 
 const Profile: React.FC = () => {
-  const history = useHistory();
   const {
     params: { id },
   } = useRouteMatch<Params>();
-  const [present] = useIonToast();
 
   const dispatch = useAppDispatch();
   const [logout] = useLogoutMutation();
@@ -53,13 +52,17 @@ const Profile: React.FC = () => {
   const { data: profile } = useGetProfileQuery(parseInt(id, 10));
   const hasListings = false;
 
+  const router = useIonRouter();
+  const [present] = useIonToast();
+
   const handleLogout = async () => {
     try {
       if (user.id && user.refreshToken) {
         await logout({ id: user.id, refreshToken: user.refreshToken }).unwrap();
-        dispatch(unsetCredentials());
-        history.push('/login');
       }
+
+      dispatch(unsetCredentials());
+      router.push('/', 'back');
     } catch (error) {
       const message = (
         (error as FetchBaseQueryError).data as ErrorResponse
@@ -76,15 +79,14 @@ const Profile: React.FC = () => {
   };
 
   const GenderIcon = () => {
-    if (profile?.gender === Gender.Male) {
-      return <IonIcon icon={male} />;
+    switch (profile?.gender) {
+      case Gender.Female:
+        return <IonIcon icon={female} />;
+      case Gender.Male:
+        return <IonIcon icon={male} />;
+      default:
+        return null;
     }
-
-    if (profile?.gender === Gender.Female) {
-      return <IonIcon icon={female} />;
-    }
-
-    return null;
   };
 
   return (
@@ -97,7 +99,11 @@ const Profile: React.FC = () => {
               <IonButton routerLink={`/profile/${id}/edit`}>
                 <IonIcon slot="icon-only" icon={createOutline} />
               </IonButton>
-            ) : null}
+            ) : (
+              <IonButton routerLink={`/chat/${id}`} routerDirection="none">
+                <IonIcon slot="icon-only" icon={chatbubbleOutline} />
+              </IonButton>
+            )}
             <IonButton onClick={handleLogout}>
               <IonIcon slot="icon-only" icon={logOutOutline} />
             </IonButton>
@@ -113,7 +119,11 @@ const Profile: React.FC = () => {
                 <IonButton routerLink={`/profile/${id}/edit`}>
                   <IonIcon slot="icon-only" icon={createOutline} />
                 </IonButton>
-              ) : null}
+              ) : (
+                <IonButton routerLink={`/chat/${id}`} routerDirection="none">
+                  <IonIcon slot="icon-only" icon={chatbubbleOutline} />
+                </IonButton>
+              )}
               <IonButton onClick={handleLogout}>
                 <IonIcon slot="icon-only" icon={logOutOutline} />
               </IonButton>
@@ -121,10 +131,10 @@ const Profile: React.FC = () => {
           </IonToolbar>
         </IonHeader>
 
-        <div className={hasListings ? '' : styles.emptyProfileContainer}>
+        <div className={hasListings ? '' : styles.noListings}>
           <div className="ion-margin">
-            <div className={styles.profileHeader}>
-              <IonAvatar className={styles.profileAvatar}>
+            <div className={styles.header}>
+              <IonAvatar className={styles.avatar}>
                 <img
                   src={`https://ui-avatars.com/api/?name=${encodeURIComponent(
                     profile?.name ?? ''
@@ -133,9 +143,11 @@ const Profile: React.FC = () => {
               </IonAvatar>
               <div>
                 <h1 className="ion-no-margin">{profile?.name}</h1>
-                <IonText color="dark">
-                  {profile?.gender} <GenderIcon />
-                </IonText>
+                {profile?.gender !== Gender.PNTS && (
+                  <IonText color="dark">
+                    {profile?.gender} <GenderIcon />
+                  </IonText>
+                )}
               </div>
             </div>
 
@@ -197,8 +209,8 @@ const Profile: React.FC = () => {
               </IonCard>
             </>
           ) : (
-            <div className={styles.emptyMessage}>
-              <IonIcon className={styles.closeIcon} icon={closeCircle} />
+            <div className={styles.noListingsMessage}>
+              <IonIcon className={styles.noListingsIcon} icon={closeCircle} />
               <p className="ion-no-margin">You have no tutor/tutee listings.</p>
             </div>
           )}

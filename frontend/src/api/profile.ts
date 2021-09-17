@@ -1,5 +1,18 @@
 import api from './base';
-import { Profile } from '../types/profile';
+
+export enum Gender {
+  Female = 'Female',
+  Male = 'Male',
+  PNTS = 'Prefer not to say',
+}
+
+interface Profile {
+  id: number;
+  name: string;
+  gender: Gender;
+  description: string;
+  createdAt: Date;
+}
 
 const extendedApi = api.injectEndpoints({
   endpoints: (builder) => ({
@@ -7,8 +20,8 @@ const extendedApi = api.injectEndpoints({
       query: (id) => ({
         url: `profile/${id}`,
       }),
-      providesTags: (result, error, arg) => [{ type: 'Profile', id: arg }],
       transformResponse: (response: { data: Profile }) => response.data,
+      providesTags: (result, error, id) => [{ type: 'Profile', id }],
     }),
     updateProfile: builder.mutation<
       void,

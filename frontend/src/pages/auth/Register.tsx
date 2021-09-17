@@ -16,8 +16,8 @@ import {
   IonSpinner,
   IonTitle,
   IonToolbar,
+  useIonRouter,
 } from '@ionic/react';
-import { useHistory } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import type { FetchBaseQueryError } from '@reduxjs/toolkit/query/react';
 
@@ -35,7 +35,10 @@ interface RegisterData {
 }
 
 const Register: React.FC = () => {
-  const history = useHistory();
+  const dispatch = useAppDispatch();
+  const [registerUser, { isLoading }] = useRegisterMutation();
+
+  const router = useIonRouter();
   const {
     register,
     formState: { errors },
@@ -44,35 +47,31 @@ const Register: React.FC = () => {
     getValues,
   } = useForm<RegisterData>();
 
-  const dispatch = useAppDispatch();
-  const [registerUser, { isLoading }] = useRegisterMutation();
-
   const onSubmit = async (data: RegisterData) => {
     try {
       const credentials = await registerUser(data).unwrap();
 
       dispatch(setCredentials(credentials));
-      history.push('/tutors');
+      router.push('/');
     } catch (error) {
-      const { errors: errorResponse } = (error as FetchBaseQueryError)
+      const { errors: errorMessages } = (error as FetchBaseQueryError)
         .data as ErrorResponse;
-      const emailErrorMessage = errorResponse
-        .find((errorMessage) => errorMessage.field === 'email')
-        ?.detail.join(', ');
-      const passwordErrorMessage = errorResponse
-        .find((errorMessage) => errorMessage.field === 'password')
-        ?.detail.join(', ');
 
-      if (emailErrorMessage) {
-        setError('email', {
-          message: emailErrorMessage,
-        });
-      }
-
-      if (passwordErrorMessage) {
-        setError('password', {
-          message: passwordErrorMessage,
-        });
+      for (const errorMessage of errorMessages) {
+        switch (errorMessage.field) {
+          case 'email':
+            setError('email', {
+              message: errorMessage.detail.join(', '),
+            });
+            break;
+          case 'password':
+            setError('password', {
+              message: errorMessage.detail.join(', '),
+            });
+            break;
+          default:
+            break;
+        }
       }
     }
   };
@@ -91,17 +90,14 @@ const Register: React.FC = () => {
         <IonGrid className="ion-no-padding">
           <IonRow>
             <IonCol className="ion-no-padding">
-              <div className={styles.welcomeHeader}>
-                <img className={styles.welcomeImg} src="/assets/welcome.png" />
-                <p className={styles.welcomeText}>
+              <div className={styles.header}>
+                <img className={styles.headerImg} src="/assets/welcome.png" />
+                <p className={styles.headerText}>
                   Welcome to Tutorific! Register an account to start looking for
                   tutors/tutees.
                 </p>
               </div>
-              <form
-                className={styles.registerForm}
-                onSubmit={handleSubmit(onSubmit)}
-              >
+              <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
                 <IonItem
                   fill="outline"
                   lines="full"

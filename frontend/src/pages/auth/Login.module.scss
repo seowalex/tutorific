@@ -1,14 +1,14 @@
-.brandHeader {
+.header {
   margin: 0 40px 60px;
 
-  .brandImg {
+  .headerImg {
     display: block;
     margin: auto;
     width: 100%;
     max-width: 240px;
   }
 
-  .brandName {
+  .headerName {
     font-family: 'Bitter', serif;
     font-size: 48px;
     font-weight: 500;
@@ -17,7 +17,7 @@
   }
 }
 
-.loginForm {
+.form {
   display: flex;
   flex-direction: column;
   gap: 16px;

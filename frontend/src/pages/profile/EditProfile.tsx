@@ -13,6 +13,8 @@ import {
   IonNote,
   IonPage,
   IonRow,
+  IonSelect,
+  IonSelectOption,
   IonSpinner,
   IonTextarea,
   IonTitle,
@@ -24,11 +26,11 @@ import { useForm } from 'react-hook-form';
 import type { FetchBaseQueryError } from '@reduxjs/toolkit/query/react';
 
 import {
+  Gender,
   useGetProfileQuery,
   useUpdateProfileMutation,
 } from '../../api/profile';
 import type { ErrorResponse } from '../../types/error';
-import type { Gender } from '../../types/profile';
 
 import styles from './EditProfile.module.scss';
 
@@ -43,13 +45,14 @@ interface ProfileData {
 }
 
 const EditProfile: React.FC = () => {
-  const history = useIonRouter();
   const {
     params: { id },
   } = useRouteMatch<Params>();
 
   const [updateProfile, { isLoading }] = useUpdateProfileMutation();
   const { data: profile } = useGetProfileQuery(parseInt(id, 10));
+
+  const router = useIonRouter();
   const {
     register,
     formState: { errors },
@@ -62,36 +65,31 @@ const EditProfile: React.FC = () => {
   const onSubmit = async (data: ProfileData) => {
     try {
       await updateProfile({ id: parseInt(id, 10), ...data }).unwrap();
-      history.push(`/profile/${id}`, 'back');
+      router.push(`/profile/${id}`, 'back');
     } catch (error) {
-      const { errors: errorResponse } = (error as FetchBaseQueryError)
+      const { errors: errorMessages } = (error as FetchBaseQueryError)
         .data as ErrorResponse;
-      const nameErrorMessage = errorResponse
-        .find((errorMessage) => errorMessage.field === 'name')
-        ?.detail.join(', ');
-      const genderErrorMessage = errorResponse
-        .find((errorMessage) => errorMessage.field === 'gender')
-        ?.detail.join(', ');
-      const descriptionErrorMessage = errorResponse
-        .find((errorMessage) => errorMessage.field === 'description')
-        ?.detail.join(', ');
 
-      if (nameErrorMessage) {
-        setError('name', {
-          message: nameErrorMessage,
-        });
-      }
-
-      if (genderErrorMessage) {
-        setError('gender', {
-          message: genderErrorMessage,
-        });
-      }
-
-      if (descriptionErrorMessage) {
-        setError('description', {
-          message: descriptionErrorMessage,
-        });
+      for (const errorMessage of errorMessages) {
+        switch (errorMessage.field) {
+          case 'name':
+            setError('name', {
+              message: errorMessage.detail.join(', '),
+            });
+            break;
+          case 'gender':
+            setError('gender', {
+              message: errorMessage.detail.join(', '),
+            });
+            break;
+          case 'description':
+            setError('description', {
+              message: errorMessage.detail.join(', '),
+            });
+            break;
+          default:
+            break;
+        }
       }
     }
   };
@@ -106,22 +104,11 @@ const EditProfile: React.FC = () => {
           </IonButtons>
         </IonToolbar>
       </IonHeader>
-      <IonContent fullscreen>
-        <IonHeader collapse="condense">
-          <IonToolbar>
-            <IonTitle size="large">Edit Profile</IonTitle>
-            <IonButtons slot="start">
-              <IonBackButton />
-            </IonButtons>
-          </IonToolbar>
-        </IonHeader>
-        <IonGrid className="ion-padding">
+      <IonContent className="ion-padding" fullscreen>
+        <IonGrid className="ion-no-padding">
           <IonRow>
             <IonCol className="ion-no-padding">
-              <form
-                className={styles.profileForm}
-                onSubmit={handleSubmit(onSubmit)}
-              >
+              <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
                 <IonItem
                   fill="outline"
                   lines="full"
@@ -143,15 +130,33 @@ const EditProfile: React.FC = () => {
                 <IonItem
                   fill="outline"
                   lines="full"
+                  color={errors.gender ? 'danger' : undefined}
+                  disabled={isLoading}
+                >
+                  <IonLabel position="floating">Gender</IonLabel>
+                  <IonSelect
+                    {...register('gender', {
+                      required: 'Gender is required',
+                    })}
+                  >
+                    {Object.values(Gender).map((gender) => (
+                      <IonSelectOption value={gender}>{gender}</IonSelectOption>
+                    ))}
+                  </IonSelect>
+                  {errors.gender && (
+                    <IonNote slot="helper" color="danger">
+                      {errors.gender.message}
+                    </IonNote>
+                  )}
+                </IonItem>
+                <IonItem
+                  fill="outline"
+                  lines="full"
                   color={errors.description ? 'danger' : undefined}
                   disabled={isLoading}
                 >
                   <IonLabel position="floating">Description</IonLabel>
-                  <IonTextarea
-                    {...register('description', {
-                      required: 'Description is required',
-                    })}
-                  />
+                  <IonTextarea {...register('description')} />
                   {errors.description && (
                     <IonNote slot="helper" color="danger">
                       {errors.description.message}

@@ -11,8 +11,8 @@ import {
   IonPage,
   IonRow,
   IonSpinner,
+  useIonRouter,
 } from '@ionic/react';
-import { useHistory } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import type { FetchBaseQueryError } from '@reduxjs/toolkit/query/react';
 
@@ -29,7 +29,10 @@ interface LoginData {
 }
 
 const Login: React.FC = () => {
-  const history = useHistory();
+  const dispatch = useAppDispatch();
+  const [login, { isLoading }] = useLoginMutation();
+
+  const router = useIonRouter();
   const {
     register,
     formState: { errors },
@@ -37,15 +40,12 @@ const Login: React.FC = () => {
     setError,
   } = useForm<LoginData>();
 
-  const dispatch = useAppDispatch();
-  const [login, { isLoading }] = useLoginMutation();
-
   const onSubmit = async (data: LoginData) => {
     try {
       const credentials = await login(data).unwrap();
 
       dispatch(setCredentials(credentials));
-      history.push('/tutors');
+      router.push('/');
     } catch (error) {
       const message = (
         (error as FetchBaseQueryError).data as ErrorResponse
@@ -64,14 +64,11 @@ const Login: React.FC = () => {
         <IonGrid className="ion-no-padding h-100">
           <IonRow className="ion-align-items-center h-100">
             <IonCol className="ion-no-padding">
-              <div className={styles.brandHeader}>
-                <img className={styles.brandImg} src="/assets/icon/icon.png" />
-                <h1 className={styles.brandName}>Tutorific</h1>
+              <div className={styles.header}>
+                <img className={styles.headerImg} src="/assets/icon/icon.png" />
+                <h1 className={styles.headerName}>Tutorific</h1>
               </div>
-              <form
-                className={styles.loginForm}
-                onSubmit={handleSubmit(onSubmit)}
-              >
+              <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
                 <IonItem
                   fill="outline"
                   lines="full"
