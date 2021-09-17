@@ -1,10 +1,9 @@
-import Faker from 'faker';
-import { define } from 'typeorm-seeding';
+import faker from 'faker';
 import { Gender, Level, Subject, Town } from '../../utils/model';
 import Profile from '../../models/profile';
 import TuteeListing from '../../models/tuteeListing';
 
-define(TuteeListing, (faker: typeof Faker, context?: { tutee: Profile }) => {
+const TuteeListingSeed = (context?: { tutee: Profile }) => {
   const tuteeListing = new TuteeListing();
   tuteeListing.tutee = context?.tutee ?? new Profile();
 
@@ -12,7 +11,7 @@ define(TuteeListing, (faker: typeof Faker, context?: { tutee: Profile }) => {
 
   const hours = faker.random.arrayElements(
     Array.from(Array(7 * 24).keys()),
-    faker.random.number({ min: 2, max: 80 })
+    faker.datatype.number({ min: 2, max: 80 })
   );
   tuteeListing.timeSlots = [];
   hours.forEach((hour) => {
@@ -22,7 +21,7 @@ define(TuteeListing, (faker: typeof Faker, context?: { tutee: Profile }) => {
 
   tuteeListing.subjects = faker.random.arrayElements(
     Object.values(Subject),
-    faker.random.number({ min: 1, max: Object.values(Subject).length })
+    faker.datatype.number({ min: 1, max: Object.values(Subject).length })
   );
 
   tuteeListing.level = faker.random.arrayElement(Object.values(Level));
@@ -45,4 +44,6 @@ define(TuteeListing, (faker: typeof Faker, context?: { tutee: Profile }) => {
   tuteeListing.location = faker.random.arrayElement(Object.values(Town));
 
   return tuteeListing;
-});
+};
+
+export default TuteeListingSeed;

@@ -1,10 +1,9 @@
-import Faker from 'faker';
-import { define, factory } from 'typeorm-seeding';
+import faker from 'faker';
 import { Gender } from '../../utils/model';
-import Profile from '../../models/profile';
 import User from '../../models/user';
+import ProfileSeed from './profile.factory';
 
-define(User, (faker: typeof Faker, context?: { isTutor: boolean }) => {
+const UserSeed = (context?: { isTutor: boolean }) => {
   // more females than males in general
   const allGenders = Object.values(Gender);
   for (let i = 0; i < 3; i += 1) {
@@ -19,16 +18,19 @@ define(User, (faker: typeof Faker, context?: { isTutor: boolean }) => {
   }
 
   const firstName = faker.name.firstName(genderNum);
+  faker.locale = 'zh_CN';
   const lastName = faker.name.lastName(genderNum);
 
   const user = new User();
   user.email = faker.internet.email(firstName, lastName);
   user.password = faker.random.words(3); // ensure that more than 8 char long
-  user.refreshToken = []; // TODO what do i do
-  user.profile = factory(Profile)({
+  user.refreshToken = [];
+  user.profile = ProfileSeed({
     name: `${firstName} ${lastName}`,
     gender,
-    isTutor: context?.isTutor,
-  }) as any;
+    isTutor: context?.isTutor ?? false,
+  });
   return user;
-});
+};
+
+export default UserSeed;

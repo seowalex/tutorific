@@ -1,10 +1,9 @@
-import Faker from 'faker';
-import { define } from 'typeorm-seeding';
+import faker from 'faker';
 import { Level, Subject } from '../../utils/model';
 import Profile from '../../models/profile';
 import TutorListing from '../../models/tutorListing';
 
-define(TutorListing, (faker: typeof Faker, context?: { tutor: Profile }) => {
+const TutorListingSeed = (context?: { tutor: Profile }) => {
   const tutorListing = new TutorListing();
   tutorListing.tutor = context?.tutor ?? new Profile();
 
@@ -12,7 +11,7 @@ define(TutorListing, (faker: typeof Faker, context?: { tutor: Profile }) => {
 
   const hours = faker.random.arrayElements(
     Array.from(Array(7 * 24).keys()),
-    faker.random.number({ min: 2, max: 80 })
+    faker.datatype.number({ min: 2, max: 80 })
   );
   tutorListing.timeSlots = [];
   hours.forEach((hour) => {
@@ -22,12 +21,12 @@ define(TutorListing, (faker: typeof Faker, context?: { tutor: Profile }) => {
 
   tutorListing.subjects = faker.random.arrayElements(
     Object.values(Subject),
-    faker.random.number({ min: 1, max: 3 })
+    faker.datatype.number({ min: 1, max: 3 })
   );
 
   tutorListing.levels = faker.random.arrayElements(
     Object.values(Level),
-    faker.random.number({ min: 1, max: Object.values(Level).length })
+    faker.datatype.number({ min: 1, max: Object.values(Level).length })
   );
 
   const expectedPriceRange = {
@@ -38,13 +37,20 @@ define(TutorListing, (faker: typeof Faker, context?: { tutor: Profile }) => {
     [Level.JC]: [40, 60],
   };
 
+  let min = expectedPriceRange[Level.JC][1];
+  let max = expectedPriceRange[Level.LowerPrimary][0];
+  tutorListing.levels.forEach((level) => {
+    min =
+      expectedPriceRange[level][0] < min ? expectedPriceRange[level][0] : min;
+    max =
+      expectedPriceRange[level][1] > min ? expectedPriceRange[level][1] : max;
+  });
+
   // TODO depends on experience also
-  tutorListing.priceMin =
-    expectedPriceRange[tutorListing.levels[0]][0] +
-    faker.datatype.number(1) * 5;
-  tutorListing.priceMax =
-    expectedPriceRange[tutorListing.levels[tutorListing.levels.length - 1]][1] +
-    faker.datatype.number(2) * 5;
+  tutorListing.priceMin = min + faker.datatype.number(1) * 5;
+  tutorListing.priceMax = max + faker.datatype.number(2) * 5;
 
   return tutorListing;
-});
+};
+
+export default TutorListingSeed;
