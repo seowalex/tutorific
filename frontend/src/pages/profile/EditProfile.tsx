@@ -100,7 +100,7 @@ const EditProfile: React.FC = () => {
         <IonToolbar>
           <IonTitle>Edit Profile</IonTitle>
           <IonButtons slot="start">
-            <IonBackButton />
+            <IonBackButton defaultHref={`/profile/${id}`} />
           </IonButtons>
         </IonToolbar>
       </IonHeader>

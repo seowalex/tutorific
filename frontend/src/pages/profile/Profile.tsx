@@ -211,7 +211,12 @@ const Profile: React.FC = () => {
           ) : (
             <div className={styles.noListingsMessage}>
               <IonIcon className={styles.noListingsIcon} icon={closeCircle} />
-              <p className="ion-no-margin">You have no tutor/tutee listings.</p>
+              <p className="ion-no-margin">
+                {user.profileId === parseInt(id, 10)
+                  ? 'You have'
+                  : 'This person has'}{' '}
+                no tutor/tutee listings.
+              </p>
             </div>
           )}
         </div>

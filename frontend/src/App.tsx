@@ -31,6 +31,7 @@ import EditTuteeListing from './pages/tutees/EditTuteeListing';
 import Chat from './pages/Chat';
 
 import Profile from './pages/profile/Profile';
+import CreateProfile from './pages/profile/CreateProfile';
 import EditProfile from './pages/profile/EditProfile';
 
 import './styles/main.scss';
@@ -52,6 +53,13 @@ const App: React.FC = () => {
           {!currentUserId ? (
             <Route exact path="/register">
               <Register />
+            </Route>
+          ) : (
+            <></>
+          )}
+          {!currentUserId ? (
+            <Route exact path="/profile">
+              <CreateProfile />
             </Route>
           ) : (
             <></>

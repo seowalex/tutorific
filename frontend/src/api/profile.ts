@@ -1,4 +1,5 @@
 import api from './base';
+import type { AuthState } from '../reducers/auth';
 
 export enum Gender {
   Female = 'Female',
@@ -14,6 +15,11 @@ interface Profile {
   createdAt: Date;
 }
 
+interface AddProfileResponse {
+  profileId: number;
+  jwtToken: string;
+}
+
 const extendedApi = api.injectEndpoints({
   endpoints: (builder) => ({
     getProfile: builder.query<Profile, number>({
@@ -22,6 +28,17 @@ const extendedApi = api.injectEndpoints({
       }),
       transformResponse: (response: { data: Profile }) => response.data,
       providesTags: (result, error, id) => [{ type: 'Profile', id }],
+    }),
+    addProfile: builder.mutation<Partial<AuthState>, Partial<Profile>>({
+      query: ({ id, ...body }) => ({
+        url: `profile`,
+        method: 'POST',
+        body,
+      }),
+      transformResponse: (response: AddProfileResponse) => ({
+        profileId: response.profileId,
+        token: response.jwtToken,
+      }),
     }),
     updateProfile: builder.mutation<
       void,
@@ -39,4 +56,8 @@ const extendedApi = api.injectEndpoints({
   }),
 });
 
-export const { useGetProfileQuery, useUpdateProfileMutation } = extendedApi;
+export const {
+  useGetProfileQuery,
+  useAddProfileMutation,
+  useUpdateProfileMutation,
+} = extendedApi;

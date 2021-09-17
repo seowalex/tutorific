@@ -43,9 +43,13 @@ const Login: React.FC = () => {
   const onSubmit = async (data: LoginData) => {
     try {
       const credentials = await login(data).unwrap();
-
       dispatch(setCredentials(credentials));
-      router.push('/');
+
+      if (credentials.profileId) {
+        router.push('/');
+      } else {
+        router.push('/profile');
+      }
     } catch (error) {
       const message = (
         (error as FetchBaseQueryError).data as ErrorResponse

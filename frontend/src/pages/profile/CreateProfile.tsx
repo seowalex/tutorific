@@ -13,7 +13,10 @@ import {
   IonNote,
   IonPage,
   IonRow,
+  IonSelect,
+  IonSelectOption,
   IonSpinner,
+  IonTextarea,
   IonTitle,
   IonToolbar,
   useIonRouter,
@@ -22,21 +25,21 @@ import { useForm } from 'react-hook-form';
 import type { FetchBaseQueryError } from '@reduxjs/toolkit/query/react';
 
 import { useAppDispatch } from '../../app/hooks';
-import { useRegisterMutation } from '../../api/auth';
-import { setCredentials } from '../../reducers/auth';
+import { Gender, useAddProfileMutation } from '../../api/profile';
+import { setProfileId, setToken } from '../../reducers/auth';
 import type { ErrorResponse } from '../../types/error';
 
-import styles from './Register.module.scss';
+import styles from './CreateProfile.module.scss';
 
-interface RegisterData {
-  email: string;
-  password: string;
-  confirm_password: string;
+interface ProfileData {
+  name: string;
+  gender: Gender;
+  description: string;
 }
 
-const Register: React.FC = () => {
+const CreateProfile: React.FC = () => {
   const dispatch = useAppDispatch();
-  const [registerUser, { isLoading }] = useRegisterMutation();
+  const [addProfile, { isLoading }] = useAddProfileMutation();
 
   const router = useIonRouter();
   const {
@@ -44,32 +47,36 @@ const Register: React.FC = () => {
     formState: { errors },
     handleSubmit,
     setError,
-    getValues,
-  } = useForm<RegisterData>();
+  } = useForm<ProfileData>();
 
-  const onSubmit = async (data: RegisterData) => {
+  const onSubmit = async (data: ProfileData) => {
     try {
-      const credentials = await registerUser(data).unwrap();
-      dispatch(setCredentials(credentials));
+      const profile = await addProfile(data).unwrap();
 
-      if (credentials.profileId) {
-        router.push('/');
-      } else {
-        router.push('/profile');
+      if (profile.profileId && profile.token) {
+        dispatch(setProfileId(profile.profileId));
+        dispatch(setToken(profile.token));
       }
+
+      router.push('/');
     } catch (error) {
       const { errors: errorMessages } = (error as FetchBaseQueryError)
         .data as ErrorResponse;
 
       for (const errorMessage of errorMessages) {
         switch (errorMessage.field) {
-          case 'email':
-            setError('email', {
+          case 'name':
+            setError('name', {
               message: errorMessage.detail.join(', '),
             });
             break;
-          case 'password':
-            setError('password', {
+          case 'gender':
+            setError('gender', {
+              message: errorMessage.detail.join(', '),
+            });
+            break;
+          case 'description':
+            setError('description', {
               message: errorMessage.detail.join(', '),
             });
             break;
@@ -84,83 +91,68 @@ const Register: React.FC = () => {
     <IonPage>
       <IonHeader>
         <IonToolbar>
+          <IonTitle>Create Profile</IonTitle>
           <IonButtons slot="start">
-            <IonBackButton defaultHref="/login" disabled={isLoading} />
+            <IonBackButton defaultHref="/login" />
           </IonButtons>
-          <IonTitle>Register</IonTitle>
         </IonToolbar>
       </IonHeader>
       <IonContent className="ion-padding" fullscreen>
         <IonGrid className="ion-no-padding">
           <IonRow>
             <IonCol className="ion-no-padding">
-              <div className={styles.header}>
-                <img className={styles.headerImg} src="/assets/welcome.png" />
-                <p className={styles.headerText}>
-                  Welcome to Tutorific! Register an account to start looking for
-                  tutors/tutees.
-                </p>
-              </div>
               <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
                 <IonItem
                   fill="outline"
                   lines="full"
-                  color={errors.email ? 'danger' : undefined}
+                  color={errors.name ? 'danger' : undefined}
                   disabled={isLoading}
                 >
-                  <IonLabel position="floating">Email</IonLabel>
+                  <IonLabel position="floating">Name</IonLabel>
                   <IonInput
-                    type="email"
-                    {...register('email', {
-                      required: 'Email is required',
+                    {...register('name', {
+                      required: 'Name is required',
                     })}
                   />
-                  {errors.email && (
+                  {errors.name && (
                     <IonNote slot="helper" color="danger">
-                      {errors.email.message}
+                      {errors.name.message}
                     </IonNote>
                   )}
                 </IonItem>
                 <IonItem
                   fill="outline"
                   lines="full"
-                  color={errors.password ? 'danger' : undefined}
+                  color={errors.gender ? 'danger' : undefined}
                   disabled={isLoading}
                 >
-                  <IonLabel position="floating">Password</IonLabel>
-                  <IonInput
-                    type="password"
-                    {...register('password', {
-                      required: 'Password is required',
+                  <IonLabel position="floating">Gender</IonLabel>
+                  <IonSelect
+                    {...register('gender', {
+                      required: 'Gender is required',
                     })}
-                  />
-                  {errors.password && (
+                  >
+                    {Object.values(Gender).map((gender) => (
+                      <IonSelectOption value={gender}>{gender}</IonSelectOption>
+                    ))}
+                  </IonSelect>
+                  {errors.gender && (
                     <IonNote slot="helper" color="danger">
-                      {errors.password.message}
+                      {errors.gender.message}
                     </IonNote>
                   )}
                 </IonItem>
                 <IonItem
                   fill="outline"
                   lines="full"
-                  color={errors.confirm_password ? 'danger' : undefined}
+                  color={errors.description ? 'danger' : undefined}
                   disabled={isLoading}
                 >
-                  <IonLabel position="floating">Confirm Password</IonLabel>
-                  <IonInput
-                    type="password"
-                    {...register('confirm_password', {
-                      required: 'Password is required',
-                      validate: {
-                        match: (value) =>
-                          value === getValues('password') ||
-                          'Passwords need to match',
-                      },
-                    })}
-                  />
-                  {errors.confirm_password && (
+                  <IonLabel position="floating">Description</IonLabel>
+                  <IonTextarea {...register('description')} />
+                  {errors.description && (
                     <IonNote slot="helper" color="danger">
-                      {errors.confirm_password.message}
+                      {errors.description.message}
                     </IonNote>
                   )}
                 </IonItem>
@@ -170,7 +162,7 @@ const Register: React.FC = () => {
                   type="submit"
                   disabled={isLoading}
                 >
-                  {isLoading ? <IonSpinner /> : 'Register'}
+                  {isLoading ? <IonSpinner /> : 'Save'}
                 </IonButton>
               </form>
             </IonCol>
@@ -181,4 +173,4 @@ const Register: React.FC = () => {
   );
 };
 
-export default Register;
+export default CreateProfile;
