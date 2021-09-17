@@ -1,22 +1,13 @@
 import React from 'react';
 import {
   IonBackButton,
-  IonButton,
   IonButtons,
   IonCol,
   IonContent,
   IonGrid,
   IonHeader,
-  IonInput,
-  IonItem,
-  IonLabel,
-  IonNote,
   IonPage,
   IonRow,
-  IonSelect,
-  IonSelectOption,
-  IonSpinner,
-  IonTextarea,
   IonTitle,
   IonToolbar,
   useIonRouter,
@@ -26,22 +17,15 @@ import { useForm } from 'react-hook-form';
 import type { FetchBaseQueryError } from '@reduxjs/toolkit/query/react';
 
 import {
-  Gender,
   useGetProfileQuery,
   useUpdateProfileMutation,
 } from '../../api/profile';
 import type { ErrorResponse } from '../../types/error';
 
-import styles from './EditProfile.module.scss';
+import ProfileForm, { ProfileData } from '../../components/ProfileForm';
 
 interface Params {
   id: string;
-}
-
-interface ProfileData {
-  name: string;
-  gender: Gender;
-  description: string;
 }
 
 const EditProfile: React.FC = () => {
@@ -108,70 +92,12 @@ const EditProfile: React.FC = () => {
         <IonGrid className="ion-no-padding">
           <IonRow>
             <IonCol className="ion-no-padding">
-              <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
-                <IonItem
-                  fill="outline"
-                  lines="full"
-                  color={errors.name ? 'danger' : undefined}
-                  disabled={isLoading}
-                >
-                  <IonLabel position="floating">Name</IonLabel>
-                  <IonInput
-                    {...register('name', {
-                      required: 'Name is required',
-                    })}
-                  />
-                  {errors.name && (
-                    <IonNote slot="helper" color="danger">
-                      {errors.name.message}
-                    </IonNote>
-                  )}
-                </IonItem>
-                <IonItem
-                  fill="outline"
-                  lines="full"
-                  color={errors.gender ? 'danger' : undefined}
-                  disabled={isLoading}
-                >
-                  <IonLabel position="floating">Gender</IonLabel>
-                  <IonSelect
-                    {...register('gender', {
-                      required: 'Gender is required',
-                    })}
-                  >
-                    {Object.values(Gender).map((gender) => (
-                      <IonSelectOption value={gender}>{gender}</IonSelectOption>
-                    ))}
-                  </IonSelect>
-                  {errors.gender && (
-                    <IonNote slot="helper" color="danger">
-                      {errors.gender.message}
-                    </IonNote>
-                  )}
-                </IonItem>
-                <IonItem
-                  fill="outline"
-                  lines="full"
-                  color={errors.description ? 'danger' : undefined}
-                  disabled={isLoading}
-                >
-                  <IonLabel position="floating">Description</IonLabel>
-                  <IonTextarea {...register('description')} />
-                  {errors.description && (
-                    <IonNote slot="helper" color="danger">
-                      {errors.description.message}
-                    </IonNote>
-                  )}
-                </IonItem>
-                <IonButton
-                  className="ion-no-margin ion-margin-top"
-                  expand="block"
-                  type="submit"
-                  disabled={isLoading}
-                >
-                  {isLoading ? <IonSpinner /> : 'Save'}
-                </IonButton>
-              </form>
+              <ProfileForm
+                isLoading={isLoading}
+                register={register}
+                errors={errors}
+                handleSubmit={handleSubmit(onSubmit)}
+              />
             </IonCol>
           </IonRow>
         </IonGrid>
