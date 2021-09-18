@@ -10,7 +10,7 @@ import {
   IonButton,
   IonSpinner,
 } from '@ionic/react';
-import type { FieldErrors, UseFormRegister } from 'react-hook-form';
+import { Control, Controller, FieldErrors } from 'react-hook-form';
 
 import { Gender } from '../api/profile';
 
@@ -24,16 +24,17 @@ export interface ProfileData {
 
 interface Props {
   isLoading: boolean;
-  register: UseFormRegister<ProfileData>;
   errors: FieldErrors<ProfileData>;
   handleSubmit: (e?: React.BaseSyntheticEvent) => Promise<void>;
+  // eslint-disable-next-line @typescript-eslint/ban-types
+  control: Control<ProfileData, object>;
 }
 
 const ProfileForm: React.FC<Props> = ({
   isLoading,
-  register,
   errors,
   handleSubmit,
+  control,
 }) => (
   <form className={styles.form} onSubmit={handleSubmit}>
     <IonItem
@@ -43,10 +44,15 @@ const ProfileForm: React.FC<Props> = ({
       disabled={isLoading}
     >
       <IonLabel position="floating">Name</IonLabel>
-      <IonInput
-        {...register('name', {
+      <Controller
+        name="name"
+        control={control}
+        render={({ field: { onChange, onBlur, value } }) => (
+          <IonInput onIonChange={onChange} onIonBlur={onBlur} value={value} />
+        )}
+        rules={{
           required: 'Name is required',
-        })}
+        }}
       />
       {errors.name && (
         <IonNote slot="helper" color="danger">
@@ -61,15 +67,22 @@ const ProfileForm: React.FC<Props> = ({
       disabled={isLoading}
     >
       <IonLabel position="floating">Gender</IonLabel>
-      <IonSelect
-        {...register('gender', {
+      <Controller
+        name="gender"
+        control={control}
+        render={({ field: { onChange, onBlur, value } }) => (
+          <IonSelect onIonChange={onChange} onIonBlur={onBlur} value={value}>
+            {Object.values(Gender).map((gender) => (
+              <IonSelectOption key={gender} value={gender}>
+                {gender}
+              </IonSelectOption>
+            ))}
+          </IonSelect>
+        )}
+        rules={{
           required: 'Gender is required',
-        })}
-      >
-        {Object.values(Gender).map((gender) => (
-          <IonSelectOption value={gender}>{gender}</IonSelectOption>
-        ))}
-      </IonSelect>
+        }}
+      />
       {errors.gender && (
         <IonNote slot="helper" color="danger">
           {errors.gender.message}
@@ -83,7 +96,17 @@ const ProfileForm: React.FC<Props> = ({
       disabled={isLoading}
     >
       <IonLabel position="floating">Description</IonLabel>
-      <IonTextarea {...register('description')} />
+      <Controller
+        name="description"
+        control={control}
+        render={({ field: { onChange, onBlur, value } }) => (
+          <IonTextarea
+            onIonChange={onChange}
+            onIonBlur={onBlur}
+            value={value}
+          />
+        )}
+      />
       {errors.description && (
         <IonNote slot="helper" color="danger">
           {errors.description.message}

@@ -18,7 +18,7 @@ import {
   IonToolbar,
   useIonRouter,
 } from '@ionic/react';
-import { useForm } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import type { FetchBaseQueryError } from '@reduxjs/toolkit/query/react';
 
 import { useAppDispatch } from '../../app/hooks';
@@ -40,11 +40,11 @@ const Register: React.FC = () => {
 
   const router = useIonRouter();
   const {
-    register,
     formState: { errors },
     handleSubmit,
     setError,
     getValues,
+    control,
   } = useForm<RegisterData>();
 
   const onSubmit = async (data: RegisterData) => {
@@ -109,11 +109,20 @@ const Register: React.FC = () => {
                   disabled={isLoading}
                 >
                   <IonLabel position="floating">Email</IonLabel>
-                  <IonInput
-                    type="email"
-                    {...register('email', {
+                  <Controller
+                    name="email"
+                    control={control}
+                    render={({ field: { onChange, onBlur, value } }) => (
+                      <IonInput
+                        type="email"
+                        onIonChange={onChange}
+                        onIonBlur={onBlur}
+                        value={value}
+                      />
+                    )}
+                    rules={{
                       required: 'Email is required',
-                    })}
+                    }}
                   />
                   {errors.email && (
                     <IonNote slot="helper" color="danger">
@@ -128,11 +137,20 @@ const Register: React.FC = () => {
                   disabled={isLoading}
                 >
                   <IonLabel position="floating">Password</IonLabel>
-                  <IonInput
-                    type="password"
-                    {...register('password', {
+                  <Controller
+                    name="password"
+                    control={control}
+                    render={({ field: { onChange, onBlur, value } }) => (
+                      <IonInput
+                        type="password"
+                        onIonChange={onChange}
+                        onIonBlur={onBlur}
+                        value={value}
+                      />
+                    )}
+                    rules={{
                       required: 'Password is required',
-                    })}
+                    }}
                   />
                   {errors.password && (
                     <IonNote slot="helper" color="danger">
@@ -147,16 +165,25 @@ const Register: React.FC = () => {
                   disabled={isLoading}
                 >
                   <IonLabel position="floating">Confirm Password</IonLabel>
-                  <IonInput
-                    type="password"
-                    {...register('confirm_password', {
+                  <Controller
+                    name="confirm_password"
+                    control={control}
+                    render={({ field: { onChange, onBlur, value } }) => (
+                      <IonInput
+                        type="password"
+                        onIonChange={onChange}
+                        onIonBlur={onBlur}
+                        value={value}
+                      />
+                    )}
+                    rules={{
                       required: 'Password is required',
                       validate: {
                         match: (value) =>
                           value === getValues('password') ||
                           'Passwords need to match',
                       },
-                    })}
+                    }}
                   />
                   {errors.confirm_password && (
                     <IonNote slot="helper" color="danger">

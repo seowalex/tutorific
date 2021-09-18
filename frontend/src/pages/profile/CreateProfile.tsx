@@ -28,10 +28,10 @@ const CreateProfile: React.FC = () => {
 
   const router = useIonRouter();
   const {
-    register,
     formState: { errors },
     handleSubmit,
     setError,
+    control,
   } = useForm<ProfileData>();
 
   const onSubmit = async (data: ProfileData) => {
@@ -88,9 +88,9 @@ const CreateProfile: React.FC = () => {
             <IonCol className="ion-no-padding">
               <ProfileForm
                 isLoading={isLoading}
-                register={register}
                 errors={errors}
                 handleSubmit={handleSubmit(onSubmit)}
+                control={control}
               />
             </IonCol>
           </IonRow>

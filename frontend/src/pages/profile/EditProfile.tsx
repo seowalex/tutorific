@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   IonBackButton,
   IonButtons,
@@ -38,13 +38,16 @@ const EditProfile: React.FC = () => {
 
   const router = useIonRouter();
   const {
-    register,
     formState: { errors },
     handleSubmit,
+    reset,
     setError,
-  } = useForm<ProfileData>({
-    defaultValues: profile,
-  });
+    control,
+  } = useForm<ProfileData>();
+
+  useEffect(() => {
+    reset(profile);
+  }, [reset, profile]);
 
   const onSubmit = async (data: ProfileData) => {
     try {
@@ -94,9 +97,9 @@ const EditProfile: React.FC = () => {
             <IonCol className="ion-no-padding">
               <ProfileForm
                 isLoading={isLoading}
-                register={register}
                 errors={errors}
                 handleSubmit={handleSubmit(onSubmit)}
+                control={control}
               />
             </IonCol>
           </IonRow>

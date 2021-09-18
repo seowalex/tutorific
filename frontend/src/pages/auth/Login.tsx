@@ -13,7 +13,7 @@ import {
   IonSpinner,
   useIonRouter,
 } from '@ionic/react';
-import { useForm } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import type { FetchBaseQueryError } from '@reduxjs/toolkit/query/react';
 
 import { useAppDispatch } from '../../app/hooks';
@@ -34,10 +34,10 @@ const Login: React.FC = () => {
 
   const router = useIonRouter();
   const {
-    register,
     formState: { errors },
     handleSubmit,
     setError,
+    control,
   } = useForm<LoginData>();
 
   const onSubmit = async (data: LoginData) => {
@@ -80,11 +80,20 @@ const Login: React.FC = () => {
                   disabled={isLoading}
                 >
                   <IonLabel position="floating">Email</IonLabel>
-                  <IonInput
-                    type="email"
-                    {...register('email', {
+                  <Controller
+                    name="email"
+                    control={control}
+                    render={({ field: { onChange, onBlur, value } }) => (
+                      <IonInput
+                        type="email"
+                        onIonChange={onChange}
+                        onIonBlur={onBlur}
+                        value={value}
+                      />
+                    )}
+                    rules={{
                       required: 'Email is required',
-                    })}
+                    }}
                   />
                   {errors.email && (
                     <IonNote slot="helper" color="danger">
@@ -99,11 +108,20 @@ const Login: React.FC = () => {
                   disabled={isLoading}
                 >
                   <IonLabel position="floating">Password</IonLabel>
-                  <IonInput
-                    type="password"
-                    {...register('password', {
+                  <Controller
+                    name="password"
+                    control={control}
+                    render={({ field: { onChange, onBlur, value } }) => (
+                      <IonInput
+                        type="password"
+                        onIonChange={onChange}
+                        onIonBlur={onBlur}
+                        value={value}
+                      />
+                    )}
+                    rules={{
                       required: 'Password is required',
-                    })}
+                    }}
                   />
                   {errors.password && (
                     <IonNote slot="helper" color="danger">
