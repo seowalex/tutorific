@@ -5,33 +5,30 @@ import { RootState } from '../app/store';
 import { Gender, Level } from '../app/types';
 
 export interface TutorFiltersState {
-  priceMin: number | null;
-  priceMax: number | null;
-  timeSlots: number[];
-  subjects: string[];
-  levels: Level[];
-  gender: Gender | null;
+  priceMin?: number;
+  priceMax?: number;
+  timeSlots?: number[];
+  subjects?: string[];
+  levels?: Level[];
+  gender?: Gender;
 }
 
 const initialState: TutorFiltersState = {
-  priceMin: null,
-  priceMax: null,
   timeSlots: [],
   subjects: [],
-  levels: [],
-  gender: null,
+  levels: []
 };
 
 const slice = createSlice({
   name: 'tutorFilters',
   initialState,
   reducers: {
-    setFilters: (_, action: PayloadAction<TutorFiltersState>) => action.payload,
-    unsetFilters: () => initialState,
+    setTutorListingFilters: (_, action: PayloadAction<TutorFiltersState>) => action.payload,
+    unsetTutorListingFilters: () => initialState,
   },
 });
 
-export const { setFilters, unsetFilters } = slice.actions;
+export const { setTutorListingFilters, unsetTutorListingFilters } = slice.actions;
 
 export const selectTutorFilters = (state: RootState) => state.tutorFilters;
 

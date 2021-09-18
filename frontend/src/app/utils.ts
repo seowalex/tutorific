@@ -1,3 +1,4 @@
+import { TutorFiltersState } from '../reducers/tutorFilters';
 import { WeekDay } from './types';
 
 export const formatPriceRange = (priceMin: number, priceMax: number): string =>

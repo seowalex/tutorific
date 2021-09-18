@@ -18,12 +18,12 @@ import { TutorFiltersState } from '../reducers/tutorFilters';
 import styles from './ListingForm.module.scss';
 
 export interface FilterTutorListingFormData {
-  priceMin: number | null;
-  priceMax: number | null;
-  timeSlots: NestedValue<number[]>;
-  subjects: NestedValue<string[]>;
-  levels: NestedValue<Level[]>;
-  gender: Gender | null;
+  priceMin?: number;
+  priceMax?: number;
+  timeSlots?: NestedValue<number[]>;
+  subjects?: NestedValue<string[]>;
+  levels?: NestedValue<Level[]>;
+  gender?: Gender;
 }
 
 interface Props {
@@ -34,14 +34,32 @@ interface Props {
 
 const FilterTutorListingForm: React.FC<Props> = (props) => {
   const { onSubmit, submitButtonText, currentData } = props;
+  const emptyFilters = {
+    priceMin: undefined,
+    priceMax: undefined,
+    timeSlots: [],
+    subjects: [],
+    levels: [],
+    gender: undefined,
+  };
   const {
     register,
     formState: { errors, isSubmitting },
     handleSubmit,
+    reset,
     getValues,
   } = useForm<FilterTutorListingFormData>({
-    defaultValues: currentData ?? {},
+    defaultValues: currentData ?? emptyFilters,
   });
+
+  const handleReset = () => {
+    reset(emptyFilters);
+    console.log(getValues());
+  };
+
+  const foo = () => {
+    console.log(getValues());
+  }
 
   return (
     <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
@@ -90,12 +108,9 @@ const FilterTutorListingForm: React.FC<Props> = (props) => {
                 validate: {
                   atLeastMin: (value) => {
                     const priceMin = getValues('priceMin')!;
-                    console.log(priceMin);
-                    console.log(Number.isNaN(value!));
-                    console.log(Number.isNaN(priceMin));
-                    console.log(priceMin <= value!);
                     return (
-                      Number.isNaN(value!) ||
+                      value == null ||
+                      Number.isNaN(value) ||
                       Number.isNaN(priceMin) ||
                       priceMin <= value! ||
                       'Max Price must be at least Min Price'
@@ -171,9 +186,13 @@ const FilterTutorListingForm: React.FC<Props> = (props) => {
             <IonLabel position="stacked">Gender</IonLabel>
             <IonSelect cancelText="Cancel" okText="OK" {...register('gender')}>
               {Object.values(Gender).map((value) =>
-                value === Gender.PNTS ? null : (
-                  <IonSelectOption value={value}>{value}</IonSelectOption>
-                )
+                value === Gender.PNTS
+                  ? (
+                    <IonSelectOption value={null}>No Preference</IonSelectOption>
+                  )
+                  : (
+                    <IonSelectOption value={value}>{value}</IonSelectOption>
+                  )
               )}
             </IonSelect>
           </IonItem>
@@ -181,6 +200,24 @@ const FilterTutorListingForm: React.FC<Props> = (props) => {
       </IonRow>
       <IonButton expand="block" type="submit" disabled={isSubmitting}>
         {isSubmitting ? <IonSpinner /> : submitButtonText}
+      </IonButton>
+      <IonButton
+        expand="block"
+        type='button'
+        disabled={isSubmitting}
+        fill='outline'
+        onClick={handleReset}
+      >
+        {isSubmitting ? <IonSpinner /> : 'Clear All'}
+      </IonButton>
+      <IonButton
+        expand="block"
+        type='button'
+        disabled={isSubmitting}
+        fill='outline'
+        onClick={foo}
+      >
+        {isSubmitting ? <IonSpinner /> : 'WTF'}
       </IonButton>
     </form>
   );

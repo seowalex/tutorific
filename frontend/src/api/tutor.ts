@@ -1,6 +1,9 @@
 import api from './base';
 import { TutorListing } from '../app/types';
+import { TutorFiltersState } from '../reducers/tutorFilters'
 
+type PaginationParams = { skip?: number, limit?: number };
+type GetTutorListingsQueryParams = Partial<TutorFiltersState & PaginationParams>;
 type GetTutorListingsResponse = TutorListing[];
 type GetTutorListingResponse = TutorListing;
 type CreateTutorListingRequest = Omit<
@@ -13,9 +16,10 @@ type UpdateTutorListingRequest = Partial<
 
 const extendedApi = api.injectEndpoints({
   endpoints: (builder) => ({
-    getTutorListings: builder.query<GetTutorListingsResponse, void>({
-      query: () => ({
+    getTutorListings: builder.query<GetTutorListingsResponse, GetTutorListingsQueryParams>({
+      query: (queryParams) => ({
         url: 'tutor/',
+        params: queryParams
       }),
       transformResponse: (response: { data: GetTutorListingsResponse }) =>
         response.data,

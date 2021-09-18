@@ -13,16 +13,25 @@ import {
   IonToolbar,
   useIonViewWillEnter,
 } from '@ionic/react';
-import { addOutline, search } from 'ionicons/icons';
+import { addOutline, funnel, funnelOutline } from 'ionicons/icons';
 
 import TutorListingCard from '../../components/TutorListingCard';
 import { useGetTutorListingsQuery } from '../../api/tutor';
-import { selectTutorFilters } from '../../reducers/tutorFilters';
+import { selectTutorFilters, TutorFiltersState } from '../../reducers/tutorFilters';
 import { useAppSelector } from '../../app/hooks';
 
 const Tutors: React.FC = () => {
   const filters = useAppSelector(selectTutorFilters);
-  const { data: listings, refetch } = useGetTutorListingsQuery();
+  const { data: listings, refetch } = useGetTutorListingsQuery(filters);
+
+  const areFiltersEmpty = (filtersState: TutorFiltersState): boolean =>
+    filtersState.priceMin == null
+      && filtersState.priceMax == null
+      && (filtersState.subjects == null || filtersState.subjects.length === 0)
+      && (filtersState.levels == null || filtersState.levels.length === 0)
+      && (filtersState.timeSlots == null || filtersState.timeSlots.length === 0)
+      && !filtersState.gender;
+    
 
   const doRefresh = (event: CustomEvent<RefresherEventDetail>) => {
     refetch();
@@ -46,7 +55,7 @@ const Tutors: React.FC = () => {
               <IonIcon slot="icon-only" icon={addOutline} />
             </IonButton>
             <IonButton routerLink="/searchtutor">
-              <IonIcon slot="icon-only" icon={search} />
+              <IonIcon slot="icon-only" icon={areFiltersEmpty(filters) ? funnelOutline : funnel} />
             </IonButton>
           </IonButtons>
         </IonToolbar>

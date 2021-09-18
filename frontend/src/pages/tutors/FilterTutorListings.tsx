@@ -17,7 +17,7 @@ import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import FilterTutorListingForm, {
   FilterTutorListingFormData,
 } from '../../components/FilterTutorListingForm';
-import { selectTutorFilters, setFilters } from '../../reducers/tutorFilters';
+import { selectTutorFilters, setTutorListingFilters } from '../../reducers/tutorFilters';
 
 const FilterTutorListings: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -25,7 +25,14 @@ const FilterTutorListings: React.FC = () => {
   const currentFilters = useAppSelector(selectTutorFilters);
 
   const onSubmit: SubmitHandler<FilterTutorListingFormData> = (data) => {
-    dispatch(setFilters(data));
+    const filters = {
+      ...data,
+      priceMin: Number.isNaN(data.priceMin) ? undefined : data.priceMin,
+      priceMax: Number.isNaN(data.priceMax) ? undefined : data.priceMax,
+      gender: data.gender ?? undefined
+    }
+    console.log(filters);
+    dispatch(setTutorListingFilters(filters));
     history.push('/tutors');
   };
 
@@ -33,7 +40,7 @@ const FilterTutorListings: React.FC = () => {
     <IonPage>
       <IonHeader>
         <IonToolbar>
-          <IonTitle>Filter Tutor Listings</IonTitle>
+          <IonTitle>Search Tutor Listings</IonTitle>
           <IonButtons slot="start">
             <IonBackButton defaultHref="/tutors" />
           </IonButtons>

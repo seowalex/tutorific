@@ -18,6 +18,7 @@ import {
 import storage from 'redux-persist/lib/storage';
 import api from '../api/base';
 import auth from '../reducers/auth';
+/* eslint-disable import/no-cycle */
 import tutorFilters from '../reducers/tutorFilters';
 /* eslint-enable import/no-cycle */
 
@@ -36,6 +37,7 @@ const persistedReducer = persistReducer(persistConfig, rootReducer);
 
 export const store = configureStore({
   reducer: persistedReducer,
+  devTools: true,
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: {
