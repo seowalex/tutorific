@@ -5,9 +5,9 @@ import {
   ManyToOne,
   CreateDateColumn,
 } from 'typeorm';
-import { IsNotEmpty, Min } from 'class-validator';
+import { ArrayNotEmpty, IsNotEmpty, Max, Min } from 'class-validator';
 import Profile from './profile';
-import { Level } from '../utils/model';
+import { Gender, Level } from '../utils/model';
 import { IsBiggerThan } from '../validations/common';
 
 @Entity()
@@ -37,7 +37,17 @@ export default class TutorListing {
   description: string;
 
   @Column('int', { array: true })
-  // TODO add some range
+  @Min(0, {
+    each: true,
+    message: 'Not a valid timeslot',
+  })
+  @Max(7 * 24 * 2, {
+    each: true,
+    message: 'Not a valid timeslot',
+  })
+  @ArrayNotEmpty({
+    message: 'Should have at least 1 timeslot',
+  })
   timeSlots: number[];
 
   @Column('text', { array: true })
@@ -45,9 +55,15 @@ export default class TutorListing {
     each: true,
     message: 'Each value in subjects should not be empty',
   })
+  @ArrayNotEmpty({
+    message: 'Should have at least 1 subject',
+  })
   subjects: string[];
 
   @Column('enum', { array: true, enum: Level })
+  @ArrayNotEmpty({
+    message: 'Should have at least 1 level',
+  })
   levels: Level[];
 
   @CreateDateColumn()
@@ -56,3 +72,13 @@ export default class TutorListing {
 
 export type UpdateTutorListing = Partial<TutorListing>;
 export type CreateTutorListing = Omit<TutorListing, 'id' | 'createdAt'>;
+export type QueryTutorListing = {
+  priceMin?: number;
+  priceMax?: number;
+  timeSlots?: number[];
+  subjects?: string[];
+  levels?: Level[];
+  gender?: Gender;
+  skip?: number;
+  limit?: number;
+};

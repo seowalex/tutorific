@@ -16,9 +16,7 @@ import {
   REGISTER,
 } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
-
 import api from '../api/base';
-/* eslint-disable import/no-cycle */
 import auth from '../reducers/auth';
 import tutorFilters from '../reducers/tutorFilters';
 /* eslint-enable import/no-cycle */

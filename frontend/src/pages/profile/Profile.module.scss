@@ -1,17 +1,33 @@
-.profileHeader {
+.header {
     display: flex;
     align-items: center;
     gap: 8px;
 
-    .profileAvatar, .profileGender {
-      flex-shrink: 0;
+    .avatar {
+      margin-right: 8px;
     }
+}
 
-    .profileAvatar {
-      margin-right: 12px;
-    }
+.noListings {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 
-    .profileName {
-      margin: 0;
+  .noListingsMessage {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex-grow: 1;
+    color: #a6a6a6;
+    
+    @media (prefers-color-scheme: dark) {
+      color: #656565;
     }
+  
+    .noListingsIcon {
+      font-size: 72px;
+      margin-bottom: 12px;
+    }
+  }
 }

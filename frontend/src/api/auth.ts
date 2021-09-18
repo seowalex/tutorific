@@ -8,6 +8,7 @@ interface LoginRequest {
 
 interface LoginResponse {
   userId: number;
+  profileId: number | null;
   jwtToken: string;
   refreshToken: string;
 }
@@ -30,6 +31,7 @@ const extendedApi = api.injectEndpoints({
       }),
       transformResponse: (response: LoginResponse) => ({
         id: response.userId,
+        profileId: response.profileId,
         token: response.jwtToken,
         refreshToken: response.refreshToken,
       }),
@@ -52,6 +54,7 @@ const extendedApi = api.injectEndpoints({
       }),
       transformResponse: (response: RegisterResponse) => ({
         id: response.userId,
+        profileId: response.profileId,
         token: response.jwtToken,
         refreshToken: response.refreshToken,
       }),

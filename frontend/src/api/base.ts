@@ -35,21 +35,29 @@ const baseQueryWithReauth: BaseQueryFn<
 
   if (result.error?.status === 401) {
     const state = api.getState() as RootState;
-    const refreshResult = await baseQuery(
-      {
-        url: 'auth/refresh',
-        method: 'POST',
-        body: { userId: state.auth.id, refreshToken: state.auth.refreshToken },
-      },
-      api,
-      extraOptions
-    );
 
-    if (refreshResult.data) {
-      api.dispatch(setToken((refreshResult.data as RefreshResponse).jwtToken));
-      result = await baseQuery(args, api, extraOptions);
-    } else {
-      api.dispatch(unsetCredentials());
+    if (state.auth.id && state.auth.refreshToken) {
+      const refreshResult = await baseQuery(
+        {
+          url: 'auth/refresh',
+          method: 'POST',
+          body: {
+            userId: state.auth.id,
+            refreshToken: state.auth.refreshToken,
+          },
+        },
+        api,
+        extraOptions
+      );
+
+      if (refreshResult.data) {
+        api.dispatch(
+          setToken((refreshResult.data as RefreshResponse).jwtToken)
+        );
+        result = await baseQuery(args, api, extraOptions);
+      } else {
+        api.dispatch(unsetCredentials());
+      }
     }
   }
 
@@ -59,6 +67,7 @@ const baseQueryWithReauth: BaseQueryFn<
 const api = createApi({
   baseQuery: baseQueryWithReauth,
   endpoints: () => ({}),
+  tagTypes: ['Profile'],
 });
 
 export default api;
