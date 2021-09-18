@@ -13,22 +13,20 @@ export interface TutorFiltersState {
   gender?: Gender;
 }
 
-const initialState: TutorFiltersState = {
-  timeSlots: [],
-  subjects: [],
-  levels: []
-};
+const initialState: TutorFiltersState = {};
 
 const slice = createSlice({
   name: 'tutorFilters',
   initialState,
   reducers: {
-    setTutorListingFilters: (_, action: PayloadAction<TutorFiltersState>) => action.payload,
+    setTutorListingFilters: (_, action: PayloadAction<TutorFiltersState>) =>
+      action.payload,
     unsetTutorListingFilters: () => initialState,
   },
 });
 
-export const { setTutorListingFilters, unsetTutorListingFilters } = slice.actions;
+export const { setTutorListingFilters, unsetTutorListingFilters } =
+  slice.actions;
 
 export const selectTutorFilters = (state: RootState) => state.tutorFilters;
 

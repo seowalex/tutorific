@@ -17,7 +17,10 @@ import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import FilterTutorListingForm, {
   FilterTutorListingFormData,
 } from '../../components/FilterTutorListingForm';
-import { selectTutorFilters, setTutorListingFilters } from '../../reducers/tutorFilters';
+import {
+  selectTutorFilters,
+  setTutorListingFilters,
+} from '../../reducers/tutorFilters';
 
 const FilterTutorListings: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -29,9 +32,8 @@ const FilterTutorListings: React.FC = () => {
       ...data,
       priceMin: Number.isNaN(data.priceMin) ? undefined : data.priceMin,
       priceMax: Number.isNaN(data.priceMax) ? undefined : data.priceMax,
-      gender: data.gender ?? undefined
-    }
-    console.log(filters);
+      gender: data.gender ?? undefined,
+    };
     dispatch(setTutorListingFilters(filters));
     history.push('/tutors');
   };

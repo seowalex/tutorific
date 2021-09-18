@@ -46,20 +46,20 @@ const FilterTutorListingForm: React.FC<Props> = (props) => {
     register,
     formState: { errors, isSubmitting },
     handleSubmit,
-    reset,
+    setValue,
     getValues,
   } = useForm<FilterTutorListingFormData>({
     defaultValues: currentData ?? emptyFilters,
   });
 
   const handleReset = () => {
-    reset(emptyFilters);
-    console.log(getValues());
+    setValue('priceMin', undefined);
+    setValue('priceMax', undefined);
+    setValue('timeSlots', []);
+    setValue('subjects', []);
+    setValue('levels', []);
+    setValue('gender', undefined);
   };
-
-  const foo = () => {
-    console.log(getValues());
-  }
 
   return (
     <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
@@ -186,13 +186,11 @@ const FilterTutorListingForm: React.FC<Props> = (props) => {
             <IonLabel position="stacked">Gender</IonLabel>
             <IonSelect cancelText="Cancel" okText="OK" {...register('gender')}>
               {Object.values(Gender).map((value) =>
-                value === Gender.PNTS
-                  ? (
-                    <IonSelectOption value={null}>No Preference</IonSelectOption>
-                  )
-                  : (
-                    <IonSelectOption value={value}>{value}</IonSelectOption>
-                  )
+                value === Gender.PNTS ? (
+                  <IonSelectOption value={null}>No Preference</IonSelectOption>
+                ) : (
+                  <IonSelectOption value={value}>{value}</IonSelectOption>
+                )
               )}
             </IonSelect>
           </IonItem>
@@ -203,21 +201,12 @@ const FilterTutorListingForm: React.FC<Props> = (props) => {
       </IonButton>
       <IonButton
         expand="block"
-        type='button'
+        type="button"
         disabled={isSubmitting}
-        fill='outline'
+        fill="outline"
         onClick={handleReset}
       >
         {isSubmitting ? <IonSpinner /> : 'Clear All'}
-      </IonButton>
-      <IonButton
-        expand="block"
-        type='button'
-        disabled={isSubmitting}
-        fill='outline'
-        onClick={foo}
-      >
-        {isSubmitting ? <IonSpinner /> : 'WTF'}
       </IonButton>
     </form>
   );
