@@ -3,9 +3,9 @@
   "version": "1.0.0",
   "private": true,
   "dependencies": {
-    "@ionic/core": "^6.0.0-beta.6",
-    "@ionic/react": "^6.0.0-beta.6",
-    "@ionic/react-router": "^6.0.0-beta.6",
+    "@ionic/core": "^6.0.0-beta.5",
+    "@ionic/react": "^6.0.0-beta.5",
+    "@ionic/react-router": "^6.0.0-beta.5",
     "@reduxjs/toolkit": "^1.6.1",
     "ionicons": "^5.5.3",
     "node-sass": "^6.0.1",
@@ -28,6 +28,7 @@
     "workbox-navigation-preload": "^6.3.0",
     "workbox-precaching": "^6.3.0",
     "workbox-range-requests": "^6.3.0",
+    "workbox-recipes": "^6.3.0",
     "workbox-routing": "^6.3.0",
     "workbox-strategies": "^6.3.0",
     "workbox-streams": "^6.3.0"
