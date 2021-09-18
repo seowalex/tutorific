@@ -42,18 +42,12 @@ registerRoute(
   createHandlerBoundToURL(`${process.env.PUBLIC_URL}/index.html`)
 );
 
-warmStrategyCache({
-  urls: ['/assets/welcome.png', '/manifest.json'],
-  strategy: new StaleWhileRevalidate({
-    cacheName: 'assets',
-  }),
-});
-
 imageCache({
   warmCache: [
     '/assets/icon/favicon.png',
     '/assets/icon/icon.png',
     '/assets/icon/maskable.png',
+    '/assets/welcome.png',
   ],
 });
 

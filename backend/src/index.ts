@@ -1,4 +1,6 @@
 import Koa from 'koa';
+import serve from 'koa-static';
+import send from 'koa-send';
 import bodyParser from 'koa-bodyparser';
 import cors from '@koa/cors';
 import json from 'koa-json';
@@ -14,12 +16,18 @@ import authUtil from './utils/auth';
 
 const app = new Koa();
 
+app.use(serve(`../frontend/build`));
+
 dbConnection.then(() => {
   // eslint-disable-next-line no-console
   console.info('db listening on port: ', config.dbPort);
 });
 
-app.use(helmet());
+app.use(
+  helmet({
+    contentSecurityPolicy: false,
+  })
+);
 
 app.use(bodyParser());
 app.use(json());
@@ -45,7 +53,7 @@ app.use(async (ctx: Koa.Context, next: () => Promise<any>) => {
   }
 });
 
-app.use(
+router.use(
   jwt({ secret: process.env.JWT_SECRET ?? 'secret' }).unless({
     custom: (ctx: Koa.Context): boolean =>
       authUtil.isOpenRoute(ctx.method, ctx.url),
@@ -53,6 +61,10 @@ app.use(
 );
 
 app.use(router.routes()).use(router.allowedMethods());
+
+app.use(async (ctx) => {
+  await send(ctx, '/index.html', { root: '../frontend/build' });
+});
 
 // Development logging
 app.use(

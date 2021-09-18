@@ -13,7 +13,7 @@ interface RefreshResponse {
 }
 
 const baseQuery = fetchBaseQuery({
-  baseUrl: 'api',
+  baseUrl: '/api/',
   prepareHeaders: (headers, { getState }) => {
     const { token } = (getState() as RootState).auth;
 
