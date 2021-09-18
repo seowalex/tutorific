@@ -53,7 +53,7 @@ app.use(async (ctx: Koa.Context, next: () => Promise<any>) => {
   }
 });
 
-router.use(
+app.use(
   jwt({ secret: process.env.JWT_SECRET ?? 'secret' }).unless({
     custom: (ctx: Koa.Context): boolean =>
       authUtil.isOpenRoute(ctx.method, ctx.url),

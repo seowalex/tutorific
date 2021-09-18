@@ -66,6 +66,7 @@ const api = createApi({
   baseQuery: baseQueryWithReauth,
   endpoints: () => ({}),
   tagTypes: ['Profile'],
+  refetchOnReconnect: true,
 });
 
 export default api;

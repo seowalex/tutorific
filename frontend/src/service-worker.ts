@@ -1,13 +1,10 @@
 /// <reference lib="webworker" />
+import { CacheableResponsePlugin } from 'workbox-cacheable-response';
 import { clientsClaim } from 'workbox-core';
 import { createHandlerBoundToURL, precacheAndRoute } from 'workbox-precaching';
-import {
-  googleFontsCache,
-  imageCache,
-  warmStrategyCache,
-} from 'workbox-recipes';
+import { googleFontsCache, imageCache } from 'workbox-recipes';
 import { registerRoute } from 'workbox-routing';
-import { StaleWhileRevalidate } from 'workbox-strategies';
+import { NetworkFirst } from 'workbox-strategies';
 
 declare const self: ServiceWorkerGlobalScope;
 
@@ -52,6 +49,20 @@ imageCache({
 });
 
 googleFontsCache();
+
+// Cache successful API GET queries
+registerRoute(
+  ({ url }) =>
+    url.origin === self.location.origin && url.pathname.startsWith('/api/'),
+  new NetworkFirst({
+    cacheName: 'api',
+    plugins: [
+      new CacheableResponsePlugin({
+        statuses: [200],
+      }),
+    ],
+  })
+);
 
 // This allows the web app to trigger skipWaiting via
 // registration.waiting.postMessage({type: 'SKIP_WAITING'})
