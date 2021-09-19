@@ -12,6 +12,7 @@ import {
   IonRow,
   IonSpinner,
   useIonRouter,
+  useIonToast,
 } from '@ionic/react';
 import { Controller, useForm } from 'react-hook-form';
 import type { FetchBaseQueryError } from '@reduxjs/toolkit/query/react';
@@ -33,6 +34,7 @@ const Login: React.FC = () => {
   const [login, { isLoading }] = useLoginMutation();
 
   const router = useIonRouter();
+  const [present] = useIonToast();
   const {
     formState: { errors },
     handleSubmit,
@@ -51,14 +53,22 @@ const Login: React.FC = () => {
         router.push('/profile');
       }
     } catch (error) {
-      const message = (
-        (error as FetchBaseQueryError).data as ErrorResponse
-      ).errors
-        .flatMap((errorMessage) => errorMessage.detail)
-        .join(', ');
+      if (window.navigator.onLine) {
+        const message = (
+          (error as FetchBaseQueryError).data as ErrorResponse
+        ).errors
+          .flatMap((errorMessage) => errorMessage.detail)
+          .join(', ');
 
-      setError('email', { message });
-      setError('password', { message });
+        setError('email', { message });
+        setError('password', { message });
+      } else {
+        present({
+          message: 'Unable to connect to the Internet',
+          color: 'danger',
+          duration: 2000,
+        });
+      }
     }
   };
 
@@ -72,7 +82,7 @@ const Login: React.FC = () => {
                 <img className={styles.headerImg} src="/assets/icon/icon.png" />
                 <h1 className={styles.headerName}>Tutorific</h1>
               </div>
-              <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
+              <form onSubmit={handleSubmit(onSubmit)}>
                 <IonItem
                   fill="outline"
                   lines="full"

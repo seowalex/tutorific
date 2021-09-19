@@ -17,6 +17,7 @@ import {
   IonTitle,
   IonToolbar,
   useIonRouter,
+  useIonToast,
 } from '@ionic/react';
 import { Controller, useForm } from 'react-hook-form';
 import type { FetchBaseQueryError } from '@reduxjs/toolkit/query/react';
@@ -39,6 +40,7 @@ const Register: React.FC = () => {
   const [registerUser, { isLoading }] = useRegisterMutation();
 
   const router = useIonRouter();
+  const [present] = useIonToast();
   const {
     formState: { errors },
     handleSubmit,
@@ -58,24 +60,32 @@ const Register: React.FC = () => {
         router.push('/profile');
       }
     } catch (error) {
-      const { errors: errorMessages } = (error as FetchBaseQueryError)
-        .data as ErrorResponse;
+      if (window.navigator.onLine) {
+        const { errors: errorMessages } = (error as FetchBaseQueryError)
+          .data as ErrorResponse;
 
-      for (const errorMessage of errorMessages) {
-        switch (errorMessage.field) {
-          case 'email':
-            setError('email', {
-              message: errorMessage.detail.join(', '),
-            });
-            break;
-          case 'password':
-            setError('password', {
-              message: errorMessage.detail.join(', '),
-            });
-            break;
-          default:
-            break;
+        for (const errorMessage of errorMessages) {
+          switch (errorMessage.field) {
+            case 'email':
+              setError('email', {
+                message: errorMessage.detail.join(', '),
+              });
+              break;
+            case 'password':
+              setError('password', {
+                message: errorMessage.detail.join(', '),
+              });
+              break;
+            default:
+              break;
+          }
         }
+      } else {
+        present({
+          message: 'Unable to connect to the Internet',
+          color: 'danger',
+          duration: 2000,
+        });
       }
     }
   };
@@ -101,7 +111,7 @@ const Register: React.FC = () => {
                   tutors/tutees.
                 </p>
               </div>
-              <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
+              <form onSubmit={handleSubmit(onSubmit)}>
                 <IonItem
                   fill="outline"
                   lines="full"

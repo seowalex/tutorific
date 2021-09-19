@@ -26,7 +26,7 @@ import tuteeFilters from '../reducers/tuteeFilters';
 const persistConfig = {
   key: 'root',
   storage,
-  blacklist: [api.reducerPath],
+  whitelist: ['auth'],
 };
 
 const rootReducer = combineReducers({
