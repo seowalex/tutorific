@@ -58,14 +58,10 @@ const Profile: React.FC = () => {
   const router = useIonRouter();
   const [present] = useIonToast();
 
-  useEffect(() => {
-    window.navigator.serviceWorker.addEventListener('message', refetch);
-
-    return window.navigator.serviceWorker.removeEventListener(
-      'message',
-      refetch
-    );
-  }, [refetch]);
+  useEffect(
+    () => window.navigator.serviceWorker.addEventListener('message', refetch),
+    [refetch]
+  );
 
   const handleLogout = async () => {
     if (window.navigator.onLine) {

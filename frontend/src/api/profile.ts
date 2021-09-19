@@ -51,6 +51,19 @@ const extendedApi = api.injectEndpoints({
       }),
       invalidatesTags: (result, error, arg) =>
         result ? [{ type: 'Profile', id: arg.id }] : [],
+      // async onQueryStarted({ id, ...body }, { dispatch, queryFulfilled }) {
+      //   dispatch(
+      //     extendedApi.util.updateQueryData('getProfile', id, (draft) => {
+      //       Object.assign(draft, body);
+      //     })
+      //   );
+
+      //   try {
+      //     await queryFulfilled;
+      //   } catch {
+      //     console.log({ id, ...body });
+      //   }
+      // },
     }),
   }),
 });

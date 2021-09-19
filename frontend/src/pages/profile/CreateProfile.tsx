@@ -11,6 +11,7 @@ import {
   IonTitle,
   IonToolbar,
   useIonRouter,
+  useIonToast,
 } from '@ionic/react';
 import { useForm } from 'react-hook-form';
 import type { FetchBaseQueryError } from '@reduxjs/toolkit/query/react';
@@ -27,6 +28,7 @@ const CreateProfile: React.FC = () => {
   const [addProfile, { isLoading }] = useAddProfileMutation();
 
   const router = useIonRouter();
+  const [present] = useIonToast();
   const {
     formState: { errors },
     handleSubmit,
@@ -35,40 +37,48 @@ const CreateProfile: React.FC = () => {
   } = useForm<ProfileData>();
 
   const onSubmit = async (data: ProfileData) => {
-    try {
-      const profile = await addProfile(data).unwrap();
+    if (window.navigator.onLine) {
+      try {
+        const profile = await addProfile(data).unwrap();
 
-      if (profile.profileId && profile.token) {
-        dispatch(setProfileId(profile.profileId));
-        dispatch(setToken(profile.token));
-      }
+        if (profile.profileId && profile.token) {
+          dispatch(setProfileId(profile.profileId));
+          dispatch(setToken(profile.token));
+        }
 
-      router.push('/');
-    } catch (error) {
-      const { errors: errorMessages } = (error as FetchBaseQueryError)
-        .data as ErrorResponse;
+        router.push('/');
+      } catch (error) {
+        const { errors: errorMessages } = (error as FetchBaseQueryError)
+          .data as ErrorResponse;
 
-      for (const errorMessage of errorMessages) {
-        switch (errorMessage.field) {
-          case 'name':
-            setError('name', {
-              message: errorMessage.detail.join(', '),
-            });
-            break;
-          case 'gender':
-            setError('gender', {
-              message: errorMessage.detail.join(', '),
-            });
-            break;
-          case 'description':
-            setError('description', {
-              message: errorMessage.detail.join(', '),
-            });
-            break;
-          default:
-            break;
+        for (const errorMessage of errorMessages) {
+          switch (errorMessage.field) {
+            case 'name':
+              setError('name', {
+                message: errorMessage.detail.join(', '),
+              });
+              break;
+            case 'gender':
+              setError('gender', {
+                message: errorMessage.detail.join(', '),
+              });
+              break;
+            case 'description':
+              setError('description', {
+                message: errorMessage.detail.join(', '),
+              });
+              break;
+            default:
+              break;
+          }
         }
       }
+    } else {
+      present({
+        message: 'No internet connection',
+        color: 'danger',
+        duration: 2000,
+      });
     }
   };
 
