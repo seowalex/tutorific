@@ -1,6 +1,7 @@
 import api from './base';
 import { TutorListing } from '../app/types';
 import { TutorFiltersState } from '../reducers/tutorFilters';
+import { constructQueryString } from '../app/utils';
 
 type GetTutorListingsQueryParams = Partial<TutorFiltersState>;
 type GetTutorListingsResponse = { listings: TutorListing[]; count: number };
@@ -20,8 +21,7 @@ const extendedApi = api.injectEndpoints({
       GetTutorListingsQueryParams
     >({
       query: (queryParams) => ({
-        url: 'tutor/',
-        params: queryParams,
+        url: `tutor/${constructQueryString(queryParams)}`,
       }),
       transformResponse: (response: { data: GetTutorListingsResponse }) =>
         response.data,

@@ -96,7 +96,7 @@ const Tutors: React.FC = () => {
       </IonHeader>
       <IonContent fullscreen>
         <IonRefresher slot="fixed" onIonRefresh={doRefresh}>
-          <IonRefresherContent />
+          <IonRefresherContent refreshingText="Refreshing listings..." />
         </IonRefresher>
         {listings.map((listing) => (
           <TutorListingCard listing={listing} />

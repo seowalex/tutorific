@@ -1,3 +1,5 @@
+import { FetchArgs } from '@reduxjs/toolkit/dist/query';
+import { ObjectFlags } from 'typescript';
 import { WeekDay } from './types';
 
 export const formatPriceRange = (priceMin: number, priceMax: number): string =>
@@ -32,4 +34,21 @@ export const computeWeekDays = (timeSlots: number[]): string[] => {
   }
 
   return Array.from(weekDays);
+};
+
+export const constructQueryString = (params: Record<string, any>): string => {
+  if (params === {}) {
+    return '';
+  }
+
+  const queryString = new URLSearchParams();
+  Object.keys(params).forEach((key) => {
+    const value = params[key];
+    if (Array.isArray(value)) {
+      value.forEach((element) => queryString.append(key, element));
+    } else if (value != null) {
+      queryString.append(key, value);
+    }
+  });
+  return `?${queryString.toString()}`;
 };
