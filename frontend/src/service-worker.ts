@@ -1,10 +1,11 @@
 /// <reference lib="webworker" />
+import { BackgroundSyncPlugin } from 'workbox-background-sync';
 import { CacheableResponsePlugin } from 'workbox-cacheable-response';
 import { clientsClaim } from 'workbox-core';
 import { createHandlerBoundToURL, precacheAndRoute } from 'workbox-precaching';
 import { googleFontsCache, imageCache } from 'workbox-recipes';
 import { registerRoute } from 'workbox-routing';
-import { NetworkFirst } from 'workbox-strategies';
+import { NetworkFirst, NetworkOnly } from 'workbox-strategies';
 
 declare const self: ServiceWorkerGlobalScope;
 
@@ -62,6 +63,37 @@ registerRoute(
       }),
     ],
   })
+);
+
+const backgroundSync = new NetworkOnly({
+  plugins: [
+    new BackgroundSyncPlugin('offlineQueue', {
+      onSync: async ({ queue }) => {
+        await queue.replayRequests();
+        const clients = await self.clients.matchAll();
+
+        for (const client of clients) {
+          client.postMessage({});
+        }
+      },
+    }),
+  ],
+});
+
+// Retry failed API POST queries when online
+registerRoute(
+  ({ url }) =>
+    url.origin === self.location.origin && url.pathname.startsWith('/api/'),
+  backgroundSync,
+  'POST'
+);
+
+// Retry failed API PUT queries when online
+registerRoute(
+  ({ url }) =>
+    url.origin === self.location.origin && url.pathname.startsWith('/api/'),
+  backgroundSync,
+  'PUT'
 );
 
 // This allows the web app to trigger skipWaiting via

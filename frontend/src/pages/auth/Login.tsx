@@ -65,7 +65,7 @@ const Login: React.FC = () => {
       }
     } else {
       present({
-        message: 'Unable to connect to the Internet',
+        message: 'No internet connection',
         color: 'danger',
         duration: 2000,
       });

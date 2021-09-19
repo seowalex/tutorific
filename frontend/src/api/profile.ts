@@ -49,9 +49,8 @@ const extendedApi = api.injectEndpoints({
         method: 'PUT',
         body,
       }),
-      invalidatesTags: (result, error, arg) => [
-        { type: 'Profile', id: arg.id },
-      ],
+      invalidatesTags: (result, error, arg) =>
+        result ? [{ type: 'Profile', id: arg.id }] : [],
     }),
   }),
 });

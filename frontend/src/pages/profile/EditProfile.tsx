@@ -11,6 +11,7 @@ import {
   IonTitle,
   IonToolbar,
   useIonRouter,
+  useIonToast,
 } from '@ionic/react';
 import { useRouteMatch } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
@@ -37,6 +38,7 @@ const EditProfile: React.FC = () => {
   const { data: profile } = useGetProfileQuery(parseInt(id, 10));
 
   const router = useIonRouter();
+  const [present] = useIonToast();
   const {
     formState: { errors },
     handleSubmit,
@@ -54,29 +56,38 @@ const EditProfile: React.FC = () => {
       await updateProfile({ id: parseInt(id, 10), ...data }).unwrap();
       router.push(`/profile/${id}`, 'back');
     } catch (error) {
-      const { errors: errorMessages } = (error as FetchBaseQueryError)
-        .data as ErrorResponse;
+      if (window.navigator.onLine) {
+        const { errors: errorMessages } = (error as FetchBaseQueryError)
+          .data as ErrorResponse;
 
-      for (const errorMessage of errorMessages) {
-        switch (errorMessage.field) {
-          case 'name':
-            setError('name', {
-              message: errorMessage.detail.join(', '),
-            });
-            break;
-          case 'gender':
-            setError('gender', {
-              message: errorMessage.detail.join(', '),
-            });
-            break;
-          case 'description':
-            setError('description', {
-              message: errorMessage.detail.join(', '),
-            });
-            break;
-          default:
-            break;
+        for (const errorMessage of errorMessages) {
+          switch (errorMessage.field) {
+            case 'name':
+              setError('name', {
+                message: errorMessage.detail.join(', '),
+              });
+              break;
+            case 'gender':
+              setError('gender', {
+                message: errorMessage.detail.join(', '),
+              });
+              break;
+            case 'description':
+              setError('description', {
+                message: errorMessage.detail.join(', '),
+              });
+              break;
+            default:
+              break;
+          }
         }
+      } else {
+        present({
+          header: 'No Internet Connection',
+          message: 'Profile will be updated when you are online',
+          duration: 5000,
+        });
+        router.push(`/profile/${id}`, 'back');
       }
     }
   };

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   IonAvatar,
   IonButton,
@@ -52,11 +52,20 @@ const Profile: React.FC = () => {
   const dispatch = useAppDispatch();
   const [logout] = useLogoutMutation();
   const user = useAppSelector(selectCurrentUser);
-  const { data: profile } = useGetProfileQuery(parseInt(id, 10));
+  const { data: profile, refetch } = useGetProfileQuery(parseInt(id, 10));
   const hasListings = false;
 
   const router = useIonRouter();
   const [present] = useIonToast();
+
+  useEffect(() => {
+    window.navigator.serviceWorker.addEventListener('message', refetch);
+
+    return window.navigator.serviceWorker.removeEventListener(
+      'message',
+      refetch
+    );
+  }, [refetch]);
 
   const handleLogout = async () => {
     if (window.navigator.onLine) {
@@ -85,7 +94,7 @@ const Profile: React.FC = () => {
       }
     } else {
       present({
-        message: 'Unable to connect to the Internet',
+        message: 'No internet connection',
         color: 'danger',
         duration: 2000,
       });
