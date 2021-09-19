@@ -12,7 +12,8 @@ import {
 } from '@ionic/react';
 import React from 'react';
 import { SubmitHandler } from 'react-hook-form';
-import { RouteComponentProps, useHistory } from 'react-router';
+import { useHistory, useRouteMatch } from 'react-router';
+import { useDispatch } from 'react-redux';
 import {
   useGetTutorListingQuery,
   useUpdateTutorListingMutation,
@@ -23,16 +24,22 @@ import { selectCurrentUserId } from '../../reducers/auth';
 import TutorListingForm, {
   TutorListingFormData,
 } from '../../components/TutorListingForm';
+import { Level } from '../../app/types';
+import { resetTutorListingPagination } from '../../reducers/tutorFilters';
 
-const EditTutorListing: React.FC<RouteComponentProps<{ id: string }>> = ({
-  match,
-}) => {
-  const { id } = match.params;
-  // eslint-disable-next-line radix
-  const listingId = parseInt(id);
+interface Params {
+  id: string;
+}
+
+const EditTutorListing: React.FC = () => {
+  const {
+    params: { id },
+  } = useRouteMatch<Params>();
+  const listingId = parseInt(id, 10);
   const userId = useAppSelector(selectCurrentUserId);
   const { data: listing } = useGetTutorListingQuery(listingId);
   const [updateTutorListing] = useUpdateTutorListingMutation();
+  const dispatch = useDispatch();
   const history = useHistory();
 
   const onSubmit: SubmitHandler<TutorListingFormData> = async (data) => {
@@ -50,12 +57,13 @@ const EditTutorListing: React.FC<RouteComponentProps<{ id: string }>> = ({
         priceMax: price.upper,
         description: details.description,
         subjects: details.subjects as string[],
-        levels: details.levels as string[],
+        levels: details.levels as Level[],
         timeSlots: details.timeSlots as number[],
       };
       const result = await updateTutorListing(listingData);
 
       if ('data' in result && result.data) {
+        dispatch(resetTutorListingPagination());
         history.push(`/tutor/${id}`);
       }
     } catch (err) {

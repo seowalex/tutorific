@@ -24,7 +24,7 @@ import {
   shareSocialOutline,
   trashOutline,
 } from 'ionicons/icons';
-import { RouteComponentProps, useHistory } from 'react-router';
+import { useHistory, useRouteMatch } from 'react-router';
 import {
   useDeleteTuteeListingMutation,
   useGetTuteeListingQuery,
@@ -39,12 +39,15 @@ import {
 } from '../../app/utils';
 import ListingDetail from '../../components/ListingDetail';
 
-const TuteeListing: React.FC<RouteComponentProps<{ id: string }>> = ({
-  match,
-}) => {
-  const { id } = match.params;
-  // eslint-disable-next-line radix
-  const listingId = parseInt(id);
+interface Params {
+  id: string;
+}
+
+const TuteeListing: React.FC = () => {
+  const {
+    params: { id },
+  } = useRouteMatch<Params>();
+  const listingId = parseInt(id, 10);
   const userId = useAppSelector(selectCurrentUserId);
   const {
     data: listing,
@@ -142,7 +145,7 @@ const TuteeListing: React.FC<RouteComponentProps<{ id: string }>> = ({
           <IonItem
             button
             detail={false}
-            routerLink={`/edittutee/${listingId}`}
+            routerLink={`/tutee/${listingId}/edit`}
             onClick={() => {
               setShowPopover({ showPopover: false, event: undefined });
             }}

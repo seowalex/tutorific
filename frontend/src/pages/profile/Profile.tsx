@@ -36,6 +36,7 @@ import { selectCurrentUser, unsetCredentials } from '../../reducers/auth';
 import type { ErrorResponse } from '../../types/error';
 
 import styles from './Profile.module.scss';
+import { unsetTutorListingFilters } from '../../reducers/tutorFilters';
 
 interface Params {
   id: string;
@@ -62,6 +63,7 @@ const Profile: React.FC = () => {
       }
 
       dispatch(unsetCredentials());
+      dispatch(unsetTutorListingFilters())
       router.push('/', 'back');
     } catch (error) {
       const message = (

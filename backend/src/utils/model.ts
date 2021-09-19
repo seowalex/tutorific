@@ -7,14 +7,6 @@ export enum Gender {
   PNTS = 'Prefer not to say',
 }
 
-// only used for FE
-export enum Subject {
-  Math = 'Mathematics',
-  English = 'English',
-  Science = 'Science',
-  Chinese = 'Chinese',
-}
-
 export enum Level {
   LowerPrimary = 'Lower Primary',
   UpperPrimary = 'Upper Primary',
