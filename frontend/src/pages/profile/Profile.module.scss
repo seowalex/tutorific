@@ -1,11 +1,11 @@
 .header {
-    display: flex;
-    align-items: center;
-    gap: 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 
-    .avatar {
-      margin-right: 8px;
-    }
+  .avatar {
+    margin-right: 8px;
+  }
 }
 
 .noListings {
@@ -20,11 +20,11 @@
     justify-content: center;
     flex-grow: 1;
     color: #a6a6a6;
-    
+
     @media (prefers-color-scheme: dark) {
       color: #656565;
     }
-  
+
     .noListingsIcon {
       font-size: 72px;
       margin-bottom: 12px;

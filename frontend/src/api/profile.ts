@@ -60,4 +60,5 @@ export const {
   useGetProfileQuery,
   useAddProfileMutation,
   useUpdateProfileMutation,
+  usePrefetch,
 } = extendedApi;

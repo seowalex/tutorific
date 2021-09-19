@@ -37,7 +37,7 @@ const extendedApi = api.injectEndpoints({
     }),
     createTutorListing: builder.mutation<void, CreateTutorListingRequest>({
       query: (listing) => ({
-        url: 'tutor/',
+        url: 'tutor',
         method: 'POST',
         body: listing,
       }),
@@ -72,4 +72,5 @@ export const {
   useCreateTutorListingMutation,
   useUpdateTutorListingMutation,
   useDeleteTutorListingMutation,
+  usePrefetch,
 } = extendedApi;

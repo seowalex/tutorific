@@ -1,6 +1,7 @@
 # Tutorific
 
 ## Setup
+
 1. Install all dependencies and setup the pre-commit hooks:
 
 ```bash

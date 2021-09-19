@@ -37,7 +37,7 @@ const extendedApi = api.injectEndpoints({
     }),
     createTuteeListing: builder.mutation<void, CreateTuteeListingRequest>({
       query: (listing) => ({
-        url: 'tutee/',
+        url: 'tutee',
         method: 'POST',
         body: listing,
       }),
@@ -72,4 +72,5 @@ export const {
   useCreateTuteeListingMutation,
   useUpdateTuteeListingMutation,
   useDeleteTuteeListingMutation,
+  usePrefetch,
 } = extendedApi;

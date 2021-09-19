@@ -13,9 +13,7 @@ interface RefreshResponse {
 }
 
 const baseQuery = fetchBaseQuery({
-  baseUrl: `${process.env.NODE_ENV === 'production' ? 'https' : 'http'}://${
-    process.env.REACT_APP_BACKEND_HOST
-  }:${process.env.REACT_APP_BACKEND_PORT}/api/`,
+  baseUrl: '/api/',
   prepareHeaders: (headers, { getState }) => {
     const { token } = (getState() as RootState).auth;
 
@@ -68,6 +66,7 @@ const api = createApi({
   baseQuery: baseQueryWithReauth,
   endpoints: () => ({}),
   tagTypes: ['Profile', 'TutorListing', 'TuteeListing'],
+  refetchOnReconnect: true,
 });
 
 export default api;

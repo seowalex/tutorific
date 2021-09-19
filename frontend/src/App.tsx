@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Redirect, Route } from 'react-router-dom';
 import {
   IonApp,
@@ -13,6 +13,9 @@ import { IonReactRouter } from '@ionic/react-router';
 import { bulb, chatbubbles, person, school } from 'ionicons/icons';
 
 import { useAppSelector } from './app/hooks';
+import { usePrefetch as useTutorPrefetch } from './api/tutor';
+import { usePrefetch as useTuteePrefetch } from './api/tutee';
+import { usePrefetch as useProfilePrefetch } from './api/profile';
 import { selectCurrentUserId } from './reducers/auth';
 
 import Login from './pages/auth/Login';
@@ -40,6 +43,22 @@ import FilterTuteeListings from './pages/tutees/FilterTuteeListings';
 
 const App: React.FC = () => {
   const currentUserId = useAppSelector(selectCurrentUserId);
+  const prefetchTutorListings = useTutorPrefetch('getTutorListings');
+  const prefetchTuteeListings = useTuteePrefetch('getTuteeListings');
+  const prefetchProfile = useProfilePrefetch('getProfile');
+
+  useEffect(() => {
+    if (currentUserId) {
+      prefetchTutorListings();
+      prefetchTuteeListings();
+      prefetchProfile(currentUserId);
+    }
+  }, [
+    prefetchTutorListings,
+    prefetchTuteeListings,
+    prefetchProfile,
+    currentUserId,
+  ]);
 
   return (
     <IonApp>
