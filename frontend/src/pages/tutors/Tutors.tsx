@@ -13,7 +13,6 @@ import {
   IonRefresherContent,
   IonTitle,
   IonToolbar,
-  useIonViewWillEnter,
 } from '@ionic/react';
 import { addOutline, funnel, funnelOutline } from 'ionicons/icons';
 import { useDispatch } from 'react-redux';

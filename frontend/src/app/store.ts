@@ -20,6 +20,7 @@ import api from '../api/base';
 import auth from '../reducers/auth';
 /* eslint-disable import/no-cycle */
 import tutorFilters from '../reducers/tutorFilters';
+import tuteeFilters from '../reducers/tuteeFilters';
 /* eslint-enable import/no-cycle */
 
 const persistConfig = {
@@ -32,6 +33,7 @@ const rootReducer = combineReducers({
   [api.reducerPath]: api.reducer,
   auth,
   tutorFilters,
+  tuteeFilters,
 });
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 

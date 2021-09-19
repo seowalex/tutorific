@@ -36,6 +36,7 @@ import CreateProfile from './pages/profile/CreateProfile';
 import EditProfile from './pages/profile/EditProfile';
 
 import './styles/main.scss';
+import FilterTuteeListings from './pages/tutees/FilterTuteeListings';
 
 const App: React.FC = () => {
   const currentUserId = useAppSelector(selectCurrentUserId);
@@ -115,6 +116,9 @@ const App: React.FC = () => {
                     <AddTuteeListing />
                   </Route>
                   <Route path="/edittutee/:id" component={EditTuteeListing} />
+                  <Route path="/searchtutee">
+                    <FilterTuteeListings />
+                  </Route>
                   <Route path="/chat">
                     <Chat />
                   </Route>
