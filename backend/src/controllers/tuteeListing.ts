@@ -6,7 +6,7 @@ const getTuteeListings = async (ctx: Koa.Context): Promise<void> => {
   const [tuteeListings, count] = await tuteeListingService.getTuteeListings(
     ctx.query
   );
-  ctx.body = { count, data: tuteeListings };
+  ctx.body = { data: { listings: tuteeListings, count } };
 };
 
 const getTuteeListing = async (ctx: Koa.Context): Promise<void> => {
