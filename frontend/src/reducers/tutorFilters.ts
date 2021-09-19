@@ -11,6 +11,8 @@ export interface TutorFiltersState {
   subjects?: string[];
   levels?: Level[];
   gender?: Gender;
+  skip?: number;
+  limit?: number;
 }
 
 const initialState: TutorFiltersState = {};
@@ -21,12 +23,27 @@ const slice = createSlice({
   reducers: {
     setTutorListingFilters: (_, action: PayloadAction<TutorFiltersState>) =>
       action.payload,
+    incrementTutorListingPagination: (state) => {
+      if (state.skip) {
+        state.skip += 10;
+      } else {
+        state.skip = 10;
+      }
+    },
+    resetTutorListingPagination: (state) => {
+      state.skip = 0;
+      state.limit = 10;
+    },
     unsetTutorListingFilters: () => initialState,
   },
 });
 
-export const { setTutorListingFilters, unsetTutorListingFilters } =
-  slice.actions;
+export const {
+  setTutorListingFilters,
+  incrementTutorListingPagination,
+  resetTutorListingPagination,
+  unsetTutorListingFilters,
+} = slice.actions;
 
 export const selectTutorFilters = (state: RootState) => state.tutorFilters;
 

@@ -1,10 +1,9 @@
 import api from './base';
 import { TutorListing } from '../app/types';
-import { TutorFiltersState } from '../reducers/tutorFilters'
+import { TutorFiltersState } from '../reducers/tutorFilters';
 
-type PaginationParams = { skip?: number, limit?: number };
-type GetTutorListingsQueryParams = Partial<TutorFiltersState & PaginationParams>;
-type GetTutorListingsResponse = TutorListing[];
+type GetTutorListingsQueryParams = Partial<TutorFiltersState>;
+type GetTutorListingsResponse = { listings: TutorListing[]; count: number };
 type GetTutorListingResponse = TutorListing;
 type CreateTutorListingRequest = Omit<
   TutorListing,
@@ -16,13 +15,17 @@ type UpdateTutorListingRequest = Partial<
 
 const extendedApi = api.injectEndpoints({
   endpoints: (builder) => ({
-    getTutorListings: builder.query<GetTutorListingsResponse, GetTutorListingsQueryParams>({
+    getTutorListings: builder.query<
+      GetTutorListingsResponse,
+      GetTutorListingsQueryParams
+    >({
       query: (queryParams) => ({
         url: 'tutor/',
-        params: queryParams
+        params: queryParams,
       }),
       transformResponse: (response: { data: GetTutorListingsResponse }) =>
         response.data,
+      providesTags: ['TutorListing'],
     }),
     getTutorListing: builder.query<GetTutorListingResponse, number>({
       query: (id) => ({
@@ -30,6 +33,7 @@ const extendedApi = api.injectEndpoints({
       }),
       transformResponse: (response: { data: GetTutorListingResponse }) =>
         response.data,
+      providesTags: (result, error, id) => [{ type: 'TutorListing', id }],
     }),
     createTutorListing: builder.mutation<void, CreateTutorListingRequest>({
       query: (listing) => ({
@@ -37,6 +41,7 @@ const extendedApi = api.injectEndpoints({
         method: 'POST',
         body: listing,
       }),
+      invalidatesTags: ['TutorListing'],
     }),
     updateTutorListing: builder.mutation<
       void,
@@ -47,12 +52,16 @@ const extendedApi = api.injectEndpoints({
         method: 'PUT',
         body: update,
       }),
+      invalidatesTags: (result, error, arg) => [
+        { type: 'TutorListing', id: arg.id },
+      ],
     }),
     deleteTutorListing: builder.mutation<void, number>({
       query: (id) => ({
         url: `tutor/${id}`,
         method: 'DELETE',
       }),
+      invalidatesTags: ['TutorListing'],
     }),
   }),
 });
