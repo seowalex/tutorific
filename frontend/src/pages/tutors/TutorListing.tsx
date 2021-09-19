@@ -146,7 +146,7 @@ const TutorListing: React.FC = () => {
           <IonItem
             button
             detail={false}
-            routerLink={`/edittutor/${listingId}`}
+            routerLink={`/tutor/${listingId}/edit`}
             onClick={() => {
               setShowPopover({ showPopover: false, event: undefined });
             }}

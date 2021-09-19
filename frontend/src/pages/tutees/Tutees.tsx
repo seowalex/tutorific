@@ -82,10 +82,10 @@ const Tutees: React.FC = () => {
         <IonToolbar>
           <IonTitle>Tutee Listings</IonTitle>
           <IonButtons slot="primary" collapse>
-            <IonButton routerLink="/addtutee">
+            <IonButton routerLink="/tutee/add">
               <IonIcon slot="icon-only" icon={addOutline} />
             </IonButton>
-            <IonButton routerLink="/searchtutee">
+            <IonButton routerLink="/tutee/search">
               <IonIcon
                 slot="icon-only"
                 icon={areFiltersEmpty(filters) ? funnelOutline : funnel}

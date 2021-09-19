@@ -97,26 +97,34 @@ const App: React.FC = () => {
                 </IonTabBar>
 
                 <IonRouterOutlet>
-                  <Route path="/tutors">
+                  <Route exact path="/tutors">
                     <Tutors />
                   </Route>
-                  <Route path="/tutor/:id" component={TutorListing} />
-                  <Route path="/addtutor">
+                  <Route exact path="/tutor/:id" component={TutorListing} />
+                  <Route exact path="/tutor/add">
                     <AddTutorListing />
                   </Route>
-                  <Route path="/edittutor/:id" component={EditTutorListing} />
-                  <Route path="/searchtutor">
+                  <Route
+                    exact
+                    path="/tutor/:id/edit"
+                    component={EditTutorListing}
+                  />
+                  <Route exact path="/tutor/search">
                     <FilterTutorListings />
                   </Route>
-                  <Route path="/tutees">
+                  <Route exact path="/tutees">
                     <Tutees />
                   </Route>
-                  <Route path="/tutee/:id" component={TuteeListing} />
-                  <Route path="/addtutee">
+                  <Route exact path="/tutee/:id" component={TuteeListing} />
+                  <Route exact path="/tutee/add">
                     <AddTuteeListing />
                   </Route>
-                  <Route path="/edittutee/:id" component={EditTuteeListing} />
-                  <Route path="/searchtutee">
+                  <Route
+                    exact
+                    path="/tutee/:id/edit"
+                    component={EditTuteeListing}
+                  />
+                  <Route exact path="/tutee/search">
                     <FilterTuteeListings />
                   </Route>
                   <Route path="/chat">

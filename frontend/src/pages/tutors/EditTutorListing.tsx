@@ -12,7 +12,7 @@ import {
 } from '@ionic/react';
 import React from 'react';
 import { SubmitHandler } from 'react-hook-form';
-import { RouteComponentProps, useHistory } from 'react-router';
+import { useHistory, useRouteMatch } from 'react-router';
 import { useDispatch } from 'react-redux';
 import {
   useGetTutorListingQuery,
@@ -27,10 +27,14 @@ import TutorListingForm, {
 import { Level } from '../../app/types';
 import { resetTutorListingPagination } from '../../reducers/tutorFilters';
 
-const EditTutorListing: React.FC<RouteComponentProps<{ id: string }>> = ({
-  match,
-}) => {
-  const { id } = match.params;
+interface Params {
+  id: string;
+}
+
+const EditTutorListing: React.FC = () => {
+  const {
+    params: { id },
+  } = useRouteMatch<Params>();
   const listingId = parseInt(id, 10);
   const userId = useAppSelector(selectCurrentUserId);
   const { data: listing } = useGetTutorListingQuery(listingId);
