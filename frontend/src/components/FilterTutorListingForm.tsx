@@ -11,7 +11,12 @@ import {
   IonSelectOption,
   IonSpinner,
 } from '@ionic/react';
-import { NestedValue, SubmitHandler, useForm } from 'react-hook-form';
+import {
+  Controller,
+  NestedValue,
+  SubmitHandler,
+  useForm,
+} from 'react-hook-form';
 import { Gender, Level, Subject, WeekDay } from '../app/types';
 import { TutorFiltersState } from '../reducers/tutorFilters';
 
@@ -46,20 +51,12 @@ const FilterTutorListingForm: React.FC<Props> = (props) => {
     register,
     formState: { errors, isSubmitting },
     handleSubmit,
-    setValue,
+    control,
+    reset,
     getValues,
   } = useForm<FilterTutorListingFormData>({
     defaultValues: currentData ?? emptyFilters,
   });
-
-  const handleReset = () => {
-    setValue('priceMin', undefined);
-    setValue('priceMax', undefined);
-    setValue('timeSlots', []);
-    setValue('subjects', []);
-    setValue('levels', []);
-    setValue('gender', undefined);
-  };
 
   return (
     <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
@@ -72,15 +69,23 @@ const FilterTutorListingForm: React.FC<Props> = (props) => {
             disabled={isSubmitting}
           >
             <IonLabel position="stacked">Min Price</IonLabel>
-            <IonInput
-              type="number"
-              {...register('priceMin', {
+            <Controller
+              name="priceMin"
+              control={control}
+              render={({ field: { onChange, onBlur, value } }) => (
+                <IonInput
+                  type="number"
+                  onIonChange={onChange}
+                  onIonBlur={onBlur}
+                  value={value}
+                />
+              )}
+              rules={{
                 min: {
                   value: 0,
                   message: 'Min Price must be positive',
                 },
-                valueAsNumber: true,
-              })}
+              }}
             />
             {errors.priceMin && (
               <IonNote slot="helper" color="danger">
@@ -97,27 +102,36 @@ const FilterTutorListingForm: React.FC<Props> = (props) => {
             disabled={isSubmitting}
           >
             <IonLabel position="stacked">Max Price</IonLabel>
-            <IonInput
-              type="number"
-              {...register('priceMax', {
+            <Controller
+              name="priceMax"
+              control={control}
+              render={({ field: { onChange, onBlur, value } }) => (
+                <IonInput
+                  type="number"
+                  onIonChange={onChange}
+                  onIonBlur={onBlur}
+                  value={value}
+                />
+              )}
+              rules={{
                 min: {
                   value: 0,
                   message: 'Max Price must be positive',
                 },
-                valueAsNumber: true,
                 validate: {
                   atLeastMin: (value) => {
                     const priceMin = getValues('priceMin')!;
                     return (
                       value == null ||
+                      priceMin == null ||
                       Number.isNaN(value) ||
                       Number.isNaN(priceMin) ||
-                      priceMin <= value! ||
+                      priceMin <= value ||
                       'Max Price must be at least Min Price'
                     );
                   },
                 },
-              })}
+              }}
             />
             {errors.priceMax && (
               <IonNote slot="helper" color="danger">
@@ -184,15 +198,29 @@ const FilterTutorListingForm: React.FC<Props> = (props) => {
         <IonCol>
           <IonItem fill="outline" lines="full" disabled={isSubmitting}>
             <IonLabel position="stacked">Gender</IonLabel>
-            <IonSelect cancelText="Cancel" okText="OK" {...register('gender')}>
-              {Object.values(Gender).map((value) =>
-                value === Gender.PNTS ? (
-                  <IonSelectOption value={null}>No Preference</IonSelectOption>
-                ) : (
-                  <IonSelectOption value={value}>{value}</IonSelectOption>
-                )
+            <Controller
+              name="gender"
+              control={control}
+              render={({ field: { onChange, onBlur, value } }) => (
+                <IonSelect
+                  cancelText="Cancel"
+                  okText="OK"
+                  onIonChange={onChange}
+                  onIonBlur={onBlur}
+                  value={value}
+                >
+                  {Object.values(Gender).map((gender) =>
+                    gender === Gender.PNTS ? (
+                      <IonSelectOption value={null}>
+                        No Preference
+                      </IonSelectOption>
+                    ) : (
+                      <IonSelectOption value={gender}>{gender}</IonSelectOption>
+                    )
+                  )}
+                </IonSelect>
               )}
-            </IonSelect>
+            />
           </IonItem>
         </IonCol>
       </IonRow>
@@ -204,7 +232,7 @@ const FilterTutorListingForm: React.FC<Props> = (props) => {
         type="button"
         disabled={isSubmitting}
         fill="outline"
-        onClick={handleReset}
+        onClick={() => reset(emptyFilters)}
       >
         {isSubmitting ? <IonSpinner /> : 'Clear All'}
       </IonButton>

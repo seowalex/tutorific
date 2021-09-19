@@ -30,9 +30,6 @@ const FilterTutorListings: React.FC = () => {
   const onSubmit: SubmitHandler<FilterTutorListingFormData> = (data) => {
     const filters = {
       ...data,
-      priceMin: Number.isNaN(data.priceMin) ? undefined : data.priceMin,
-      priceMax: Number.isNaN(data.priceMax) ? undefined : data.priceMax,
-      gender: data.gender ?? undefined,
       skip: 0,
       limit: 10,
     };
