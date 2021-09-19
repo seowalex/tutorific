@@ -35,6 +35,8 @@ import { Gender, useGetProfileQuery } from '../../api/profile';
 import { selectCurrentUser, unsetCredentials } from '../../reducers/auth';
 import type { ErrorResponse } from '../../types/error';
 
+import OfflineCard from '../../components/OfflineCard';
+
 import styles from './Profile.module.scss';
 import { unsetTutorListingFilters } from '../../reducers/tutorFilters';
 
@@ -57,23 +59,33 @@ const Profile: React.FC = () => {
   const [present] = useIonToast();
 
   const handleLogout = async () => {
-    try {
-      if (user.id && user.refreshToken) {
-        await logout({ id: user.id, refreshToken: user.refreshToken }).unwrap();
+    if (window.navigator.onLine) {
+      try {
+        if (user.id && user.refreshToken) {
+          await logout({
+            id: user.id,
+            refreshToken: user.refreshToken,
+          }).unwrap();
+        }
+
+        dispatch(unsetCredentials());
+        router.push('/', 'back');
+      } catch (error) {
+        const message = (
+          (error as FetchBaseQueryError).data as ErrorResponse
+        ).errors
+          .flatMap((errorMessage) => errorMessage.detail)
+          .join(', ');
+
+        present({
+          message,
+          color: 'danger',
+          duration: 2000,
+        });
       }
-
-      dispatch(unsetCredentials());
-      dispatch(unsetTutorListingFilters())
-      router.push('/', 'back');
-    } catch (error) {
-      const message = (
-        (error as FetchBaseQueryError).data as ErrorResponse
-      ).errors
-        .flatMap((errorMessage) => errorMessage.detail)
-        .join(', ');
-
+    } else {
       present({
-        message,
+        message: 'Unable to connect to the Internet',
         color: 'danger',
         duration: 2000,
       });
@@ -134,6 +146,8 @@ const Profile: React.FC = () => {
         </IonHeader>
 
         <div className={hasListings ? '' : styles.noListings}>
+          <OfflineCard />
+
           <div className="ion-margin">
             <div className={styles.header}>
               <IonAvatar className={styles.avatar}>

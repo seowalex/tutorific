@@ -43,17 +43,17 @@ const Login: React.FC = () => {
   } = useForm<LoginData>();
 
   const onSubmit = async (data: LoginData) => {
-    try {
-      const credentials = await login(data).unwrap();
-      dispatch(setCredentials(credentials));
+    if (window.navigator.onLine) {
+      try {
+        const credentials = await login(data).unwrap();
+        dispatch(setCredentials(credentials));
 
-      if (credentials.profileId) {
-        router.push('/');
-      } else {
-        router.push('/profile');
-      }
-    } catch (error) {
-      if (window.navigator.onLine) {
+        if (credentials.profileId) {
+          router.push('/');
+        } else {
+          router.push('/profile');
+        }
+      } catch (error) {
         const message = (
           (error as FetchBaseQueryError).data as ErrorResponse
         ).errors
@@ -62,13 +62,13 @@ const Login: React.FC = () => {
 
         setError('email', { message });
         setError('password', { message });
-      } else {
-        present({
-          message: 'Unable to connect to the Internet',
-          color: 'danger',
-          duration: 2000,
-        });
       }
+    } else {
+      present({
+        message: 'Unable to connect to the Internet',
+        color: 'danger',
+        duration: 2000,
+      });
     }
   };
 

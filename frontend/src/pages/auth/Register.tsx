@@ -50,17 +50,17 @@ const Register: React.FC = () => {
   } = useForm<RegisterData>();
 
   const onSubmit = async (data: RegisterData) => {
-    try {
-      const credentials = await registerUser(data).unwrap();
-      dispatch(setCredentials(credentials));
+    if (window.navigator.onLine) {
+      try {
+        const credentials = await registerUser(data).unwrap();
+        dispatch(setCredentials(credentials));
 
-      if (credentials.profileId) {
-        router.push('/');
-      } else {
-        router.push('/profile');
-      }
-    } catch (error) {
-      if (window.navigator.onLine) {
+        if (credentials.profileId) {
+          router.push('/');
+        } else {
+          router.push('/profile');
+        }
+      } catch (error) {
         const { errors: errorMessages } = (error as FetchBaseQueryError)
           .data as ErrorResponse;
 
@@ -80,13 +80,13 @@ const Register: React.FC = () => {
               break;
           }
         }
-      } else {
-        present({
-          message: 'Unable to connect to the Internet',
-          color: 'danger',
-          duration: 2000,
-        });
       }
+    } else {
+      present({
+        message: 'Unable to connect to the Internet',
+        color: 'danger',
+        duration: 2000,
+      });
     }
   };
 
