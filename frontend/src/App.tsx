@@ -49,8 +49,8 @@ const App: React.FC = () => {
 
   useEffect(() => {
     if (currentUserId) {
-      prefetchTutorListings();
-      prefetchTuteeListings();
+      prefetchTutorListings({});
+      prefetchTuteeListings({});
       prefetchProfile(currentUserId);
     }
   }, [
