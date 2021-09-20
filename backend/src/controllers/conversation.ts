@@ -1,5 +1,4 @@
 import Koa from 'koa';
-import { CreateConversation } from '../models/conversation';
 import conversationService from '../services/conversation';
 import messageService from '../services/message';
 
@@ -36,32 +35,14 @@ const getConversation = async (ctx: Koa.Context): Promise<void> => {
 };
 
 const createConversation = async (ctx: Koa.Context): Promise<void> => {
-  const conversation: CreateConversation & {
-    firstMessage: string;
-  } = ctx.request.body;
+  const conversation = ctx.request.body;
 
-  const conversationEntity: CreateConversation & {
-    firstMessage?: string;
-  } = { ...conversation };
-  delete conversationEntity.firstMessage;
   const newConversation = await conversationService.createConversation(
-    conversationEntity
+    conversation
   );
 
-  const { profileId } = ctx.state.user;
-
-  const message = await messageService.createMessage({
-    conversation: newConversation,
-    sender: profileId,
-    content: conversation.firstMessage,
-  });
-
-  // not sure what shld be returned?
   ctx.body = {
-    data: {
-      conversation: newConversation,
-      message,
-    },
+    data: newConversation,
   };
 };
 
