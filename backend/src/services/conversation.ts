@@ -2,6 +2,9 @@ import { getRepository } from 'typeorm';
 import classValidate from '../utils/validate';
 import Conversation, { CreateConversation } from '../models/conversation';
 
+const getConversation = async (id: number): Promise<Conversation | undefined> =>
+  getRepository(Conversation).findOne(id);
+
 const getConversations = async (
   profileId: number
 ): Promise<Array<Conversation>> =>
@@ -19,6 +22,7 @@ const createConversation = async (
 };
 
 export default {
+  getConversation,
   getConversations,
   createConversation,
 };

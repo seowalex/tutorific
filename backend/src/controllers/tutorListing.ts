@@ -20,6 +20,12 @@ const getTutorListing = async (ctx: Koa.Context): Promise<void> => {
 
 const createTutorListing = async (ctx: Koa.Context): Promise<void> => {
   const tutorListing = ctx.request.body;
+
+  const { profileId } = ctx.state.user;
+  if (profileId !== tutorListing.tuteeId) {
+    ctx.throw(HttpStatus.UNAUTHORIZED);
+  }
+
   const newTutorListing = await tutorListingService.createTutorListing({
     ...tutorListing,
     tutor: tutorListing.tutorId,
@@ -30,9 +36,16 @@ const createTutorListing = async (ctx: Koa.Context): Promise<void> => {
 };
 
 const updateTutorListing = async (ctx: Koa.Context): Promise<void> => {
+  const tutorListing = ctx.request.body;
+
+  const { profileId } = ctx.state.user;
+  if (profileId !== tutorListing.tuteeId) {
+    ctx.throw(HttpStatus.UNAUTHORIZED);
+  }
+
   const savedTutorListing = await tutorListingService.updateTutorListing(
     ctx.params.id,
-    ctx.request.body
+    tutorListing
   );
   ctx.body = {
     data: savedTutorListing,
@@ -40,6 +53,17 @@ const updateTutorListing = async (ctx: Koa.Context): Promise<void> => {
 };
 
 const deleteTutorListing = async (ctx: Koa.Context): Promise<void> => {
+  const { profileId } = ctx.state.user;
+  const tutorListing = await tutorListingService.getTutorListing(ctx.params.id);
+
+  if (!tutorListing) {
+    ctx.throw(HttpStatus.NOT_FOUND);
+  }
+
+  if (profileId !== tutorListing.tutor.id) {
+    ctx.throw(HttpStatus.UNAUTHORIZED);
+  }
+
   await tutorListingService.deleteTutorListing(ctx.params.id);
   ctx.status = HttpStatus.OK;
   ctx.body = {};
