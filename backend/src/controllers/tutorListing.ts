@@ -54,7 +54,10 @@ const updateTutorListing = async (ctx: Koa.Context): Promise<void> => {
 
 const deleteTutorListing = async (ctx: Koa.Context): Promise<void> => {
   const { profileId } = ctx.state.user;
-  const tutorListing = await tutorListingService.getTutorListing(ctx.params.id);
+  const tutorListingId = ctx.params.id;
+  const tutorListing = await tutorListingService.getTutorListing(
+    tutorListingId
+  );
 
   if (!tutorListing) {
     ctx.throw(HttpStatus.NOT_FOUND);
@@ -64,7 +67,7 @@ const deleteTutorListing = async (ctx: Koa.Context): Promise<void> => {
     ctx.throw(HttpStatus.UNAUTHORIZED);
   }
 
-  await tutorListingService.deleteTutorListing(ctx.params.id);
+  await tutorListingService.deleteTutorListing(tutorListingId);
   ctx.status = HttpStatus.OK;
   ctx.body = {};
 };

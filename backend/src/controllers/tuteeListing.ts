@@ -54,7 +54,10 @@ const updateTuteeListing = async (ctx: Koa.Context): Promise<void> => {
 
 const deleteTuteeListing = async (ctx: Koa.Context): Promise<void> => {
   const { profileId } = ctx.state.user;
-  const tuteeListing = await tuteeListingService.getTuteeListing(ctx.params.id);
+  const tuteeListingId = ctx.params.id;
+  const tuteeListing = await tuteeListingService.getTuteeListing(
+    tuteeListingId
+  );
 
   if (!tuteeListing) {
     ctx.throw(HttpStatus.NOT_FOUND);
@@ -64,7 +67,7 @@ const deleteTuteeListing = async (ctx: Koa.Context): Promise<void> => {
     ctx.throw(HttpStatus.UNAUTHORIZED);
   }
 
-  await tuteeListingService.deleteTuteeListing(ctx.params.id);
+  await tuteeListingService.deleteTuteeListing(tuteeListingId);
   ctx.status = HttpStatus.OK;
   ctx.body = {};
 };
