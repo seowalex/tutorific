@@ -20,6 +20,12 @@ const getTuteeListing = async (ctx: Koa.Context): Promise<void> => {
 
 const createTuteeListing = async (ctx: Koa.Context): Promise<void> => {
   const tuteeListing = ctx.request.body;
+
+  const { profileId } = ctx.state.user;
+  if (profileId !== tuteeListing.tuteeId) {
+    ctx.throw(HttpStatus.UNAUTHORIZED);
+  }
+
   const newTuteeListing = await tuteeListingService.createTuteeListing({
     ...tuteeListing,
     tutee: tuteeListing.tuteeId,
@@ -30,9 +36,16 @@ const createTuteeListing = async (ctx: Koa.Context): Promise<void> => {
 };
 
 const updateTuteeListing = async (ctx: Koa.Context): Promise<void> => {
+  const tuteeListing = ctx.request.body;
+
+  const { profileId } = ctx.state.user;
+  if (profileId !== tuteeListing.tuteeId) {
+    ctx.throw(HttpStatus.UNAUTHORIZED);
+  }
+
   const savedTuteeListing = await tuteeListingService.updateTuteeListing(
     ctx.params.id,
-    ctx.request.body
+    tuteeListing
   );
   ctx.body = {
     data: savedTuteeListing,
@@ -40,7 +53,21 @@ const updateTuteeListing = async (ctx: Koa.Context): Promise<void> => {
 };
 
 const deleteTuteeListing = async (ctx: Koa.Context): Promise<void> => {
-  await tuteeListingService.deleteTuteeListing(ctx.params.id);
+  const { profileId } = ctx.state.user;
+  const tuteeListingId = ctx.params.id;
+  const tuteeListing = await tuteeListingService.getTuteeListing(
+    tuteeListingId
+  );
+
+  if (!tuteeListing) {
+    ctx.throw(HttpStatus.NOT_FOUND);
+  }
+
+  if (profileId !== tuteeListing.tutee.id) {
+    ctx.throw(HttpStatus.UNAUTHORIZED);
+  }
+
+  await tuteeListingService.deleteTuteeListing(tuteeListingId);
   ctx.status = HttpStatus.OK;
   ctx.body = {};
 };

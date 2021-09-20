@@ -18,6 +18,9 @@ export default class Conversation {
   secondProfile: Profile;
 }
 
-export type GetConversations = Conversation & { lastMessage: Message };
+export type GetConversations = Pick<Conversation, 'id'> & {
+  lastMessage?: Message;
+  otherProfile: Profile;
+};
 export type GetConversation = Array<Message>;
 export type CreateConversation = Omit<Conversation, 'id'>;

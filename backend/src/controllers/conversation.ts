@@ -1,5 +1,5 @@
 import Koa from 'koa';
-import { CreateConversation } from '../models/conversation';
+import HttpStatus from 'http-status-codes';
 import conversationService from '../services/conversation';
 import messageService from '../services/message';
 
@@ -26,42 +26,59 @@ const getConversations = async (ctx: Koa.Context): Promise<void> => {
     return 0;
   });
 
-  ctx.body = { data: conversationsWithLastMessage };
+  // only send other profile
+  const conversationsWithLastMessageAndOtherProfile =
+    conversationsWithLastMessage.map((convo) => ({
+      id: convo.id,
+      lastMessage: convo.lastMessage,
+      otherProfile:
+        convo.firstProfile.id === profileId
+          ? convo.secondProfile
+          : convo.firstProfile,
+      otherProfileId:
+        convo.firstProfile.id === profileId
+          ? convo.secondProfile.id
+          : convo.firstProfile.id,
+    }));
+
+  ctx.body = { data: conversationsWithLastMessageAndOtherProfile };
 };
 
 const getConversation = async (ctx: Koa.Context): Promise<void> => {
   // note that return type is just [Message]
-  const messages = await messageService.getMessages(ctx.params.id);
+  const conversationId = ctx.params.id;
+
+  const conversation = await conversationService.getConversation(
+    conversationId
+  );
+  if (!conversation) {
+    ctx.throw(HttpStatus.NOT_FOUND);
+  }
+
+  const { profileId } = ctx.state.user;
+  if (
+    conversation.firstProfile.id !== profileId &&
+    conversation.secondProfile.id !== profileId
+  ) {
+    ctx.throw(HttpStatus.UNAUTHORIZED);
+  }
+
+  const messages = await messageService.getMessages(conversationId);
   ctx.body = { data: messages };
 };
 
 const createConversation = async (ctx: Koa.Context): Promise<void> => {
-  const conversation: CreateConversation & {
-    firstMessage: string;
-  } = ctx.request.body;
-
-  const conversationEntity: CreateConversation & {
-    firstMessage?: string;
-  } = { ...conversation };
-  delete conversationEntity.firstMessage;
-  const newConversation = await conversationService.createConversation(
-    conversationEntity
-  );
+  const conversation = ctx.request.body;
 
   const { profileId } = ctx.state.user;
 
-  const message = await messageService.createMessage({
-    conversation: newConversation,
-    sender: profileId,
-    content: conversation.firstMessage,
+  const newConversation = await conversationService.createConversation({
+    firstProfile: profileId,
+    secondProfile: conversation.otherProfileId,
   });
 
-  // not sure what shld be returned?
   ctx.body = {
-    data: {
-      conversation: newConversation,
-      message,
-    },
+    data: newConversation,
   };
 };
 
