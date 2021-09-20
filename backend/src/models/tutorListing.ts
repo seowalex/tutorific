@@ -79,6 +79,7 @@ export type QueryTutorListing = {
   subjects?: string[];
   levels?: Level[];
   gender?: Gender;
+  profileId?: number;
   skip?: number;
   limit?: number;
 };

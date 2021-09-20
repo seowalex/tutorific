@@ -58,6 +58,12 @@ const getTuteeListings = async (
     conditions.gender = queries.gender;
   }
 
+  if (queries.profileId) {
+    conditions.tutee = {
+      id: queries.profileId,
+    };
+  }
+
   return getRepository(TuteeListing).findAndCount({
     where: conditions,
     cache: true,

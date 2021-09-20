@@ -51,6 +51,12 @@ const getTutorListings = async (
     };
   }
 
+  if (queries.profileId) {
+    conditions.tutor = {
+      id: queries.profileId,
+    };
+  }
+
   return getRepository(TutorListing).findAndCount({
     relations: ['tutor'],
     where: conditions,

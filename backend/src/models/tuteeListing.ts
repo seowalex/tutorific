@@ -83,6 +83,7 @@ export type QueryTuteeListing = {
   levels?: Level[];
   gender?: Gender;
   locations?: Town[];
+  profileId?: number;
   skip?: number;
   limit?: number;
 };
