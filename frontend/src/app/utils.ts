@@ -13,6 +13,8 @@ const numberToWeekDay: Record<number, WeekDay> = {
   6: WeekDay.Sun,
 };
 
+// #region APIs
+
 export const constructQueryString = (params: Record<string, any>): string => {
   if (params === {}) {
     return '';
@@ -30,11 +32,19 @@ export const constructQueryString = (params: Record<string, any>): string => {
   return `?${queryString.toString()}`;
 };
 
+// #endregion
+
+// #region String Formatting
+
 export const formatPriceRange = (priceMin: number, priceMax: number): string =>
   `$${priceMin} - ${priceMax}`;
 
 export const formatStringList = (strings: string[]): string =>
   strings.join(', ');
+
+// #endregion
+
+// #region Time Slots
 
 export const formatWeekDay = (weekDay: WeekDay): string => {
   switch (weekDay) {
@@ -95,9 +105,6 @@ export const getWeekDayNumber = (weekDay: WeekDay): number => {
   }
 };
 
-export const computeFirstTimeSlotOfDay = (day: WeekDay, startingHour: number) =>
-  getWeekDayNumber(day) * slotsPerDay + startingHour * slotsPerHour;
-
 export const computeHour = (timeSlot: number): number =>
   Math.floor((timeSlot % slotsPerDay) / 2);
 
@@ -108,6 +115,9 @@ export const formatHour = (hour: number): string => {
 
   return `${formattedHour}${suffix}`;
 };
+
+export const computeFirstTimeSlotOfDay = (day: WeekDay, startingHour: number) =>
+  getWeekDayNumber(day) * slotsPerDay + startingHour * slotsPerHour;
 
 export const calculateSlotNumber = (
   currentX: number,
@@ -129,17 +139,17 @@ export const selectedTimeSlotsToArray = (
         .map((key) => parseInt(key, 10))
     : [];
 
-// eslint-disable-next-line arrow-body-style
 export const filterSlotsByDayAndRow = (
   slots: SelectedTimeSlots,
   firstTimeSlot: number,
   slotsPerRow: number
-): SelectedTimeSlots => {
-  return slots
+): SelectedTimeSlots =>
+  slots
     ? {
         ...[...Array(slotsPerRow).keys()].map(
           (slotNumber) => slots[firstTimeSlot + slotNumber]
         ),
       }
     : {};
-};
+
+// #endregion
