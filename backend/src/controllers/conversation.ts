@@ -35,6 +35,10 @@ const getConversations = async (ctx: Koa.Context): Promise<void> => {
         convo.firstProfile.id === profileId
           ? convo.secondProfile
           : convo.firstProfile,
+      otherProfileId:
+        convo.firstProfile.id === profileId
+          ? convo.secondProfile.id
+          : convo.firstProfile.id,
     }));
 
   ctx.body = { data: conversationsWithLastMessageAndOtherProfile };
@@ -67,16 +71,11 @@ const createConversation = async (ctx: Koa.Context): Promise<void> => {
   const conversation = ctx.request.body;
 
   const { profileId } = ctx.state.user;
-  if (
-    conversation.firstProfile.id !== profileId &&
-    conversation.secondProfile.id !== profileId
-  ) {
-    ctx.throw(HttpStatus.UNAUTHORIZED);
-  }
 
-  const newConversation = await conversationService.createConversation(
-    conversation
-  );
+  const newConversation = await conversationService.createConversation({
+    firstProfile: profileId,
+    secondProfile: conversation.otherProfileId,
+  });
 
   ctx.body = {
     data: newConversation,
