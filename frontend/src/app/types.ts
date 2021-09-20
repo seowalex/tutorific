@@ -1,3 +1,5 @@
+import { NestedValue } from 'react-hook-form';
+
 export enum Gender {
   MALE = 'Male',
   FEMALE = 'Female',
@@ -52,13 +54,13 @@ export enum Town {
 }
 
 export enum WeekDay {
-  Monday = 'Mon',
-  Tuesday = 'Tue',
-  Wednesday = 'Wed',
-  Thursday = 'Thu',
-  Friday = 'Fri',
-  Saturday = 'Sat',
-  Sunday = 'Sun',
+  Mon = 'Mon',
+  Tue = 'Tue',
+  Wed = 'Wed',
+  Thu = 'Thu',
+  Fri = 'Fri',
+  Sat = 'Sat',
+  Sun = 'Sun',
 }
 
 export interface Profile {
@@ -81,6 +83,17 @@ export interface TutorListing {
   createdAt: Date;
 }
 
+export interface TutorListingFormData {
+  price: {
+    lower: number;
+    upper: number;
+  };
+  description: string;
+  timeSlots: NestedValue<SelectedTimeSlots>;
+  subjects: NestedValue<string[]>;
+  levels: NestedValue<string[]>;
+}
+
 export interface TuteeListing {
   id: number;
   tutee: Profile;
@@ -94,3 +107,18 @@ export interface TuteeListing {
   location: Town;
   createdAt: Date;
 }
+
+export interface TuteeListingFormData {
+  price: {
+    lower: number;
+    upper: number;
+  };
+  description: string;
+  timeSlots: NestedValue<SelectedTimeSlots>;
+  subjects: NestedValue<string[]>;
+  level: Level;
+  gender: Gender;
+  location: Town;
+}
+
+export type SelectedTimeSlots = Record<number, boolean>;

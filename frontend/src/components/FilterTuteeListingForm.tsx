@@ -17,15 +17,17 @@ import {
   SubmitHandler,
   useForm,
 } from 'react-hook-form';
-import { Gender, Level, Subject, Town, WeekDay } from '../app/types';
+import { Gender, Level, SelectedTimeSlots, Subject, Town } from '../app/types';
 import { TuteeFiltersState } from '../reducers/tuteeFilters';
 
 import styles from './ListingForm.module.scss';
+import { arrayToSelectedTimeSlots } from '../app/utils';
+import SelectTimeSlotsItem from './timeSlots/SelectTimeSlotsItem';
 
 export interface FilterTuteeListingFormData {
   priceMin?: number;
   priceMax?: number;
-  timeSlots?: NestedValue<number[]>;
+  timeSlots?: NestedValue<SelectedTimeSlots>;
   subjects?: NestedValue<string[]>;
   levels?: NestedValue<Level[]>;
   locations?: NestedValue<Town[]>;
@@ -43,7 +45,7 @@ const FilterTuteeListingForm: React.FC<Props> = (props) => {
   const emptyFilters = {
     priceMin: undefined,
     priceMax: undefined,
-    timeSlots: [],
+    timeSlots: {},
     subjects: [],
     levels: [],
     locations: [],
@@ -57,11 +59,32 @@ const FilterTuteeListingForm: React.FC<Props> = (props) => {
     reset,
     getValues,
   } = useForm<FilterTuteeListingFormData>({
-    defaultValues: currentData ?? emptyFilters,
+    defaultValues: currentData
+      ? {
+          ...currentData,
+          timeSlots: arrayToSelectedTimeSlots(currentData.timeSlots),
+        }
+      : emptyFilters,
   });
 
   return (
     <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
+      <IonRow>
+        <IonCol>
+          <Controller
+            name="timeSlots"
+            control={control}
+            render={({ field: { onChange, value } }) => (
+              <SelectTimeSlotsItem
+                onChange={onChange}
+                value={value ?? {}}
+                errors={errors}
+                isSubmitting={isSubmitting}
+              />
+            )}
+          />
+        </IonCol>
+      </IonRow>
       <IonRow className={styles.priceInputsRow}>
         <IonCol>
           <IonItem
@@ -122,7 +145,7 @@ const FilterTuteeListingForm: React.FC<Props> = (props) => {
                 },
                 validate: {
                   atLeastMin: (value) => {
-                    const priceMin = getValues('priceMin')!;
+                    const priceMin = getValues('priceMin');
                     return (
                       value == null ||
                       priceMin == null ||
@@ -174,23 +197,6 @@ const FilterTuteeListingForm: React.FC<Props> = (props) => {
             >
               {Object.values(Level).map((value) => (
                 <IonSelectOption value={value}>{value}</IonSelectOption>
-              ))}
-            </IonSelect>
-          </IonItem>
-        </IonCol>
-      </IonRow>
-      <IonRow>
-        <IonCol>
-          <IonItem fill="outline" lines="full" disabled={isSubmitting}>
-            <IonLabel position="stacked">Available Days</IonLabel>
-            <IonSelect
-              multiple
-              cancelText="Cancel"
-              okText="OK"
-              {...register('timeSlots')}
-            >
-              {Object.keys(WeekDay).map((key, index) => (
-                <IonSelectOption value={index * 48}>{key}</IonSelectOption>
               ))}
             </IonSelect>
           </IonItem>

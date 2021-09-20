@@ -12,10 +12,17 @@ import {
   IonTextarea,
 } from '@ionic/react';
 import React from 'react';
-import { NestedValue, SubmitHandler, useForm } from 'react-hook-form';
-import { Level, Subject, TutorListing, WeekDay } from '../app/types';
+import {
+  Controller,
+  NestedValue,
+  SubmitHandler,
+  useForm,
+} from 'react-hook-form';
+import { Level, SelectedTimeSlots, Subject, TutorListing } from '../app/types';
+import SelectTimeSlotsItem from './timeSlots/SelectTimeSlotsItem';
 
 import styles from './ListingForm.module.scss';
+import { arrayToSelectedTimeSlots } from '../app/utils';
 
 export interface TutorListingFormData {
   price: {
@@ -23,7 +30,7 @@ export interface TutorListingFormData {
     upper: number;
   };
   description: string;
-  timeSlots: NestedValue<number[]>;
+  timeSlots: NestedValue<SelectedTimeSlots>;
   subjects: NestedValue<string[]>;
   levels: NestedValue<Level[]>;
 }
@@ -39,6 +46,7 @@ const TutorListingForm: React.FC<Props> = (props: Props) => {
   const {
     register,
     formState: { errors, isSubmitting },
+    control,
     handleSubmit,
     getValues,
   } = useForm<TutorListingFormData>({
@@ -49,7 +57,7 @@ const TutorListingForm: React.FC<Props> = (props: Props) => {
             upper: currentData.priceMax,
           },
           description: currentData.description,
-          timeSlots: currentData.timeSlots,
+          timeSlots: arrayToSelectedTimeSlots(currentData.timeSlots),
           subjects: currentData.subjects,
           levels: currentData.levels,
         }
@@ -58,6 +66,22 @@ const TutorListingForm: React.FC<Props> = (props: Props) => {
 
   return (
     <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
+      <IonRow>
+        <IonCol>
+          <Controller
+            name="timeSlots"
+            control={control}
+            render={({ field: { onChange, value } }) => (
+              <SelectTimeSlotsItem
+                onChange={onChange}
+                value={value}
+                errors={errors}
+                isSubmitting={isSubmitting}
+              />
+            )}
+          />
+        </IonCol>
+      </IonRow>
       <IonRow className={styles.priceInputsRow}>
         <IonCol>
           <IonItem
@@ -180,39 +204,6 @@ const TutorListingForm: React.FC<Props> = (props: Props) => {
             {errors.levels && (
               <IonNote slot="helper" color="danger">
                 {errors.levels.message}
-              </IonNote>
-            )}
-          </IonItem>
-        </IonCol>
-      </IonRow>
-      <IonRow>
-        <IonCol>
-          <IonItem
-            fill="outline"
-            lines="full"
-            color={errors.timeSlots ? 'danger' : undefined}
-            disabled={isSubmitting}
-          >
-            <IonLabel position="stacked">Available Days</IonLabel>
-            <IonSelect
-              multiple
-              cancelText="Cancel"
-              okText="OK"
-              {...register('timeSlots', {
-                required: 'Please select at least one day',
-                minLength: {
-                  value: 1,
-                  message: 'Please select at least one day',
-                },
-              })}
-            >
-              {Object.keys(WeekDay).map((key, index) => (
-                <IonSelectOption value={index * 48}>{key}</IonSelectOption>
-              ))}
-            </IonSelect>
-            {errors.timeSlots && (
-              <IonNote slot="helper" color="danger">
-                {errors.timeSlots.message}
               </IonNote>
             )}
           </IonItem>

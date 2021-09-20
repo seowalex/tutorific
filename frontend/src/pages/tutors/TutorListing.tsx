@@ -73,6 +73,7 @@ const TutorListing: React.FC = () => {
         setShowPopover({ showPopover: false, event: undefined });
       }
     } catch (err) {
+      // eslint-disable-next-line no-console
       console.log(err);
     }
   };

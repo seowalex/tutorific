@@ -12,30 +12,20 @@ import {
   IonTextarea,
 } from '@ionic/react';
 import React from 'react';
-import { NestedValue, SubmitHandler, useForm } from 'react-hook-form';
+import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import {
   Gender,
   Level,
   Subject,
   Town,
   TuteeListing,
-  WeekDay,
+  TuteeListingFormData,
 } from '../app/types';
+// eslint-disable-next-line import/no-cycle
+import SelectTimeSlotsItem from './timeSlots/SelectTimeSlotsItem';
 
 import styles from './ListingForm.module.scss';
-
-export interface TuteeListingFormData {
-  price: {
-    lower: number;
-    upper: number;
-  };
-  description: string;
-  timeSlots: NestedValue<number[]>;
-  subjects: NestedValue<string[]>;
-  level: Level;
-  gender: Gender;
-  location: Town;
-}
+import { arrayToSelectedTimeSlots } from '../app/utils';
 
 interface Props {
   onSubmit: SubmitHandler<TuteeListingFormData>;
@@ -48,6 +38,7 @@ const TuteeListingForm: React.FC<Props> = (props: Props) => {
   const {
     register,
     formState: { errors, isSubmitting },
+    control,
     handleSubmit,
     getValues,
   } = useForm<TuteeListingFormData>({
@@ -58,7 +49,7 @@ const TuteeListingForm: React.FC<Props> = (props: Props) => {
             upper: currentData.priceMax,
           },
           description: currentData.description,
-          timeSlots: currentData.timeSlots,
+          timeSlots: arrayToSelectedTimeSlots(currentData.timeSlots),
           subjects: currentData.subjects,
           level: currentData.level,
           gender: currentData.gender,
@@ -69,6 +60,22 @@ const TuteeListingForm: React.FC<Props> = (props: Props) => {
 
   return (
     <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
+      <IonRow>
+        <IonCol>
+          <Controller
+            name="timeSlots"
+            control={control}
+            render={({ field: { onChange, value } }) => (
+              <SelectTimeSlotsItem
+                onChange={onChange}
+                value={value}
+                errors={errors}
+                isSubmitting={isSubmitting}
+              />
+            )}
+          />
+        </IonCol>
+      </IonRow>
       <IonRow className={styles.priceInputsRow}>
         <IonCol>
           <IonItem
@@ -186,39 +193,6 @@ const TuteeListingForm: React.FC<Props> = (props: Props) => {
             {errors.level && (
               <IonNote slot="helper" color="danger">
                 {errors.level.message}
-              </IonNote>
-            )}
-          </IonItem>
-        </IonCol>
-      </IonRow>
-      <IonRow>
-        <IonCol>
-          <IonItem
-            fill="outline"
-            lines="full"
-            color={errors.timeSlots ? 'danger' : undefined}
-            disabled={isSubmitting}
-          >
-            <IonLabel position="stacked">Available Days</IonLabel>
-            <IonSelect
-              multiple
-              cancelText="Cancel"
-              okText="OK"
-              {...register('timeSlots', {
-                required: 'Please select at least one day',
-                minLength: {
-                  value: 1,
-                  message: 'Please select at least one day',
-                },
-              })}
-            >
-              {Object.keys(WeekDay).map((key, index) => (
-                <IonSelectOption value={index * 48}>{key}</IonSelectOption>
-              ))}
-            </IonSelect>
-            {errors.timeSlots && (
-              <IonNote slot="helper" color="danger">
-                {errors.timeSlots.message}
               </IonNote>
             )}
           </IonItem>
