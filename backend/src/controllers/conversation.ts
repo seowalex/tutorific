@@ -1,4 +1,5 @@
 import Koa from 'koa';
+import { GetConversations } from 'models/conversation';
 import conversationService from '../services/conversation';
 import messageService from '../services/message';
 
@@ -25,7 +26,18 @@ const getConversations = async (ctx: Koa.Context): Promise<void> => {
     return 0;
   });
 
-  ctx.body = { data: conversationsWithLastMessage };
+  // only send other profile
+  const conversationsWithLastMessageAndOtherProfile: Array<GetConversations> =
+    conversationsWithLastMessage.map((convo) => ({
+      id: convo.id,
+      lastMessage: convo.lastMessage,
+      otherProfile:
+        convo.firstProfile.id === profileId
+          ? convo.secondProfile
+          : convo.firstProfile,
+    }));
+
+  ctx.body = { data: conversationsWithLastMessageAndOtherProfile };
 };
 
 const getConversation = async (ctx: Koa.Context): Promise<void> => {

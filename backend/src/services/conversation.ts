@@ -10,7 +10,7 @@ const getConversations = async (
   });
 
 const createConversation = async (
-  conversation: Omit<CreateConversation, 'firstMessage'>
+  conversation: CreateConversation
 ): Promise<Conversation> => {
   const newConversation = new Conversation();
   Object.assign(newConversation, conversation);
