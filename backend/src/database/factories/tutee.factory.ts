@@ -1,5 +1,5 @@
 import faker from 'faker';
-import { Gender, Level, Subject, Town } from '../../utils/model';
+import { Gender, Level, Town } from '../../utils/model';
 import Profile from '../../models/profile';
 import TuteeListing from '../../models/tuteeListing';
 
@@ -21,15 +21,14 @@ const TuteeListingSeed = (context?: { tutee: Profile }) => {
     tuteeListing.timeSlots.push(hour * 2 + 1);
   });
 
+  const subjects = ['English', 'Chinese', 'Math', 'Science'];
+
   tuteeListing.subjects = faker.random
     .arrayElements(
-      Object.values(Subject),
-      faker.datatype.number({ min: 1, max: Object.values(Subject).length })
+      subjects,
+      faker.datatype.number({ min: 1, max: subjects.length })
     )
-    .sort(
-      (a, b) =>
-        Object.values(Subject).indexOf(a) - Object.values(Subject).indexOf(b)
-    );
+    .sort((a, b) => subjects.indexOf(a) - subjects.indexOf(b));
 
   tuteeListing.level = faker.random.arrayElement(Object.values(Level));
 
