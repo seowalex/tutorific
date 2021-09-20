@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import {
   IonAvatar,
+  IonBackButton,
   IonButton,
   IonButtons,
   IonCard,
@@ -115,6 +116,9 @@ const Profile: React.FC = () => {
       <IonHeader>
         <IonToolbar>
           <IonTitle>Profile</IonTitle>
+          <IonButtons slot="start">
+            <IonBackButton />
+          </IonButtons>
           <IonButtons slot="primary" collapse>
             {user.profileId === parseInt(id, 10) ? (
               <IonButton routerLink={`/profile/${id}/edit`}>

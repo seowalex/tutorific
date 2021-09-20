@@ -9,6 +9,10 @@
   padding: 1rem;
 }
 
+:global(.md) .chat {
+  padding-bottom: 0;
+}
+
 .chatBubble {
   position: relative;
   border-radius: 0.5rem;
@@ -70,5 +74,51 @@
     bottom: 0;
     width: 0;
     border-style: solid;
+  }
+}
+
+.chatBox {
+  display: flex;
+  align-items: end;
+  gap: 0.5rem;
+  z-index: 0;
+
+  ion-item {
+    flex-grow: 1;
+  }
+
+  ion-button {
+    margin: 0;
+  }
+}
+
+:global(.md) .chatBox {
+  padding: 1rem;
+
+  ion-textarea {
+    margin-top: 0.25rem;
+  }
+
+  ion-button {
+    height: 3.125rem;
+    width: 3.125rem;
+    --border-radius: 3.125rem;
+  }
+}
+
+:global(.ios) .chatBox {
+  background-color: var(--ion-color-light);
+  padding: 0.5rem;
+
+  ion-textarea {
+    margin-top: 0.125rem;
+  }
+
+  ion-button {
+    height: 2.5rem;
+    width: 2.5rem;
+    --border-radius: 2.5rem;
+    --padding-start: 0.75rem;
+    --padding-end: 0.75rem;
   }
 }

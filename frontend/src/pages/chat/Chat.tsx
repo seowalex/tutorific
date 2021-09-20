@@ -1,13 +1,18 @@
 import React from 'react';
 import {
   IonBackButton,
+  IonButton,
   IonButtons,
   IonContent,
   IonHeader,
+  IonIcon,
+  IonItem,
   IonPage,
+  IonTextarea,
   IonTitle,
   IonToolbar,
 } from '@ionic/react';
+import { person, send } from 'ionicons/icons';
 
 import OfflineCard from '../../components/OfflineCard';
 
@@ -20,6 +25,11 @@ const Chat: React.FC = () => (
         <IonTitle>Chat</IonTitle>
         <IonButtons slot="start">
           <IonBackButton defaultHref="/chats" />
+        </IonButtons>
+        <IonButtons slot="primary">
+          <IonButton routerLink={`/profile/${1}`}>
+            <IonIcon slot="icon-only" icon={person} />
+          </IonButton>
         </IonButtons>
       </IonToolbar>
     </IonHeader>
@@ -78,6 +88,14 @@ const Chat: React.FC = () => (
         </div>
       </div>
     </IonContent>
+    <div className={styles.chatBox}>
+      <IonItem fill="outline" lines="full">
+        <IonTextarea placeholder="Message" rows={1} autoGrow />
+      </IonItem>
+      <IonButton>
+        <IonIcon slot="icon-only" icon={send} />
+      </IonButton>
+    </div>
   </IonPage>
 );
 
