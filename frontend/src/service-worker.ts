@@ -70,6 +70,7 @@ registerRoute(
   })
 );
 
+// Custom logic to get a new auth token before replaying requests
 const backgroundSync = new NetworkOnly({
   plugins: [
     new BackgroundSyncPlugin('offlineQueue', {

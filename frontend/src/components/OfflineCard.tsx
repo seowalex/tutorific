@@ -36,7 +36,8 @@ const OfflineCard: React.FC = () => {
       <IonCardHeader>
         <IonCardTitle>Offline</IonCardTitle>
         <IonCardSubtitle>
-          You are currently offline. Certain functions may not be available.
+          You are currently offline. Certain functions may not be available, and
+          data may be out of date.
         </IonCardSubtitle>
       </IonCardHeader>
     </IonCard>

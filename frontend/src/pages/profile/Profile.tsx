@@ -31,8 +31,9 @@ import {
 
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { useLogoutMutation } from '../../api/auth';
-import { Gender, useGetProfileQuery } from '../../api/profile';
+import { useGetProfileQuery } from '../../api/profile';
 import { selectCurrentUser, unsetCredentials } from '../../reducers/auth';
+import { Gender } from '../../types/profile';
 import type { ErrorResponse } from '../../types/error';
 
 import OfflineCard from '../../components/OfflineCard';

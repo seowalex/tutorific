@@ -1,19 +1,6 @@
 import api from './base';
 import type { AuthState } from '../reducers/auth';
-
-export enum Gender {
-  Female = 'Female',
-  Male = 'Male',
-  PNTS = 'Prefer not to say',
-}
-
-interface Profile {
-  id: number;
-  name: string;
-  gender: Gender;
-  description: string;
-  createdAt: Date;
-}
+import type { Profile } from '../types/profile';
 
 interface AddProfileResponse {
   profileId: number;
@@ -29,7 +16,10 @@ const extendedApi = api.injectEndpoints({
       transformResponse: (response: { data: Profile }) => response.data,
       providesTags: (result, error, id) => [{ type: 'Profile', id }],
     }),
-    addProfile: builder.mutation<Partial<AuthState>, Partial<Profile>>({
+    addProfile: builder.mutation<
+      Pick<AuthState, 'profileId' | 'token'>,
+      Omit<Profile, 'id'>
+    >({
       query: (body) => ({
         url: `profile`,
         method: 'POST',
@@ -40,10 +30,7 @@ const extendedApi = api.injectEndpoints({
         token: response.jwtToken,
       }),
     }),
-    updateProfile: builder.mutation<
-      void,
-      Partial<Profile> & Pick<Profile, 'id'>
-    >({
+    updateProfile: builder.mutation<void, Profile>({
       query: ({ id, ...body }) => ({
         url: `profile/${id}`,
         method: 'PUT',
@@ -51,19 +38,13 @@ const extendedApi = api.injectEndpoints({
       }),
       invalidatesTags: (result, error, arg) =>
         result ? [{ type: 'Profile', id: arg.id }] : [],
-      // async onQueryStarted({ id, ...body }, { dispatch, queryFulfilled }) {
-      //   dispatch(
-      //     extendedApi.util.updateQueryData('getProfile', id, (draft) => {
-      //       Object.assign(draft, body);
-      //     })
-      //   );
-
-      //   try {
-      //     await queryFulfilled;
-      //   } catch {
-      //     console.log({ id, ...body });
-      //   }
-      // },
+      async onQueryStarted({ id, ...body }, { dispatch }) {
+        dispatch(
+          extendedApi.util.updateQueryData('getProfile', id, (draft) => {
+            Object.assign(draft, body);
+          })
+        );
+      },
     }),
   }),
 });

@@ -12,7 +12,7 @@ import {
 } from '@ionic/react';
 import { Control, Controller, FieldErrors } from 'react-hook-form';
 
-import { Gender } from '../api/profile';
+import { Gender } from '../types/profile';
 
 export interface ProfileData {
   name: string;
