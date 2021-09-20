@@ -1,7 +1,22 @@
 export enum Gender {
-  M = 'Male',
-  F = 'Female',
-  N = 'None',
+  MALE = 'Male',
+  FEMALE = 'Female',
+  PNTS = 'Prefer not to say',
+}
+
+export enum Level {
+  LowerPrimary = 'Lower Primary',
+  UpperPrimary = 'Upper Primary',
+  LowerSecondary = 'Lower Secondary',
+  UpperSecondary = 'Upper Secondary',
+  JC = 'Junior College',
+}
+
+export enum Subject {
+  Mathematics = 'Mathematics',
+  English = 'English',
+  Science = 'Science',
+  Chinese = 'Chinese',
 }
 
 export enum Town {
@@ -62,7 +77,7 @@ export interface TutorListing {
   description: string;
   timeSlots: number[];
   subjects: string[];
-  levels: string[];
+  levels: Level[];
   createdAt: Date;
 }
 
@@ -74,7 +89,7 @@ export interface TuteeListing {
   description: string;
   timeSlots: number[];
   subjects: string[];
-  level: string;
+  level: Level;
   gender: Gender;
   location: Town;
   createdAt: Date;

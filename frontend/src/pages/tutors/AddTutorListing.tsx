@@ -13,13 +13,19 @@ import {
 import React from 'react';
 import { SubmitHandler } from 'react-hook-form';
 import { useHistory } from 'react-router';
+import { useDispatch } from 'react-redux';
 import { useCreateTutorListingMutation } from '../../api/tutor';
 import { useAppSelector } from '../../app/hooks';
 import { selectCurrentUserId } from '../../reducers/auth';
 
-import TutorListingForm, { TutorListingFormData } from './TutorListingForm';
+import TutorListingForm, {
+  TutorListingFormData,
+} from '../../components/TutorListingForm';
+import { Level } from '../../app/types';
+import { resetTutorListingPagination } from '../../reducers/tutorFilters';
 
 const AddTutorListing: React.FC = () => {
+  const dispatch = useDispatch();
   const userId = useAppSelector(selectCurrentUserId);
   const [createTutorListing] = useCreateTutorListingMutation();
   const history = useHistory();
@@ -38,12 +44,13 @@ const AddTutorListing: React.FC = () => {
         priceMax: price.upper,
         description: details.description,
         subjects: details.subjects as string[],
-        levels: details.levels as string[],
+        levels: details.levels as Level[],
         timeSlots: details.timeSlots as number[],
       };
       const result = await createTutorListing(listingData);
 
       if ('data' in result && result.data) {
+        dispatch(resetTutorListingPagination());
         history.push('/tutors');
       }
     } catch (err) {

@@ -1,8 +1,7 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Redirect, Route } from 'react-router-dom';
 import {
   IonApp,
-  IonBadge,
   IonIcon,
   IonLabel,
   IonRouterOutlet,
@@ -13,37 +12,83 @@ import {
 import { IonReactRouter } from '@ionic/react-router';
 import { bulb, chatbubbles, person, school } from 'ionicons/icons';
 
-import Login from './pages/auth/Login';
-import Register from './pages/auth/Register';
-import Tutors from './pages/tutors/Tutors';
-import Tutees from './pages/tutees/Tutees';
-import Chat from './pages/Chat';
-import Profile from './pages/profile/Profile';
 import { useAppSelector } from './app/hooks';
+import { usePrefetch as useTutorPrefetch } from './api/tutor';
+import { usePrefetch as useTuteePrefetch } from './api/tutee';
+import { usePrefetch as useProfilePrefetch } from './api/profile';
 import { selectCurrentUserId } from './reducers/auth';
 
-import './styles/main.scss';
+import Login from './pages/auth/Login';
+import Register from './pages/auth/Register';
+
+import Tutors from './pages/tutors/Tutors';
 import TutorListing from './pages/tutors/TutorListing';
 import AddTutorListing from './pages/tutors/AddTutorListing';
 import EditTutorListing from './pages/tutors/EditTutorListing';
+
+import Tutees from './pages/tutees/Tutees';
 import TuteeListing from './pages/tutees/TuteeListing';
 import AddTuteeListing from './pages/tutees/AddTuteeListing';
 import EditTuteeListing from './pages/tutees/EditTuteeListing';
+import FilterTutorListings from './pages/tutors/FilterTutorListings';
+
+import Chat from './pages/Chat';
+
+import Profile from './pages/profile/Profile';
+import CreateProfile from './pages/profile/CreateProfile';
+import EditProfile from './pages/profile/EditProfile';
+
+import './styles/main.scss';
+import FilterTuteeListings from './pages/tutees/FilterTuteeListings';
 
 const App: React.FC = () => {
-  const userId = useAppSelector(selectCurrentUserId);
+  const currentUserId = useAppSelector(selectCurrentUserId);
+  const prefetchTutorListings = useTutorPrefetch('getTutorListings');
+  const prefetchTuteeListings = useTuteePrefetch('getTuteeListings');
+  const prefetchProfile = useProfilePrefetch('getProfile');
+
+  useEffect(() => {
+    if (currentUserId) {
+      prefetchTutorListings({});
+      prefetchTuteeListings({});
+      prefetchProfile(currentUserId);
+    }
+  }, [
+    prefetchTutorListings,
+    prefetchTuteeListings,
+    prefetchProfile,
+    currentUserId,
+  ]);
 
   return (
     <IonApp>
       <IonReactRouter>
         <IonRouterOutlet>
-          <Route exact path="/login">
-            <Login />
-          </Route>
-          <Route exact path="/register">
-            <Register />
-          </Route>
-          {userId ? (
+          {!currentUserId ? (
+            <Route exact path="/login">
+              <Login />
+            </Route>
+          ) : (
+            <></>
+          )}
+          {!currentUserId ? (
+            <Route exact path="/register">
+              <Register />
+            </Route>
+          ) : (
+            <></>
+          )}
+          {!currentUserId ? (
+            <Route exact path="/profile">
+              <CreateProfile />
+            </Route>
+          ) : (
+            <></>
+          )}
+          {!currentUserId ? <Redirect exact path="/" to="/login" /> : <></>}
+          {!currentUserId ? (
+            <Redirect to="/login" />
+          ) : (
             <Route>
               <IonTabs>
                 <IonTabBar slot="bottom">
@@ -59,43 +104,62 @@ const App: React.FC = () => {
                   <IonTabButton tab="chat" href="/chat">
                     <IonIcon icon={chatbubbles} />
                     <IonLabel>Chat</IonLabel>
-                    <IonBadge>6</IonBadge>
                   </IonTabButton>
 
-                  <IonTabButton tab="profile" href={`/profile/${userId}`}>
+                  <IonTabButton
+                    tab="profile"
+                    href={`/profile/${currentUserId}`}
+                  >
                     <IonIcon icon={person} />
                     <IonLabel>Profile</IonLabel>
                   </IonTabButton>
                 </IonTabBar>
 
                 <IonRouterOutlet>
-                  <Route path="/tutors">
+                  <Route exact path="/tutors">
                     <Tutors />
                   </Route>
-                  <Route path="/tutor/:id" component={TutorListing} />
-                  <Route path="/addtutor">
+                  <Route exact path="/tutor/:id" component={TutorListing} />
+                  <Route exact path="/tutor/add">
                     <AddTutorListing />
                   </Route>
-                  <Route path="/edittutor/:id" component={EditTutorListing} />
-                  <Route path="/tutees">
+                  <Route
+                    exact
+                    path="/tutor/:id/edit"
+                    component={EditTutorListing}
+                  />
+                  <Route exact path="/tutor/search">
+                    <FilterTutorListings />
+                  </Route>
+                  <Route exact path="/tutees">
                     <Tutees />
                   </Route>
-                  <Route path="/tutee/:id" component={TuteeListing} />
-                  <Route path="/addtutee">
+                  <Route exact path="/tutee/:id" component={TuteeListing} />
+                  <Route exact path="/tutee/add">
                     <AddTuteeListing />
                   </Route>
-                  <Route path="/edittutee/:id" component={EditTuteeListing} />
+                  <Route
+                    exact
+                    path="/tutee/:id/edit"
+                    component={EditTuteeListing}
+                  />
+                  <Route exact path="/tutee/search">
+                    <FilterTuteeListings />
+                  </Route>
                   <Route path="/chat">
                     <Chat />
                   </Route>
-                  <Route path="/profile">
+                  <Route exact path="/profile/:id">
                     <Profile />
                   </Route>
+                  <Route exact path="/profile/:id/edit">
+                    <EditProfile />
+                  </Route>
+                  <Redirect exact path="/" to="/tutors" />
+                  <Redirect to="/tutors" />
                 </IonRouterOutlet>
               </IonTabs>
             </Route>
-          ) : (
-            <Redirect to="/login" />
           )}
         </IonRouterOutlet>
       </IonReactRouter>

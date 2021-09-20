@@ -13,7 +13,7 @@ export default class Conversation {
 
   @ManyToOne(() => Profile, { nullable: false, eager: true })
   @UniqueConversation('firstProfile', {
-    message: 'Already have a conversation with other person',
+    message: 'Already have an existing conversation',
   })
   secondProfile: Profile;
 }

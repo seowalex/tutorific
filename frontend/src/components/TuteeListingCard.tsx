@@ -17,7 +17,7 @@ import { locationOutline } from 'ionicons/icons';
 import styles from './ListingCard.module.scss';
 import ProfileItem from './ProfileItem';
 import WeekDaysItem from './WeekDaysItem';
-import { TuteeListing } from '../app/types';
+import { Gender, Level, TuteeListing } from '../app/types';
 import { formatPriceRange, formatStringList } from '../app/utils';
 
 interface Props {
@@ -26,6 +26,9 @@ interface Props {
 
 const TuteeListingCard: React.FC<Props> = (props: Props) => {
   const { listing } = props;
+
+  const formatLevelAndGender = (level: Level, gender: Gender) =>
+    `${level}${gender === Gender.PNTS ? '' : `\n${gender} Student`}`;
 
   return (
     <IonCard button routerLink={`/tutee/${listing.id}`}>
@@ -50,7 +53,7 @@ const TuteeListingCard: React.FC<Props> = (props: Props) => {
           <IonRow>
             <IonCol>
               <IonCardSubtitle class="ion-text-start">
-                {`${listing.level}\n${listing.gender} Student`}
+                {formatLevelAndGender(listing.level, listing.gender)}
               </IonCardSubtitle>
             </IonCol>
             <IonCol>

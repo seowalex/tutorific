@@ -12,7 +12,7 @@ import {
 } from '@ionic/react';
 import React from 'react';
 import { SubmitHandler } from 'react-hook-form';
-import { RouteComponentProps, useHistory } from 'react-router';
+import { useHistory, useRouteMatch } from 'react-router';
 import {
   useGetTuteeListingQuery,
   useUpdateTuteeListingMutation,
@@ -20,12 +20,18 @@ import {
 import { useAppSelector } from '../../app/hooks';
 import { selectCurrentUserId } from '../../reducers/auth';
 
-import TuteeListingForm, { TuteeListingFormData } from './TuteeListingForm';
+import TuteeListingForm, {
+  TuteeListingFormData,
+} from '../../components/TuteeListingForm';
 
-const EditTuteeListing: React.FC<RouteComponentProps<{ id: string }>> = ({
-  match,
-}) => {
-  const { id } = match.params;
+interface Params {
+  id: string;
+}
+
+const EditTuteeListing: React.FC = () => {
+  const {
+    params: { id },
+  } = useRouteMatch<Params>();
   // eslint-disable-next-line radix
   const listingId = parseInt(id);
   const userId = useAppSelector(selectCurrentUserId);

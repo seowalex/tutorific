@@ -16,13 +16,15 @@ import {
   IonSpinner,
   IonTitle,
   IonToolbar,
+  useIonRouter,
 } from '@ionic/react';
-import { useHistory } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
+import type { FetchBaseQueryError } from '@reduxjs/toolkit/query/react';
 
 import { useAppDispatch } from '../../app/hooks';
 import { useRegisterMutation } from '../../api/auth';
 import { setCredentials } from '../../reducers/auth';
+import type { ErrorResponse } from '../../types/error';
 
 import styles from './Register.module.scss';
 
@@ -36,24 +38,45 @@ const Register: React.FC = () => {
   const dispatch = useAppDispatch();
   const [registerUser, { isLoading }] = useRegisterMutation();
 
-  const history = useHistory();
+  const router = useIonRouter();
   const {
     register,
     formState: { errors },
     handleSubmit,
+    setError,
     getValues,
   } = useForm<RegisterData>();
 
   const onSubmit = async (data: RegisterData) => {
     try {
-      const result = await registerUser(data);
+      const credentials = await registerUser(data).unwrap();
+      dispatch(setCredentials(credentials));
 
-      if ('data' in result && result.data) {
-        dispatch(setCredentials(result.data));
-        history.push('/tutors');
+      if (credentials.profileId) {
+        router.push('/');
+      } else {
+        router.push('/profile');
       }
-    } catch (err) {
-      console.log(err);
+    } catch (error) {
+      const { errors: errorMessages } = (error as FetchBaseQueryError)
+        .data as ErrorResponse;
+
+      for (const errorMessage of errorMessages) {
+        switch (errorMessage.field) {
+          case 'email':
+            setError('email', {
+              message: errorMessage.detail.join(', '),
+            });
+            break;
+          case 'password':
+            setError('password', {
+              message: errorMessage.detail.join(', '),
+            });
+            break;
+          default:
+            break;
+        }
+      }
     }
   };
 
@@ -71,17 +94,14 @@ const Register: React.FC = () => {
         <IonGrid className="ion-no-padding">
           <IonRow>
             <IonCol className="ion-no-padding">
-              <div className={styles.welcomeHeader}>
-                <img className={styles.welcomeImg} src="/assets/welcome.png" />
-                <p className={styles.welcomeText}>
+              <div className={styles.header}>
+                <img className={styles.headerImg} src="/assets/welcome.png" />
+                <p className={styles.headerText}>
                   Welcome to Tutorific! Register an account to start looking for
                   tutors/tutees.
                 </p>
               </div>
-              <form
-                className={styles.registerForm}
-                onSubmit={handleSubmit(onSubmit)}
-              >
+              <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
                 <IonItem
                   fill="outline"
                   lines="full"

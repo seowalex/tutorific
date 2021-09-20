@@ -1,7 +1,10 @@
 import api from './base';
 import { TuteeListing } from '../app/types';
+import { TuteeFiltersState } from '../reducers/tuteeFilters';
+import { constructQueryString } from '../app/utils';
 
-type GetTuteeListingsResponse = TuteeListing[];
+type GetTuteeListingsQueryParams = Partial<TuteeFiltersState>;
+type GetTuteeListingsResponse = { listings: TuteeListing[]; count: number };
 type GetTuteeListingResponse = TuteeListing;
 type CreateTuteeListingRequest = Omit<
   TuteeListing,
@@ -13,12 +16,16 @@ type UpdateTuteeListingRequest = Partial<
 
 const extendedApi = api.injectEndpoints({
   endpoints: (builder) => ({
-    getTuteeListings: builder.query<GetTuteeListingsResponse, void>({
-      query: () => ({
-        url: 'tutee/',
+    getTuteeListings: builder.query<
+      GetTuteeListingsResponse,
+      GetTuteeListingsQueryParams
+    >({
+      query: (queryParams) => ({
+        url: `tutee/${constructQueryString(queryParams)}`,
       }),
       transformResponse: (response: { data: GetTuteeListingsResponse }) =>
         response.data,
+      providesTags: ['TuteeListing'],
     }),
     getTuteeListing: builder.query<GetTuteeListingResponse, number>({
       query: (id) => ({
@@ -26,13 +33,15 @@ const extendedApi = api.injectEndpoints({
       }),
       transformResponse: (response: { data: GetTuteeListingResponse }) =>
         response.data,
+      providesTags: (result, error, id) => [{ type: 'TuteeListing', id }],
     }),
     createTuteeListing: builder.mutation<void, CreateTuteeListingRequest>({
       query: (listing) => ({
-        url: 'tutee/',
+        url: 'tutee',
         method: 'POST',
         body: listing,
       }),
+      invalidatesTags: ['TuteeListing'],
     }),
     updateTuteeListing: builder.mutation<
       void,
@@ -43,12 +52,16 @@ const extendedApi = api.injectEndpoints({
         method: 'PUT',
         body: update,
       }),
+      invalidatesTags: (result, error, arg) => [
+        { type: 'TuteeListing', id: arg.id },
+      ],
     }),
     deleteTuteeListing: builder.mutation<void, number>({
       query: (id) => ({
         url: `tutee/${id}`,
         method: 'DELETE',
       }),
+      invalidatesTags: ['TuteeListing'],
     }),
   }),
 });
@@ -59,4 +72,5 @@ export const {
   useCreateTuteeListingMutation,
   useUpdateTuteeListingMutation,
   useDeleteTuteeListingMutation,
+  usePrefetch,
 } = extendedApi;

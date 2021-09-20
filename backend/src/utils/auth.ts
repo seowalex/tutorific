@@ -32,6 +32,11 @@ const generateRefreshToken = (): string =>
   crypto.randomBytes(CRYPTO_BYTES).toString('hex');
 
 const isOpenRoute = (method: string, url: string): boolean => {
+  // Check frontend path
+  if (!url.startsWith('/api/')) {
+    return true;
+  }
+
   if (!OPEN_ROUTES[method]) {
     return false;
   }

@@ -1,7 +1,10 @@
 import api from './base';
 import { TutorListing } from '../app/types';
+import { TutorFiltersState } from '../reducers/tutorFilters';
+import { constructQueryString } from '../app/utils';
 
-type GetTutorListingsResponse = TutorListing[];
+type GetTutorListingsQueryParams = Partial<TutorFiltersState>;
+type GetTutorListingsResponse = { listings: TutorListing[]; count: number };
 type GetTutorListingResponse = TutorListing;
 type CreateTutorListingRequest = Omit<
   TutorListing,
@@ -13,12 +16,16 @@ type UpdateTutorListingRequest = Partial<
 
 const extendedApi = api.injectEndpoints({
   endpoints: (builder) => ({
-    getTutorListings: builder.query<GetTutorListingsResponse, void>({
-      query: () => ({
-        url: 'tutor/',
+    getTutorListings: builder.query<
+      GetTutorListingsResponse,
+      GetTutorListingsQueryParams
+    >({
+      query: (queryParams) => ({
+        url: `tutor/${constructQueryString(queryParams)}`,
       }),
       transformResponse: (response: { data: GetTutorListingsResponse }) =>
         response.data,
+      providesTags: ['TutorListing'],
     }),
     getTutorListing: builder.query<GetTutorListingResponse, number>({
       query: (id) => ({
@@ -26,13 +33,15 @@ const extendedApi = api.injectEndpoints({
       }),
       transformResponse: (response: { data: GetTutorListingResponse }) =>
         response.data,
+      providesTags: (result, error, id) => [{ type: 'TutorListing', id }],
     }),
     createTutorListing: builder.mutation<void, CreateTutorListingRequest>({
       query: (listing) => ({
-        url: 'tutor/',
+        url: 'tutor',
         method: 'POST',
         body: listing,
       }),
+      invalidatesTags: ['TutorListing'],
     }),
     updateTutorListing: builder.mutation<
       void,
@@ -43,12 +52,16 @@ const extendedApi = api.injectEndpoints({
         method: 'PUT',
         body: update,
       }),
+      invalidatesTags: (result, error, arg) => [
+        { type: 'TutorListing', id: arg.id },
+      ],
     }),
     deleteTutorListing: builder.mutation<void, number>({
       query: (id) => ({
         url: `tutor/${id}`,
         method: 'DELETE',
       }),
+      invalidatesTags: ['TutorListing'],
     }),
   }),
 });
@@ -59,4 +72,5 @@ export const {
   useCreateTutorListingMutation,
   useUpdateTutorListingMutation,
   useDeleteTutorListingMutation,
+  usePrefetch,
 } = extendedApi;

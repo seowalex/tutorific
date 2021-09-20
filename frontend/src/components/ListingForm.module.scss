@@ -1,5 +1,9 @@
 .form {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 1rem;
+}
+
+.priceInputsRow {
+  gap: 1rem;
 }
