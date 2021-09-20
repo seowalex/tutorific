@@ -1,0 +1,74 @@
+.chatContainer::part(scroll) {
+  display: flex;
+  flex-direction: column-reverse;
+}
+
+.chat {
+  display: flex;
+  flex-direction: column-reverse;
+  padding: 1rem;
+}
+
+.chatBubble {
+  position: relative;
+  border-radius: 0.5rem;
+  padding: 1rem;
+
+  &:not(:first-child) {
+    margin-bottom: 1rem;
+  }
+
+  &.sent {
+    color: var(--ion-color-primary-contrast);
+    background-color: var(--ion-color-primary);
+    border-bottom-right-radius: 0;
+    margin-left: 5rem;
+    margin-right: 0.5rem;
+
+    & + & {
+      margin-bottom: 0.5rem;
+      border-bottom-right-radius: 0.5rem;
+
+      &::after {
+        content: none;
+      }
+    }
+
+    &::after {
+      right: -0.5rem;
+      border-width: 0 0.5rem 0.5rem 0;
+      border-color: var(--ion-color-primary) transparent;
+    }
+  }
+
+  &.received {
+    color: var(--ion-color-light-contrast);
+    background-color: var(--ion-color-light);
+    border-bottom-left-radius: 0;
+    margin-left: 0.5rem;
+    margin-right: 5rem;
+
+    & + & {
+      margin-bottom: 0.5rem;
+      border-bottom-left-radius: 0.5rem;
+
+      &::after {
+        content: none;
+      }
+    }
+
+    &::after {
+      left: -0.5rem;
+      border-width: 0 0 0.5rem 0.5rem;
+      border-color: var(--ion-color-light) transparent;
+    }
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    width: 0;
+    border-style: solid;
+  }
+}

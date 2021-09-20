@@ -32,7 +32,8 @@ import AddTuteeListing from './pages/tutees/AddTuteeListing';
 import EditTuteeListing from './pages/tutees/EditTuteeListing';
 import FilterTutorListings from './pages/tutors/FilterTutorListings';
 
-import Chat from './pages/Chat';
+import Chats from './pages/chat/Chats';
+import Chat from './pages/chat/Chat';
 
 import Profile from './pages/profile/Profile';
 import CreateProfile from './pages/profile/CreateProfile';
@@ -101,9 +102,9 @@ const App: React.FC = () => {
                     <IonLabel>Tutees</IonLabel>
                   </IonTabButton>
 
-                  <IonTabButton tab="chat" href="/chat">
+                  <IonTabButton tab="chats" href="/chats">
                     <IonIcon icon={chatbubbles} />
-                    <IonLabel>Chat</IonLabel>
+                    <IonLabel>Chats</IonLabel>
                   </IonTabButton>
 
                   <IonTabButton
@@ -146,7 +147,10 @@ const App: React.FC = () => {
                   <Route exact path="/tutee/search">
                     <FilterTuteeListings />
                   </Route>
-                  <Route path="/chat">
+                  <Route exact path="/chats">
+                    <Chats />
+                  </Route>
+                  <Route exact path="/chat/:id">
                     <Chat />
                   </Route>
                   <Route exact path="/profile/:id">

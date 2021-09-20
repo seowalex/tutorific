@@ -20,6 +20,7 @@ import {
 } from '@ionic/react';
 import { useRouteMatch } from 'react-router-dom';
 import type { FetchBaseQueryError } from '@reduxjs/toolkit/query/react';
+import Avatar from 'react-avatar';
 import {
   chatbubbleOutline,
   closeCircle,
@@ -54,7 +55,7 @@ const Profile: React.FC = () => {
   const [logout] = useLogoutMutation();
   const user = useAppSelector(selectCurrentUser);
   const { data: profile, refetch } = useGetProfileQuery(parseInt(id, 10));
-  const hasListings = false;
+  const hasListings = true;
 
   const router = useIonRouter();
   const [present] = useIonToast();
@@ -157,10 +158,11 @@ const Profile: React.FC = () => {
           <div className="ion-margin">
             <div className={styles.header}>
               <IonAvatar className={styles.avatar}>
-                <img
-                  src={`https://ui-avatars.com/api/?name=${encodeURIComponent(
-                    profile?.name ?? ''
-                  )}&background=random`}
+                <Avatar
+                  name={profile?.name}
+                  maxInitials={2}
+                  size="100%"
+                  round
                 />
               </IonAvatar>
               <div>
