@@ -26,6 +26,7 @@ import TutorListingForm, {
 } from '../../components/TutorListingForm';
 import { Level } from '../../app/types';
 import { resetTutorListingPagination } from '../../reducers/tutorFilters';
+import { selectedTimeSlotsToArray } from '../../app/utils';
 
 interface Params {
   id: string;
@@ -44,6 +45,7 @@ const EditTutorListing: React.FC = () => {
 
   const onSubmit: SubmitHandler<TutorListingFormData> = async (data) => {
     if (userId == null) {
+      // eslint-disable-next-line no-console
       console.log('User is not logged in');
       return;
     }
@@ -58,7 +60,7 @@ const EditTutorListing: React.FC = () => {
         description: details.description,
         subjects: details.subjects as string[],
         levels: details.levels as Level[],
-        timeSlots: details.timeSlots as number[],
+        timeSlots: selectedTimeSlotsToArray(details.timeSlots),
       };
       const result = await updateTutorListing(listingData);
 
@@ -67,6 +69,7 @@ const EditTutorListing: React.FC = () => {
         history.push(`/tutor/${id}`);
       }
     } catch (err) {
+      // eslint-disable-next-line no-console
       console.log(err);
     }
   };

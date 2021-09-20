@@ -13,6 +13,7 @@ import {
 import React from 'react';
 import { SubmitHandler } from 'react-hook-form';
 import { useHistory, useRouteMatch } from 'react-router';
+import { useDispatch } from 'react-redux';
 import {
   useGetTuteeListingQuery,
   useUpdateTuteeListingMutation,
@@ -20,9 +21,10 @@ import {
 import { useAppSelector } from '../../app/hooks';
 import { selectCurrentUserId } from '../../reducers/auth';
 
-import TuteeListingForm, {
-  TuteeListingFormData,
-} from '../../components/TuteeListingForm';
+import TuteeListingForm from '../../components/TuteeListingForm';
+import { selectedTimeSlotsToArray } from '../../app/utils';
+import { resetTuteeListingPagination } from '../../reducers/tuteeFilters';
+import { TuteeListingFormData } from '../../app/types';
 
 interface Params {
   id: string;
@@ -37,10 +39,12 @@ const EditTuteeListing: React.FC = () => {
   const userId = useAppSelector(selectCurrentUserId);
   const { data: listing } = useGetTuteeListingQuery(listingId);
   const [updateTuteeListing] = useUpdateTuteeListingMutation();
+  const dispatch = useDispatch();
   const history = useHistory();
 
   const onSubmit: SubmitHandler<TuteeListingFormData> = async (data) => {
     if (userId == null) {
+      // eslint-disable-next-line no-console
       console.log('User is not logged in');
       return;
     }
@@ -54,14 +58,16 @@ const EditTuteeListing: React.FC = () => {
         priceMin: price.lower,
         priceMax: price.upper,
         subjects: details.subjects as string[],
-        timeSlots: details.timeSlots as number[],
+        timeSlots: selectedTimeSlotsToArray(details.timeSlots),
       };
       const result = await updateTuteeListing(listingData);
 
       if ('data' in result && result.data) {
+        dispatch(resetTuteeListingPagination());
         history.push(`/tutee/${id}`);
       }
     } catch (err) {
+      // eslint-disable-next-line no-console
       console.log(err);
     }
   };

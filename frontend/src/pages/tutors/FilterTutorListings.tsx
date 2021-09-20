@@ -21,6 +21,7 @@ import {
   selectTutorFilters,
   setTutorListingFilters,
 } from '../../reducers/tutorFilters';
+import { selectedTimeSlotsToArray } from '../../app/utils';
 
 const FilterTutorListings: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -30,6 +31,7 @@ const FilterTutorListings: React.FC = () => {
   const onSubmit: SubmitHandler<FilterTutorListingFormData> = (data) => {
     const filters = {
       ...data,
+      timeSlots: selectedTimeSlotsToArray(data.timeSlots),
       skip: 0,
       limit: 10,
     };
