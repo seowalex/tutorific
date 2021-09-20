@@ -14,8 +14,6 @@ import { Control, Controller, FieldErrors } from 'react-hook-form';
 
 import { Gender } from '../api/profile';
 
-import styles from './ProfileForm.module.scss';
-
 export interface ProfileData {
   name: string;
   gender: Gender;
@@ -36,7 +34,7 @@ const ProfileForm: React.FC<Props> = ({
   handleSubmit,
   control,
 }) => (
-  <form className={styles.form} onSubmit={handleSubmit}>
+  <form onSubmit={handleSubmit}>
     <IonItem
       fill="outline"
       lines="full"

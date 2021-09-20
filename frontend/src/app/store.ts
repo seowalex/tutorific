@@ -15,13 +15,15 @@ import {
   PURGE,
   REGISTER,
 } from 'redux-persist';
-import storage from 'redux-persist/lib/storage';
+import storage from 'localforage';
 import api from '../api/base';
 import auth from '../reducers/auth';
 /* eslint-disable import/no-cycle */
 import tutorFilters from '../reducers/tutorFilters';
 import tuteeFilters from '../reducers/tuteeFilters';
 /* eslint-enable import/no-cycle */
+
+storage.setDriver(storage.INDEXEDDB);
 
 const persistConfig = {
   key: 'root',

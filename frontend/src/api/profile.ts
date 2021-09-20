@@ -30,7 +30,7 @@ const extendedApi = api.injectEndpoints({
       providesTags: (result, error, id) => [{ type: 'Profile', id }],
     }),
     addProfile: builder.mutation<Partial<AuthState>, Partial<Profile>>({
-      query: ({ id, ...body }) => ({
+      query: (body) => ({
         url: `profile`,
         method: 'POST',
         body,

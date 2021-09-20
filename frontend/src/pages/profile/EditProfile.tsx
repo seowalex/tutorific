@@ -47,9 +47,7 @@ const EditProfile: React.FC = () => {
     control,
   } = useForm<ProfileData>();
 
-  useEffect(() => {
-    reset(profile);
-  }, [reset, profile]);
+  useEffect(() => reset(profile), [reset, profile]);
 
   const onSubmit = async (data: ProfileData) => {
     try {
