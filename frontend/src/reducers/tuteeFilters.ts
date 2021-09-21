@@ -1,8 +1,6 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-
-// eslint-disable-next-line import/no-cycle
-import { RootState } from '../app/store';
-import { Gender, Level, Town } from '../app/types';
+import { PayloadAction, createSlice } from '@reduxjs/toolkit';
+import type { RootState } from '../app/store';
+import type { Gender, Level, Town } from '../app/types';
 
 export interface TuteeFiltersState {
   priceMin?: number;

@@ -17,7 +17,13 @@ const extendedApi = api.injectEndpoints({
         url: 'conversation',
       }),
       transformResponse: (response: { data: [ChatInfo] }) => response.data,
-      providesTags: ['Chat'],
+      providesTags: (result) =>
+        result
+          ? [
+              ...result.map(({ id }) => ({ type: 'Chat' as const, id })),
+              { type: 'Chat', id: 'LIST' },
+            ]
+          : [{ type: 'Chat', id: 'LIST' }],
     }),
     getChat: builder.query<Chat, number>({
       query: (id) => ({
@@ -36,7 +42,8 @@ const extendedApi = api.injectEndpoints({
       }),
       transformResponse: (response: { data: AddChatResponse }) =>
         response.data.id,
-      invalidatesTags: (result) => (result ? ['Chat'] : []),
+      invalidatesTags: (result) =>
+        result ? [{ type: 'Chat', id: 'LIST' }] : [],
     }),
     addMessage: builder.mutation<void, AddMessageRequest>({
       query: ({ chatId, content }) => ({

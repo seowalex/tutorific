@@ -16,12 +16,11 @@ import {
   REGISTER,
 } from 'redux-persist';
 import storage from 'localforage';
+
 import api from '../api/base';
 import auth from '../reducers/auth';
-/* eslint-disable import/no-cycle */
 import tutorFilters from '../reducers/tutorFilters';
 import tuteeFilters from '../reducers/tuteeFilters';
-/* eslint-enable import/no-cycle */
 
 storage.setDriver(storage.INDEXEDDB);
 
@@ -41,7 +40,6 @@ const persistedReducer = persistReducer(persistConfig, rootReducer);
 
 export const store = configureStore({
   reducer: persistedReducer,
-  devTools: true,
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: {
