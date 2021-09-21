@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import {
+  IonActionSheet,
   IonButton,
   IonButtons,
   IonContent,
@@ -18,9 +19,13 @@ import {
 import {
   arrowBackOutline,
   chatbubbleOutline,
+  closeOutline,
   createOutline,
   ellipsisVertical,
   lockClosedOutline,
+  logoFacebook,
+  logoWhatsapp,
+  paperPlaneOutline,
   shareSocialOutline,
   trashOutline,
 } from 'ionicons/icons';
@@ -33,6 +38,7 @@ import { useAppSelector } from '../../app/hooks';
 import ProfileItem from '../../components/ProfileItem';
 import { selectCurrentUserId } from '../../reducers/auth';
 import {
+  baseUrl,
   computeWeekDays,
   formatPriceRange,
   formatStringList,
@@ -57,12 +63,15 @@ const TutorListing: React.FC = () => {
   const history = useHistory();
 
   const isOwnListing = userId === listing?.tutor.id;
-  const [popoverState, setShowPopover] = useState({
+  const [popoverState, setPopoverState] = useState({
     showPopover: false,
     event: undefined,
   });
+  const [showShareSheet, setShowShareSheet] = useState<boolean>(false);
   const [presentDeleteAlert] = useIonAlert();
   const [deleteTutorListing] = useDeleteTutorListingMutation();
+
+  const listingUrl = `${baseUrl}/tutor/${listingId}`;
 
   const handleDeleteListing = async () => {
     try {
@@ -70,7 +79,7 @@ const TutorListing: React.FC = () => {
 
       if ('data' in result && result.data) {
         history.push('/tutors');
-        setShowPopover({ showPopover: false, event: undefined });
+        setPopoverState({ showPopover: false, event: undefined });
       }
     } catch (err) {
       // eslint-disable-next-line no-console
@@ -97,7 +106,7 @@ const TutorListing: React.FC = () => {
               <IonButton
                 onClick={(e: any) => {
                   e.persist();
-                  setShowPopover({ showPopover: true, event: e });
+                  setPopoverState({ showPopover: true, event: e });
                 }}
               >
                 <IonIcon slot="icon-only" icon={ellipsisVertical} />
@@ -136,11 +145,15 @@ const TutorListing: React.FC = () => {
         event={popoverState.event}
         isOpen={popoverState.showPopover}
         onDidDismiss={() =>
-          setShowPopover({ showPopover: false, event: undefined })
+          setPopoverState({ showPopover: false, event: undefined })
         }
       >
         <IonList>
-          <IonItem button detail={false}>
+          <IonItem
+            button
+            detail={false}
+            onClick={() => setShowShareSheet(true)}
+          >
             <IonIcon icon={shareSocialOutline} slot="end" />
             <IonLabel>Share Listing</IonLabel>
           </IonItem>
@@ -149,16 +162,16 @@ const TutorListing: React.FC = () => {
             detail={false}
             routerLink={`/tutor/${listingId}/edit`}
             onClick={() => {
-              setShowPopover({ showPopover: false, event: undefined });
+              setPopoverState({ showPopover: false, event: undefined });
             }}
           >
             <IonIcon icon={createOutline} slot="end" />
             <IonLabel>Edit Listing</IonLabel>
           </IonItem>
-          <IonItem button detail={false}>
+          {/* <IonItem button detail={false}>
             <IonIcon icon={lockClosedOutline} slot="end" />
             <IonLabel>Close Listing</IonLabel>
-          </IonItem>
+          </IonItem> */}
           <IonItem
             button
             detail={false}
@@ -178,6 +191,38 @@ const TutorListing: React.FC = () => {
           </IonItem>
         </IonList>
       </IonPopover>
+      <IonActionSheet
+        isOpen={showShareSheet}
+        onDidDismiss={() => setShowShareSheet(false)}
+        buttons={[
+          {
+            text: 'Facebook',
+            icon: logoFacebook,
+            handler: () => {
+              window.location.href = `http://www.facebook.com/share.php?u=${listingUrl}`;
+            },
+          },
+          {
+            text: 'WhatsApp',
+            icon: logoWhatsapp,
+            handler: () => {
+              window.open(`whatsapp://send?text=${listingUrl}`);
+            },
+          },
+          {
+            text: 'Telegram',
+            icon: paperPlaneOutline,
+            handler: () => {
+              window.location.href = `https://t.me/share/url?url=${listingUrl}&text=I'm looking for students!`;
+            },
+          },
+          {
+            text: 'Cancel',
+            icon: closeOutline,
+            handler: () => setShowShareSheet(false),
+          },
+        ]}
+      />
     </IonPage>
   );
 };
