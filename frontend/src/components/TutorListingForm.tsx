@@ -1,6 +1,7 @@
 import {
   IonButton,
   IonCol,
+  IonIcon,
   IonInput,
   IonItem,
   IonLabel,
@@ -10,30 +11,25 @@ import {
   IonSelectOption,
   IonSpinner,
   IonTextarea,
+  useIonAlert,
 } from '@ionic/react';
-import React from 'react';
+import React, { useState } from 'react';
+import { Controller, SubmitHandler, useForm } from 'react-hook-form';
+import { addOutline } from 'ionicons/icons';
 import {
-  Controller,
-  NestedValue,
-  SubmitHandler,
-  useForm,
-} from 'react-hook-form';
-import { Level, SelectedTimeSlots, Subject, TutorListing } from '../app/types';
+  Level,
+  Subject,
+  TutorListing,
+  TutorListingFormData,
+} from '../app/types';
 import SelectTimeSlotsItem from './timeSlots/SelectTimeSlotsItem';
 
 import styles from './ListingForm.module.scss';
-import { arrayToSelectedTimeSlots } from '../app/utils';
-
-export interface TutorListingFormData {
-  price: {
-    lower: number;
-    upper: number;
-  };
-  description: string;
-  timeSlots: NestedValue<SelectedTimeSlots>;
-  subjects: NestedValue<string[]>;
-  levels: NestedValue<Level[]>;
-}
+import {
+  arrayToSelectedTimeSlots,
+  formatTitleCase,
+  mapSubject,
+} from '../app/utils';
 
 interface Props {
   onSubmit: SubmitHandler<TutorListingFormData>;
@@ -43,11 +39,13 @@ interface Props {
 
 const TutorListingForm: React.FC<Props> = (props: Props) => {
   const { onSubmit, submitButtonText, currentData } = props;
+  console.log(currentData);
   const {
     register,
     formState: { errors, isSubmitting },
     control,
     handleSubmit,
+    setValue,
     getValues,
   } = useForm<TutorListingFormData>({
     defaultValues: currentData
@@ -63,6 +61,30 @@ const TutorListingForm: React.FC<Props> = (props: Props) => {
         }
       : {},
   });
+  const [otherSubjects, setOtherSubjects] = useState<string[]>(
+    currentData
+      ? currentData.subjects.filter(
+          (subject) => !Object.keys(Subject).includes(subject)
+        )
+      : []
+  );
+  const [presentAddSubjectAlert, dismissAddSubjectAlert] = useIonAlert();
+
+  const handleAddSubject = (value: Record<number, string>) => {
+    const addedSubject = formatTitleCase(value[0]);
+    const mappedSubject = mapSubject(addedSubject);
+    const currentSubjects = getValues('subjects') ?? [];
+    if (
+      !otherSubjects.includes(addedSubject) &&
+      !currentSubjects.includes(addedSubject) &&
+      mappedSubject == null
+    ) {
+      setOtherSubjects([addedSubject, ...otherSubjects]);
+    }
+    if (!currentSubjects.includes(mappedSubject ?? addedSubject)) {
+      setValue('subjects', [mappedSubject ?? addedSubject, ...currentSubjects]);
+    }
+  };
 
   return (
     <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
@@ -150,30 +172,60 @@ const TutorListingForm: React.FC<Props> = (props: Props) => {
             disabled={isSubmitting}
           >
             <IonLabel position="stacked">Subjects</IonLabel>
-            <IonSelect
-              multiple
-              cancelText="Cancel"
-              okText="OK"
-              {...register('subjects', {
-                required: 'Please select at least one subject',
-                minLength: {
-                  value: 1,
-                  message: 'Please select at least one subject',
-                },
-              })}
-            >
-              {Object.keys(Subject).map((key) => (
-                <IonSelectOption value={key}>
-                  {Object(Subject)[key]}
-                </IonSelectOption>
-              ))}
-            </IonSelect>
+            <Controller
+              name="subjects"
+              control={control}
+              render={({ field: { onChange, onBlur, value } }) => (
+                <IonSelect
+                  multiple
+                  cancelText="Cancel"
+                  okText="OK"
+                  onIonChange={onChange}
+                  onIonBlur={onBlur}
+                  value={value}
+                >
+                  {otherSubjects.map((subject) => (
+                    <IonSelectOption value={subject}>{subject}</IonSelectOption>
+                  ))}
+                  {Object.keys(Subject).map((key) => (
+                    <IonSelectOption value={key}>
+                      {Object(Subject)[key]}
+                    </IonSelectOption>
+                  ))}
+                </IonSelect>
+              )}
+              rules={{ required: 'Please select at least one subject' }}
+            />
             {errors.subjects && (
               <IonNote slot="helper" color="danger">
                 {errors.subjects.message}
               </IonNote>
             )}
           </IonItem>
+          <IonButton
+            expand="block"
+            fill="outline"
+            onClick={() =>
+              presentAddSubjectAlert({
+                header: 'Add Other Subject',
+                message: 'Enter your subject:',
+                inputs: [{ type: 'text' }],
+                buttons: [
+                  {
+                    text: 'Cancel',
+                    handler: dismissAddSubjectAlert,
+                  },
+                  {
+                    text: 'Ok',
+                    handler: handleAddSubject,
+                  },
+                ],
+              })
+            }
+          >
+            <IonIcon slot="start" icon={addOutline} />
+            Add Other Subject
+          </IonButton>
         </IonCol>
       </IonRow>
       <IonRow>
