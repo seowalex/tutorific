@@ -180,7 +180,7 @@ const Profile: React.FC = () => {
               </div>
             </div>
 
-            <p>{profile?.description}</p>
+            <p className="ion-text-prewrap">{profile?.description}</p>
           </div>
 
           {hasListings ? (

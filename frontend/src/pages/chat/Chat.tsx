@@ -76,6 +76,7 @@ const Chat: React.FC = () => {
           {chat?.map((message) => (
             <div
               className={clsx(
+                'ion-text-prewrap',
                 styles.chatBubble,
                 currentUserId === message.senderId
                   ? styles.sent
