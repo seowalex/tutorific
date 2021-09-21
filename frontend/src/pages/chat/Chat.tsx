@@ -11,6 +11,7 @@ import {
   IonTextarea,
   IonTitle,
   IonToolbar,
+  useIonToast,
 } from '@ionic/react';
 import { useRouteMatch } from 'react-router-dom';
 import { Controller, useForm } from 'react-hook-form';
@@ -45,11 +46,29 @@ const Chat: React.FC = () => {
   const [addMessage] = useAddMessageMutation();
   const currentUserId = useAppSelector(selectCurrentUserId);
 
+  const [present] = useIonToast();
   const { handleSubmit, reset, control } = useForm<MessageData>();
 
-  const onSubmit = (data: MessageData) => {
-    addMessage({ chatId: parseInt(id, 10), ...data }).unwrap();
+  const onSubmit = async (data: MessageData) => {
     reset();
+
+    try {
+      if (currentUserId) {
+        await addMessage({
+          chatId: parseInt(id, 10),
+          senderId: currentUserId,
+          ...data,
+        }).unwrap();
+      }
+    } catch (error) {
+      if (!window.navigator.onLine) {
+        present({
+          header: 'No Internet Connection',
+          message: 'Message will be sent when you are online',
+          duration: 2000,
+        });
+      }
+    }
   };
 
   const handleKeyDown = (
@@ -79,7 +98,7 @@ const Chat: React.FC = () => {
       <IonContent className={styles.chatContainer} fullscreen>
         <OfflineCard />
 
-        {!chat?.messages.length ? (
+        {chat?.messages.length ? (
           <div className={styles.chat}>
             {chat?.messages.map((message) => (
               <div

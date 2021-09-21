@@ -7,6 +7,7 @@ interface AddChatResponse {
 
 interface AddMessageRequest {
   chatId: number;
+  senderId: number;
   content: string;
 }
 
@@ -56,6 +57,29 @@ const extendedApi = api.injectEndpoints({
       }),
       invalidatesTags: (result, error, arg) =>
         result ? [{ type: 'Chat', id: arg.chatId }] : [],
+      async onQueryStarted({ chatId, ...body }, { dispatch }) {
+        const message = { id: new Date().getTime(), ...body };
+
+        dispatch(
+          extendedApi.util.updateQueryData(
+            'getChats',
+            undefined as void,
+            (draft) => {
+              const pendingChat = draft.find((chat) => chat.id === chatId);
+
+              if (pendingChat) {
+                pendingChat.lastMessage = message;
+              }
+            }
+          )
+        );
+
+        dispatch(
+          extendedApi.util.updateQueryData('getChat', chatId, (draft) => {
+            draft.messages.unshift(message);
+          })
+        );
+      },
     }),
   }),
 });
