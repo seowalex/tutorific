@@ -209,6 +209,7 @@ const Register: React.FC = () => {
                 >
                   {isLoading ? <IonSpinner /> : 'Register'}
                 </IonButton>
+                <input type="submit" hidden />
               </form>
             </IonCol>
           </IonRow>

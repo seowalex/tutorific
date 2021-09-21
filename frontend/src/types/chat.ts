@@ -12,6 +12,7 @@ export interface Chat {
 }
 
 interface Message {
+  id: number;
   senderId: number;
   content: string;
 }

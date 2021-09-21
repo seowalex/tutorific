@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import {
   IonBackButton,
   IonButton,
@@ -15,13 +15,14 @@ import {
 import { useRouteMatch } from 'react-router-dom';
 import { Controller, useForm } from 'react-hook-form';
 import clsx from 'clsx';
-import { person, send } from 'ionicons/icons';
+import { chatbubbleEllipses, person, send } from 'ionicons/icons';
 
 import { useAppSelector } from '../../app/hooks';
 import { useAddMessageMutation, useGetChatQuery } from '../../api/chat';
 import { selectCurrentUserId } from '../../reducers/auth';
 
 import OfflineCard from '../../components/OfflineCard';
+import EmptyPlaceholder from '../../components/EmptyPlaceholder';
 
 import styles from './Chat.module.scss';
 
@@ -38,27 +39,33 @@ const Chat: React.FC = () => {
     params: { id },
   } = useRouteMatch<Params>();
 
-  const { data: chat, refetch } = useGetChatQuery(parseInt(id, 10));
+  const { data: chat } = useGetChatQuery(parseInt(id, 10), {
+    pollingInterval: 1000,
+  });
   const [addMessage] = useAddMessageMutation();
   const currentUserId = useAppSelector(selectCurrentUserId);
 
   const { handleSubmit, reset, control } = useForm<MessageData>();
 
-  useEffect(
-    () => window.navigator.serviceWorker.addEventListener('message', refetch),
-    [refetch]
-  );
-
-  const onSubmit = async (data: MessageData) => {
-    await addMessage({ chatId: parseInt(id, 10), ...data }).unwrap();
+  const onSubmit = (data: MessageData) => {
+    addMessage({ chatId: parseInt(id, 10), ...data }).unwrap();
     reset();
+  };
+
+  const handleKeyDown = (
+    event: React.KeyboardEvent<HTMLIonTextareaElement>
+  ) => {
+    if (!event.shiftKey && event.code === 'Enter') {
+      event.preventDefault();
+      handleSubmit(onSubmit)();
+    }
   };
 
   return (
     <IonPage>
       <IonHeader>
         <IonToolbar>
-          <IonTitle>Chat</IonTitle>
+          <IonTitle>{chat?.otherProfile.name}</IonTitle>
           <IonButtons slot="start">
             <IonBackButton defaultHref="/chats" />
           </IonButtons>
@@ -72,21 +79,29 @@ const Chat: React.FC = () => {
       <IonContent className={styles.chatContainer} fullscreen>
         <OfflineCard />
 
-        <div className={styles.chat}>
-          {chat?.messages.map((message) => (
-            <div
-              className={clsx(
-                'ion-text-prewrap',
-                styles.chatBubble,
-                currentUserId === message.senderId
-                  ? styles.sent
-                  : styles.received
-              )}
-            >
-              {message.content}
-            </div>
-          ))}
-        </div>
+        {!chat?.messages.length ? (
+          <div className={styles.chat}>
+            {chat?.messages.map((message) => (
+              <div
+                className={clsx(
+                  'ion-text-prewrap',
+                  styles.chatBubble,
+                  currentUserId === message.senderId
+                    ? styles.sent
+                    : styles.received
+                )}
+                key={message.id}
+              >
+                {message.content}
+              </div>
+            ))}
+          </div>
+        ) : (
+          <EmptyPlaceholder
+            icon={chatbubbleEllipses}
+            text="This chat has no messages. Send a message to start the conversation!"
+          />
+        )}
       </IonContent>
       <form className={styles.chatSend} onSubmit={handleSubmit(onSubmit)}>
         <IonItem
@@ -106,6 +121,7 @@ const Chat: React.FC = () => {
                 value={value}
                 rows={1}
                 autoGrow
+                onKeyDown={handleKeyDown}
               />
             )}
             rules={{

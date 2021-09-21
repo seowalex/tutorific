@@ -39,6 +39,7 @@ import { Gender } from '../../types/profile';
 import type { ErrorResponse } from '../../types/error';
 
 import OfflineCard from '../../components/OfflineCard';
+import EmptyPlaceholder from '../../components/EmptyPlaceholder';
 
 import styles from './Profile.module.scss';
 
@@ -55,7 +56,7 @@ const Profile: React.FC = () => {
   const [logout] = useLogoutMutation();
   const user = useAppSelector(selectCurrentUser);
   const { data: profile, refetch } = useGetProfileQuery(parseInt(id, 10));
-  const hasListings = true;
+  const hasListings = false;
 
   const router = useIonRouter();
   const [present] = useIonToast();
@@ -240,15 +241,14 @@ const Profile: React.FC = () => {
               </IonCard>
             </>
           ) : (
-            <div className={styles.noListingsMessage}>
-              <IonIcon className={styles.noListingsIcon} icon={closeCircle} />
-              <p className="ion-no-margin">
-                {user.profileId === parseInt(id, 10)
+            <EmptyPlaceholder
+              icon={closeCircle}
+              text={`${
+                user.profileId === parseInt(id, 10)
                   ? 'You have'
-                  : 'This person has'}{' '}
-                no tutor/tutee listings.
-              </p>
-            </div>
+                  : 'This person has'
+              } no tutor/tutee listings.`}
+            />
           )}
         </div>
       </IonContent>

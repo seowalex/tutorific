@@ -8,7 +8,7 @@
   flex-direction: column-reverse;
   padding: 1rem;
 
-  :global(.md) & {
+  :global(.md) &:only-child {
     padding-bottom: 0;
   }
 
@@ -80,7 +80,7 @@
 .chatSend {
   display: flex;
   flex-direction: row;
-  align-items: end;
+  align-items: flex-end;
   gap: 0.5rem;
   z-index: 0;
 

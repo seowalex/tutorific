@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import {
   IonContent,
   IonHeader,
@@ -13,20 +13,19 @@ import {
 } from '@ionic/react';
 import { RefresherEventDetail } from '@ionic/core';
 import Avatar from 'react-avatar';
+import { chatbubbleEllipses } from 'ionicons/icons';
 
 import { useGetChatsQuery } from '../../api/chat';
 
 import OfflineCard from '../../components/OfflineCard';
+import EmptyPlaceholder from '../../components/EmptyPlaceholder';
 
 import styles from './Chats.module.scss';
 
 const Chats: React.FC = () => {
-  const { data: chats, refetch } = useGetChatsQuery();
-
-  useEffect(
-    () => window.navigator.serviceWorker.addEventListener('message', refetch),
-    [refetch]
-  );
+  const { data: chats, refetch } = useGetChatsQuery(undefined as void, {
+    pollingInterval: 10000,
+  });
 
   const handleRefresh = (event: CustomEvent<RefresherEventDetail>) => {
     refetch();
@@ -43,7 +42,7 @@ const Chats: React.FC = () => {
           <IonTitle>Chats</IonTitle>
         </IonToolbar>
       </IonHeader>
-      <IonContent className={styles.chatContent} fullscreen>
+      <IonContent className={styles.chatsContainer} fullscreen>
         <IonRefresher slot="fixed" onIonRefresh={handleRefresh}>
           <IonRefresherContent />
         </IonRefresher>
@@ -53,23 +52,30 @@ const Chats: React.FC = () => {
           </IonToolbar>
         </IonHeader>
         <OfflineCard />
-        <IonList>
-          {chats?.map((chat) => (
-            <IonItem routerLink={`/chat/${chat.id}`}>
-              <Avatar
-                className={styles.avatar}
-                name={chat.otherProfile.name}
-                maxInitials={2}
-                size="2.5rem"
-                round
-              />
-              <IonLabel>
-                <h2>{chat.otherProfile.name}</h2>
-                <p>{chat.lastMessage?.content}</p>
-              </IonLabel>
-            </IonItem>
-          ))}
-        </IonList>
+        {chats?.length ? (
+          <IonList>
+            {chats?.map((chat) => (
+              <IonItem routerLink={`/chat/${chat.id}`}>
+                <Avatar
+                  className={styles.avatar}
+                  name={chat.otherProfile.name}
+                  maxInitials={2}
+                  size="2.5rem"
+                  round
+                />
+                <IonLabel>
+                  <h2>{chat.otherProfile.name}</h2>
+                  <p>{chat.lastMessage?.content}</p>
+                </IonLabel>
+              </IonItem>
+            ))}
+          </IonList>
+        ) : (
+          <EmptyPlaceholder
+            icon={chatbubbleEllipses}
+            text="You have no chats. Start a conversation with a tutor/tutee today!"
+          />
+        )}
       </IonContent>
     </IonPage>
   );

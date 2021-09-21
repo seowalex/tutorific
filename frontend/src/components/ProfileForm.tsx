@@ -119,6 +119,7 @@ const ProfileForm: React.FC<Props> = ({
     >
       {isLoading ? <IonSpinner /> : 'Save'}
     </IonButton>
+    <input type="submit" hidden />
   </form>
 );
 

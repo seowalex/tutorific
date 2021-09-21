@@ -156,6 +156,7 @@ const Login: React.FC = () => {
                 >
                   Register
                 </IonButton>
+                <input type="submit" hidden />
               </form>
             </IonCol>
           </IonRow>
