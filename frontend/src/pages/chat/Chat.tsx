@@ -63,7 +63,7 @@ const Chat: React.FC = () => {
             <IonBackButton defaultHref="/chats" />
           </IonButtons>
           <IonButtons slot="primary">
-            <IonButton routerLink={`/profile/${id}`}>
+            <IonButton routerLink={`/profile/${chat?.otherProfile.id}`}>
               <IonIcon slot="icon-only" icon={person} />
             </IonButton>
           </IonButtons>
@@ -73,7 +73,7 @@ const Chat: React.FC = () => {
         <OfflineCard />
 
         <div className={styles.chat}>
-          {chat?.map((message) => (
+          {chat?.messages.map((message) => (
             <div
               className={clsx(
                 'ion-text-prewrap',

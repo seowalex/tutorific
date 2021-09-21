@@ -15,6 +15,7 @@ import { bulb, chatbubbles, person, school } from 'ionicons/icons';
 import { useAppSelector } from './app/hooks';
 import { usePrefetch as useTutorPrefetch } from './api/tutor';
 import { usePrefetch as useTuteePrefetch } from './api/tutee';
+import { usePrefetch as useChatPrefetch } from './api/chat';
 import { usePrefetch as useProfilePrefetch } from './api/profile';
 import { selectCurrentUserId } from './reducers/auth';
 
@@ -46,17 +47,20 @@ const App: React.FC = () => {
   const currentUserId = useAppSelector(selectCurrentUserId);
   const prefetchTutorListings = useTutorPrefetch('getTutorListings');
   const prefetchTuteeListings = useTuteePrefetch('getTuteeListings');
+  const prefetchChats = useChatPrefetch('getChats');
   const prefetchProfile = useProfilePrefetch('getProfile');
 
   useEffect(() => {
     if (currentUserId) {
       prefetchTutorListings({});
       prefetchTuteeListings({});
+      prefetchChats();
       prefetchProfile(currentUserId);
     }
   }, [
     prefetchTutorListings,
     prefetchTuteeListings,
+    prefetchChats,
     prefetchProfile,
     currentUserId,
   ]);

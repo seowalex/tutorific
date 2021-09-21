@@ -11,7 +11,7 @@ export interface Chat {
   messages: [Message];
 }
 
-export interface Message {
+interface Message {
   senderId: number;
   content: string;
 }

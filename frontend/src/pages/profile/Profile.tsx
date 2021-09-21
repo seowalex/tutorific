@@ -31,6 +31,7 @@ import {
 } from 'ionicons/icons';
 
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
+import api from '../../api/base';
 import { useLogoutMutation } from '../../api/auth';
 import { useGetProfileQuery } from '../../api/profile';
 import { selectCurrentUser, unsetCredentials } from '../../reducers/auth';
@@ -74,6 +75,7 @@ const Profile: React.FC = () => {
           }).unwrap();
         }
 
+        dispatch(api.util.resetApiState());
         dispatch(unsetCredentials());
         router.push('/', 'back');
       } catch (error) {
