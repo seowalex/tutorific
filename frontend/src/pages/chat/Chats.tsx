@@ -54,7 +54,7 @@ const Chats: React.FC = () => {
         </IonHeader>
         <OfflineCard />
         <IonList>
-          {chats?.map((chat, i) => (
+          {chats?.map((chat) => (
             <IonItem routerLink={`/chat/${chat.id}`}>
               <Avatar
                 className={styles.avatar}

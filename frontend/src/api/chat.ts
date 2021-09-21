@@ -1,5 +1,5 @@
 import api from './base';
-import type { Chat, Message } from '../types/chat';
+import type { ChatInfo, Message } from '../types/chat';
 
 interface AddChatResponse {
   id: number;
@@ -12,11 +12,11 @@ interface AddMessageRequest {
 
 const extendedApi = api.injectEndpoints({
   endpoints: (builder) => ({
-    getChats: builder.query<[Chat], void>({
+    getChats: builder.query<[ChatInfo], void>({
       query: () => ({
         url: 'conversation',
       }),
-      transformResponse: (response: { data: [Chat] }) => response.data,
+      transformResponse: (response: { data: [ChatInfo] }) => response.data,
       providesTags: ['Chat'],
     }),
     getChat: builder.query<[Message], number>({
