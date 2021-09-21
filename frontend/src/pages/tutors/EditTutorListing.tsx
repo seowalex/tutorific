@@ -22,10 +22,8 @@ import {
 import { useAppSelector } from '../../app/hooks';
 import { selectCurrentUserId } from '../../reducers/auth';
 
-import TutorListingForm, {
-  TutorListingFormData,
-} from '../../components/TutorListingForm';
-import { Level } from '../../app/types';
+import TutorListingForm from '../../components/TutorListingForm';
+import { Level, TutorListingFormData } from '../../app/types';
 import { resetTutorListingPagination } from '../../reducers/tutorFilters';
 import { selectedTimeSlotsToArray } from '../../app/utils';
 import { EventCategory, TutorEventAction } from '../../app/analytics';

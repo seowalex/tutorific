@@ -1,4 +1,4 @@
-import { SelectedTimeSlots, WeekDay } from './types';
+import { SelectedTimeSlots, Subject, WeekDay } from './types';
 
 const hoursInADay = 24;
 const slotsPerHour = 2; // 00 and 30 mins
@@ -41,6 +41,30 @@ export const formatPriceRange = (priceMin: number, priceMax: number): string =>
 
 export const formatStringList = (strings: string[]): string =>
   strings.join(', ');
+
+export const formatTitleCase = (str: string) =>
+  str
+    .toLowerCase()
+    .split(' ')
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(' ');
+
+// #endregion
+
+// #region Subjects
+
+export const mapSubject = (subject: string): string | undefined => {
+  const commonSubjectsMap: Record<string, Subject> = {
+    Math: Subject.Mathematics,
+    Maths: Subject.Mathematics,
+    Sci: Subject.Science,
+    Eng: Subject.English,
+  };
+
+  return Object.keys(Subject).includes(subject)
+    ? subject
+    : commonSubjectsMap[subject];
+};
 
 // #endregion
 

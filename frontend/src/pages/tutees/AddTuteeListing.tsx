@@ -21,7 +21,7 @@ import { selectCurrentUserId } from '../../reducers/auth';
 
 import TuteeListingForm from '../../components/TuteeListingForm';
 import { selectedTimeSlotsToArray } from '../../app/utils';
-import { resetTuteeListingPagination } from '../../reducers/tuteeFilters';
+import { unsetTuteeListingFilters } from '../../reducers/tuteeFilters';
 import { TuteeListingFormData } from '../../app/types';
 import { EventCategory, TuteeEventAction } from '../../app/analytics';
 
@@ -55,7 +55,7 @@ const AddTuteeListing: React.FC = () => {
           category: EventCategory.Tutee,
           action: TuteeEventAction.Create,
         });
-        dispatch(resetTuteeListingPagination());
+        dispatch(unsetTuteeListingFilters());
         history.push('/tutees');
       }
     } catch (err) {

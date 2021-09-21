@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   IonButton,
   IonCol,
+  IonIcon,
   IonInput,
   IonItem,
   IonLabel,
@@ -10,6 +11,7 @@ import {
   IonSelect,
   IonSelectOption,
   IonSpinner,
+  useIonAlert,
 } from '@ionic/react';
 import {
   Controller,
@@ -17,18 +19,23 @@ import {
   SubmitHandler,
   useForm,
 } from 'react-hook-form';
+import { addOutline } from 'ionicons/icons';
 import { Gender, Level, SelectedTimeSlots, Subject, Town } from '../app/types';
 import { TuteeFiltersState } from '../reducers/tuteeFilters';
 
 import styles from './ListingForm.module.scss';
-import { arrayToSelectedTimeSlots } from '../app/utils';
+import {
+  arrayToSelectedTimeSlots,
+  formatTitleCase,
+  mapSubject,
+} from '../app/utils';
 import SelectTimeSlotsItem from './timeSlots/SelectTimeSlotsItem';
 
 export interface FilterTuteeListingFormData {
   priceMin?: number;
   priceMax?: number;
-  timeSlots?: NestedValue<SelectedTimeSlots>;
-  subjects?: NestedValue<string[]>;
+  timeSlots: NestedValue<SelectedTimeSlots>;
+  subjects: NestedValue<string[]>;
   levels?: NestedValue<Level[]>;
   locations?: NestedValue<Town[]>;
   gender?: Gender;
@@ -57,6 +64,7 @@ const FilterTuteeListingForm: React.FC<Props> = (props) => {
     handleSubmit,
     control,
     reset,
+    setValue,
     getValues,
   } = useForm<FilterTuteeListingFormData>({
     defaultValues: currentData
@@ -66,6 +74,30 @@ const FilterTuteeListingForm: React.FC<Props> = (props) => {
         }
       : emptyFilters,
   });
+  const [otherSubjects, setOtherSubjects] = useState<string[]>(
+    currentData
+      ? currentData.subjects?.filter(
+          (subject) => !Object.keys(Subject).includes(subject)
+        ) ?? []
+      : []
+  );
+  const [presentAddSubjectAlert, dismissAddSubjectAlert] = useIonAlert();
+
+  const handleAddSubject = (value: Record<number, string>) => {
+    const addedSubject = formatTitleCase(value[0]);
+    const mappedSubject = mapSubject(addedSubject);
+    const currentSubjects = getValues('subjects') ?? [];
+    if (
+      !otherSubjects.includes(addedSubject) &&
+      !currentSubjects.includes(addedSubject) &&
+      mappedSubject == null
+    ) {
+      setOtherSubjects([addedSubject, ...otherSubjects]);
+    }
+    if (!currentSubjects.includes(mappedSubject ?? addedSubject)) {
+      setValue('subjects', [mappedSubject ?? addedSubject, ...currentSubjects]);
+    }
+  };
 
   return (
     <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
@@ -170,19 +202,54 @@ const FilterTuteeListingForm: React.FC<Props> = (props) => {
         <IonCol>
           <IonItem fill="outline" lines="full" disabled={isSubmitting}>
             <IonLabel position="stacked">Subjects</IonLabel>
-            <IonSelect
-              multiple
-              cancelText="Cancel"
-              okText="OK"
-              {...register('subjects')}
-            >
-              {Object.keys(Subject).map((key) => (
-                <IonSelectOption value={key}>
-                  {Object(Subject)[key]}
-                </IonSelectOption>
-              ))}
-            </IonSelect>
+            <Controller
+              name="subjects"
+              control={control}
+              render={({ field: { onChange, onBlur, value } }) => (
+                <IonSelect
+                  multiple
+                  cancelText="Cancel"
+                  okText="OK"
+                  onIonChange={onChange}
+                  onIonBlur={onBlur}
+                  value={value}
+                >
+                  {otherSubjects.map((subject) => (
+                    <IonSelectOption value={subject}>{subject}</IonSelectOption>
+                  ))}
+                  {Object.keys(Subject).map((key) => (
+                    <IonSelectOption value={key}>
+                      {Object(Subject)[key]}
+                    </IonSelectOption>
+                  ))}
+                </IonSelect>
+              )}
+            />
           </IonItem>
+          <IonButton
+            expand="block"
+            fill="outline"
+            onClick={() =>
+              presentAddSubjectAlert({
+                header: 'Add Other Subject',
+                message: 'Enter your subject:',
+                inputs: [{ type: 'text' }],
+                buttons: [
+                  {
+                    text: 'Cancel',
+                    handler: dismissAddSubjectAlert,
+                  },
+                  {
+                    text: 'Ok',
+                    handler: handleAddSubject,
+                  },
+                ],
+              })
+            }
+          >
+            <IonIcon slot="start" icon={addOutline} />
+            Add Other Subject
+          </IonButton>
         </IonCol>
       </IonRow>
       <IonRow>

@@ -19,11 +19,9 @@ import { useCreateTutorListingMutation } from '../../api/tutor';
 import { useAppSelector } from '../../app/hooks';
 import { selectCurrentUserId } from '../../reducers/auth';
 
-import TutorListingForm, {
-  TutorListingFormData,
-} from '../../components/TutorListingForm';
-import { Level } from '../../app/types';
-import { resetTutorListingPagination } from '../../reducers/tutorFilters';
+import TutorListingForm from '../../components/TutorListingForm';
+import { Level, TutorListingFormData } from '../../app/types';
+import { unsetTutorListingFilters } from '../../reducers/tutorFilters';
 import { selectedTimeSlotsToArray } from '../../app/utils';
 import { EventCategory, TutorEventAction } from '../../app/analytics';
 
@@ -58,7 +56,7 @@ const AddTutorListing: React.FC = () => {
           category: EventCategory.Tutor,
           action: TutorEventAction.Create,
         });
-        dispatch(resetTutorListingPagination());
+        dispatch(unsetTutorListingFilters());
         history.push('/tutors');
       }
     } catch (err) {
