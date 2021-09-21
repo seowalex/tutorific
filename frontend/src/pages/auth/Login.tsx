@@ -1,4 +1,5 @@
 import React from 'react';
+import ReactGA from 'react-ga';
 import {
   IonButton,
   IonCol,
@@ -22,6 +23,7 @@ import { setCredentials } from '../../reducers/auth';
 import type { ErrorResponse } from '../../types/error';
 
 import styles from './Login.module.scss';
+import { EventCategory, UserEventAction } from '../../app/analytics';
 
 interface LoginData {
   email: string;
@@ -43,6 +45,10 @@ const Login: React.FC = () => {
   const onSubmit = async (data: LoginData) => {
     try {
       const credentials = await login(data).unwrap();
+      ReactGA.event({
+        category: EventCategory.User,
+        action: UserEventAction.Login,
+      });
       dispatch(setCredentials(credentials));
 
       if (credentials.profileId) {

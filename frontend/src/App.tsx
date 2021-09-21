@@ -11,6 +11,7 @@ import {
 } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
 import { bulb, chatbubbles, person, school } from 'ionicons/icons';
+import ReactGA from 'react-ga';
 
 import { useAppSelector } from './app/hooks';
 import { usePrefetch as useTutorPrefetch } from './api/tutor';
@@ -40,6 +41,9 @@ import EditProfile from './pages/profile/EditProfile';
 
 import './styles/main.scss';
 import FilterTuteeListings from './pages/tutees/FilterTuteeListings';
+import withTracker from './withTracker';
+
+const GA_TRACKING_ID = 'UA-208131644-1';
 
 const App: React.FC = () => {
   const currentUserId = useAppSelector(selectCurrentUserId);
@@ -60,28 +64,32 @@ const App: React.FC = () => {
     currentUserId,
   ]);
 
+  useEffect(() => {
+    ReactGA.initialize(GA_TRACKING_ID, {
+      debug: process.env.NODE_ENV !== 'production',
+    });
+  }, []);
+
   return (
     <IonApp>
       <IonReactRouter>
         <IonRouterOutlet>
           {!currentUserId ? (
-            <Route exact path="/login">
-              <Login />
-            </Route>
+            <Route exact path="/login" component={withTracker(Login)} />
           ) : (
             <></>
           )}
           {!currentUserId ? (
-            <Route exact path="/register">
-              <Register />
-            </Route>
+            <Route exact path="/register" component={withTracker(Register)} />
           ) : (
             <></>
           )}
           {!currentUserId ? (
-            <Route exact path="/profile">
-              <CreateProfile />
-            </Route>
+            <Route
+              exact
+              path="/profile"
+              component={withTracker(CreateProfile)}
+            />
           ) : (
             <></>
           )}
@@ -116,45 +124,59 @@ const App: React.FC = () => {
                 </IonTabBar>
 
                 <IonRouterOutlet>
-                  <Route exact path="/tutors">
-                    <Tutors />
-                  </Route>
-                  <Route exact path="/tutor/:id" component={TutorListing} />
-                  <Route exact path="/tutor/add">
-                    <AddTutorListing />
-                  </Route>
+                  <Route exact path="/tutors" component={withTracker(Tutors)} />
+                  <Route
+                    exact
+                    path="/tutor/:id"
+                    component={withTracker(TutorListing)}
+                  />
+                  <Route
+                    exact
+                    path="/tutor/add"
+                    component={withTracker(AddTutorListing)}
+                  />
                   <Route
                     exact
                     path="/tutor/:id/edit"
-                    component={EditTutorListing}
+                    component={withTracker(EditTutorListing)}
                   />
-                  <Route exact path="/tutor/search">
-                    <FilterTutorListings />
-                  </Route>
-                  <Route exact path="/tutees">
-                    <Tutees />
-                  </Route>
-                  <Route exact path="/tutee/:id" component={TuteeListing} />
-                  <Route exact path="/tutee/add">
-                    <AddTuteeListing />
-                  </Route>
+                  <Route
+                    exact
+                    path="/tutor/search"
+                    component={withTracker(FilterTutorListings)}
+                  />
+                  <Route exact path="/tutees" component={withTracker(Tutees)} />
+                  <Route
+                    exact
+                    path="/tutee/:id"
+                    component={withTracker(TuteeListing)}
+                  />
+                  <Route
+                    exact
+                    path="/tutee/add"
+                    component={withTracker(AddTuteeListing)}
+                  />
                   <Route
                     exact
                     path="/tutee/:id/edit"
-                    component={EditTuteeListing}
+                    component={withTracker(EditTuteeListing)}
                   />
-                  <Route exact path="/tutee/search">
-                    <FilterTuteeListings />
-                  </Route>
-                  <Route path="/chat">
-                    <Chat />
-                  </Route>
-                  <Route exact path="/profile/:id">
-                    <Profile />
-                  </Route>
-                  <Route exact path="/profile/:id/edit">
-                    <EditProfile />
-                  </Route>
+                  <Route
+                    exact
+                    path="/tutee/search"
+                    component={withTracker(FilterTuteeListings)}
+                  />
+                  <Route exact path="/chat" component={withTracker(Chat)} />
+                  <Route
+                    exact
+                    path="/profile/:id"
+                    component={withTracker(Profile)}
+                  />
+                  <Route
+                    exact
+                    path="/profile/:id/edit"
+                    component={withTracker(EditProfile)}
+                  />
                   <Redirect exact path="/" to="/tutors" />
                   <Redirect to="/tutors" />
                 </IonRouterOutlet>
