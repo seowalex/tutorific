@@ -1,4 +1,5 @@
 import React from 'react';
+import ReactGA from 'react-ga';
 import {
   IonBackButton,
   IonButtons,
@@ -22,6 +23,7 @@ import {
   setTutorListingFilters,
 } from '../../reducers/tutorFilters';
 import { selectedTimeSlotsToArray } from '../../app/utils';
+import { EventCategory, TutorEventAction } from '../../app/analytics';
 
 const FilterTutorListings: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -36,6 +38,10 @@ const FilterTutorListings: React.FC = () => {
       limit: 10,
     };
     dispatch(setTutorListingFilters(filters));
+    ReactGA.event({
+      category: EventCategory.Tutor,
+      action: TutorEventAction.Filter,
+    });
     history.push('/tutors');
   };
 

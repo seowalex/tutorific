@@ -11,6 +11,7 @@ import {
   IonToolbar,
 } from '@ionic/react';
 import React from 'react';
+import ReactGA from 'react-ga';
 import { SubmitHandler } from 'react-hook-form';
 import { useHistory } from 'react-router';
 import { useDispatch } from 'react-redux';
@@ -24,6 +25,7 @@ import TutorListingForm, {
 import { Level } from '../../app/types';
 import { resetTutorListingPagination } from '../../reducers/tutorFilters';
 import { selectedTimeSlotsToArray } from '../../app/utils';
+import { EventCategory, TutorEventAction } from '../../app/analytics';
 
 const AddTutorListing: React.FC = () => {
   const dispatch = useDispatch();
@@ -52,6 +54,10 @@ const AddTutorListing: React.FC = () => {
       const result = await createTutorListing(listingData);
 
       if ('data' in result && result.data) {
+        ReactGA.event({
+          category: EventCategory.Tutor,
+          action: TutorEventAction.Create,
+        });
         dispatch(resetTutorListingPagination());
         history.push('/tutors');
       }

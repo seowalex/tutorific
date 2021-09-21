@@ -1,4 +1,5 @@
 import React from 'react';
+import ReactGA from 'react-ga';
 import {
   IonBackButton,
   IonButtons,
@@ -22,6 +23,7 @@ import {
   setTuteeListingFilters,
 } from '../../reducers/tuteeFilters';
 import { selectedTimeSlotsToArray } from '../../app/utils';
+import { EventCategory, TuteeEventAction } from '../../app/analytics';
 
 const FilterTuteeListings: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -36,6 +38,10 @@ const FilterTuteeListings: React.FC = () => {
       limit: 10,
     };
     dispatch(setTuteeListingFilters(filters));
+    ReactGA.event({
+      category: EventCategory.Tutee,
+      action: TuteeEventAction.Filter,
+    });
     history.push('/tutees');
   };
 

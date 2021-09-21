@@ -65,7 +65,9 @@ const App: React.FC = () => {
   ]);
 
   useEffect(() => {
-    ReactGA.initialize(GA_TRACKING_ID);
+    ReactGA.initialize(GA_TRACKING_ID, {
+      debug: process.env.NODE_ENV !== 'production',
+    });
   }, []);
 
   return (
