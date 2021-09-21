@@ -11,6 +11,7 @@ import {
   IonToolbar,
 } from '@ionic/react';
 import React from 'react';
+import ReactGA from 'react-ga';
 import { SubmitHandler } from 'react-hook-form';
 import { useHistory, useRouteMatch } from 'react-router';
 import { useDispatch } from 'react-redux';
@@ -21,12 +22,11 @@ import {
 import { useAppSelector } from '../../app/hooks';
 import { selectCurrentUserId } from '../../reducers/auth';
 
-import TutorListingForm, {
-  TutorListingFormData,
-} from '../../components/TutorListingForm';
-import { Level } from '../../app/types';
+import TutorListingForm from '../../components/TutorListingForm';
+import { Level, TutorListingFormData } from '../../app/types';
 import { resetTutorListingPagination } from '../../reducers/tutorFilters';
 import { selectedTimeSlotsToArray } from '../../app/utils';
+import { EventCategory, TutorEventAction } from '../../app/analytics';
 
 interface Params {
   id: string;
@@ -65,6 +65,10 @@ const EditTutorListing: React.FC = () => {
       const result = await updateTutorListing(listingData);
 
       if ('data' in result && result.data) {
+        ReactGA.event({
+          category: EventCategory.Tutor,
+          action: TutorEventAction.Update,
+        });
         dispatch(resetTutorListingPagination());
         history.push(`/tutor/${id}`);
       }

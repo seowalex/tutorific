@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import ReactGA from 'react-ga';
 import {
   IonActionSheet,
   IonButton,
@@ -44,6 +45,7 @@ import {
   formatStringList,
 } from '../../app/utils';
 import ListingDetail from '../../components/ListingDetail';
+import { EventCategory, TutorEventAction } from '../../app/analytics';
 
 interface Params {
   id: string;
@@ -78,6 +80,10 @@ const TutorListing: React.FC = () => {
       const result = await deleteTutorListing(listingId);
 
       if ('data' in result && result.data) {
+        ReactGA.event({
+          category: EventCategory.Tutor,
+          action: TutorEventAction.Delete,
+        });
         history.push('/tutors');
         setPopoverState({ showPopover: false, event: undefined });
       }

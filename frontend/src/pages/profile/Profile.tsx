@@ -1,4 +1,5 @@
 import React from 'react';
+import ReactGA from 'react-ga';
 import {
   IonAvatar,
   IonButton,
@@ -37,6 +38,8 @@ import type { ErrorResponse } from '../../types/error';
 
 import styles from './Profile.module.scss';
 import { unsetTutorListingFilters } from '../../reducers/tutorFilters';
+import { unsetTuteeListingFilters } from '../../reducers/tuteeFilters';
+import { EventCategory, UserEventAction } from '../../app/analytics';
 
 interface Params {
   id: string;
@@ -62,8 +65,13 @@ const Profile: React.FC = () => {
         await logout({ id: user.id, refreshToken: user.refreshToken }).unwrap();
       }
 
+      ReactGA.event({
+        category: EventCategory.User,
+        action: UserEventAction.Logout,
+      });
       dispatch(unsetCredentials());
-      dispatch(unsetTutorListingFilters())
+      dispatch(unsetTutorListingFilters());
+      dispatch(unsetTuteeListingFilters());
       router.push('/', 'back');
     } catch (error) {
       const message = (

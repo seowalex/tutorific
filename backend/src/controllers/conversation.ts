@@ -63,8 +63,13 @@ const getConversation = async (ctx: Koa.Context): Promise<void> => {
     ctx.throw(HttpStatus.UNAUTHORIZED);
   }
 
+  const otherProfile =
+    conversation.firstProfile.id === profileId
+      ? conversation.secondProfile
+      : conversation.firstProfile;
+
   const messages = await messageService.getMessages(conversationId);
-  ctx.body = { data: messages };
+  ctx.body = { data: { otherProfile, messages } };
 };
 
 const createConversation = async (ctx: Koa.Context): Promise<void> => {

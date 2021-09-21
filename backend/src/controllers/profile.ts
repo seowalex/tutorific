@@ -15,7 +15,7 @@ const getProfile = async (ctx: Koa.Context): Promise<void> => {
 
 const updateProfile = async (ctx: Koa.Context): Promise<void> => {
   const { profileId } = ctx.state.user;
-  if (profileId !== ctx.params.id) {
+  if (profileId !== Number(ctx.params.id)) {
     ctx.throw(HttpStatus.UNAUTHORIZED);
   }
 
