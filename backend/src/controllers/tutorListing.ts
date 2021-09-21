@@ -22,7 +22,7 @@ const createTutorListing = async (ctx: Koa.Context): Promise<void> => {
   const tutorListing = ctx.request.body;
 
   const { profileId } = ctx.state.user;
-  if (profileId !== tutorListing.tuteeId) {
+  if (profileId !== tutorListing.tutorId) {
     ctx.throw(HttpStatus.UNAUTHORIZED);
   }
 
