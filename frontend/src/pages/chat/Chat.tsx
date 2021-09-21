@@ -12,6 +12,7 @@ import {
   IonTitle,
   IonToolbar,
 } from '@ionic/react';
+import clsx from 'clsx';
 import { person, send } from 'ionicons/icons';
 
 import OfflineCard from '../../components/OfflineCard';
@@ -33,56 +34,56 @@ const Chat: React.FC = () => (
         </IonButtons>
       </IonToolbar>
     </IonHeader>
-    <IonContent class={styles.chatContainer} fullscreen>
+    <IonContent className={styles.chatContainer} fullscreen>
       <OfflineCard />
 
       <div className={styles.chat}>
-        <div className={`${styles.chatBubble} ${styles.sent}`}>
+        <div className={clsx(styles.chatBubble, styles.sent)}>
           1. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
           Suspendisse fermentum finibus egestas.
         </div>
 
-        <div className={`${styles.chatBubble} ${styles.sent}`}>
+        <div className={clsx(styles.chatBubble, styles.sent)}>
           1. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
           Suspendisse fermentum finibus egestas.
         </div>
 
-        <div className={`${styles.chatBubble} ${styles.sent}`}>
+        <div className={clsx(styles.chatBubble, styles.sent)}>
           1. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
           Suspendisse fermentum finibus egestas.
         </div>
 
-        <div className={`${styles.chatBubble} ${styles.received}`}>
+        <div className={clsx(styles.chatBubble, styles.received)}>
           2. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
           Suspendisse fermentum finibus egestas.
         </div>
 
-        <div className={`${styles.chatBubble} ${styles.received}`}>
+        <div className={clsx(styles.chatBubble, styles.received)}>
           2. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
           Suspendisse fermentum finibus egestas.
         </div>
 
-        <div className={`${styles.chatBubble} ${styles.sent}`}>
+        <div className={clsx(styles.chatBubble, styles.sent)}>
           3. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
           Suspendisse fermentum finibus egestas.
         </div>
 
-        <div className={`${styles.chatBubble} ${styles.received}`}>
+        <div className={clsx(styles.chatBubble, styles.received)}>
           4. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
           Suspendisse fermentum finibus egestas.
         </div>
 
-        <div className={`${styles.chatBubble} ${styles.sent}`}>
+        <div className={clsx(styles.chatBubble, styles.sent)}>
           5. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
           Suspendisse fermentum finibus egestas.
         </div>
 
-        <div className={`${styles.chatBubble} ${styles.received}`}>
+        <div className={clsx(styles.chatBubble, styles.received)}>
           6. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
           Suspendisse fermentum finibus egestas.
         </div>
 
-        <div className={`${styles.chatBubble} ${styles.sent}`}>
+        <div className={clsx(styles.chatBubble, styles.sent)}>
           7. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
           Suspendisse fermentum finibus egestas.
         </div>
