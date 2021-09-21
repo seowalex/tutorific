@@ -20,7 +20,7 @@ import { selectCurrentUserId } from '../../reducers/auth';
 
 import TuteeListingForm from '../../components/TuteeListingForm';
 import { selectedTimeSlotsToArray } from '../../app/utils';
-import { resetTuteeListingPagination } from '../../reducers/tuteeFilters';
+import { unsetTuteeListingFilters } from '../../reducers/tuteeFilters';
 import { TuteeListingFormData } from '../../app/types';
 
 const AddTuteeListing: React.FC = () => {
@@ -49,7 +49,7 @@ const AddTuteeListing: React.FC = () => {
       const result = await createTuteeListing(listingData);
 
       if ('data' in result && result.data) {
-        dispatch(resetTuteeListingPagination());
+        dispatch(unsetTuteeListingFilters());
         history.push('/tutees');
       }
     } catch (err) {
