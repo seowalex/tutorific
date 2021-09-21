@@ -101,12 +101,10 @@ const App: React.FC = () => {
                     <IonIcon icon={bulb} />
                     <IonLabel>Tutees</IonLabel>
                   </IonTabButton>
-
                   <IonTabButton tab="chats" href="/chats">
                     <IonIcon icon={chatbubbles} />
                     <IonLabel>Chats</IonLabel>
                   </IonTabButton>
-
                   <IonTabButton
                     tab="profile"
                     href={`/profile/${currentUserId}`}

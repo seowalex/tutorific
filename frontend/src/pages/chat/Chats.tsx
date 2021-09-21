@@ -13,8 +13,11 @@ import {
   IonToolbar,
 } from '@ionic/react';
 import { RefresherEventDetail } from '@ionic/core';
+import Avatar from 'react-avatar';
 
 import OfflineCard from '../../components/OfflineCard';
+
+import styles from './Chats.module.scss';
 
 const Chats: React.FC = () => {
   const handleRefresh = (event: CustomEvent<RefresherEventDetail>) => {
@@ -45,9 +48,13 @@ const Chats: React.FC = () => {
         <IonList>
           {[...Array(16)].map((_e, i) => (
             <IonItem routerLink={`/chat/${i}`}>
-              <IonAvatar slot="start">
-                <img src={`https://placekitten.com/200/200?image=${i}`} />
-              </IonAvatar>
+              <Avatar
+                className={styles.avatar}
+                name="Han"
+                maxInitials={2}
+                size="2.5rem"
+                round
+              />
               <IonLabel>
                 <h2>Han</h2>
                 <p>

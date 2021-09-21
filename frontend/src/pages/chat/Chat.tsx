@@ -88,11 +88,20 @@ const Chat: React.FC = () => (
         </div>
       </div>
     </IonContent>
-    <div className={styles.chatBox}>
-      <IonItem fill="outline" lines="full">
-        <IonTextarea placeholder="Message" rows={1} autoGrow />
+    <div className={styles.chatSend}>
+      <IonItem
+        className={styles.chatInputContainer}
+        fill="outline"
+        lines="full"
+      >
+        <IonTextarea
+          className={styles.chatInput}
+          placeholder="Message"
+          rows={1}
+          autoGrow
+        />
       </IonItem>
-      <IonButton>
+      <IonButton className={styles.chatButton}>
         <IonIcon slot="icon-only" icon={send} />
       </IonButton>
     </div>

@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react';
 import {
-  IonAvatar,
   IonBackButton,
   IonButton,
   IonButtons,
@@ -125,13 +124,15 @@ const Profile: React.FC = () => {
                 <IonIcon slot="icon-only" icon={createOutline} />
               </IonButton>
             ) : (
-              <IonButton routerLink={`/chat/${id}`} routerDirection="none">
+              <IonButton routerLink={`/chat/${id}`}>
                 <IonIcon slot="icon-only" icon={chatbubbleOutline} />
               </IonButton>
             )}
-            <IonButton onClick={handleLogout}>
-              <IonIcon slot="icon-only" icon={logOutOutline} />
-            </IonButton>
+            {user.profileId === parseInt(id, 10) && (
+              <IonButton onClick={handleLogout}>
+                <IonIcon slot="icon-only" icon={logOutOutline} />
+              </IonButton>
+            )}
           </IonButtons>
         </IonToolbar>
       </IonHeader>
@@ -145,13 +146,15 @@ const Profile: React.FC = () => {
                   <IonIcon slot="icon-only" icon={createOutline} />
                 </IonButton>
               ) : (
-                <IonButton routerLink={`/chat/${id}`} routerDirection="none">
+                <IonButton routerLink={`/chat/${id}`}>
                   <IonIcon slot="icon-only" icon={chatbubbleOutline} />
                 </IonButton>
               )}
-              <IonButton onClick={handleLogout}>
-                <IonIcon slot="icon-only" icon={logOutOutline} />
-              </IonButton>
+              {user.profileId === parseInt(id, 10) && (
+                <IonButton onClick={handleLogout}>
+                  <IonIcon slot="icon-only" icon={logOutOutline} />
+                </IonButton>
+              )}
             </IonButtons>
           </IonToolbar>
         </IonHeader>
@@ -161,14 +164,13 @@ const Profile: React.FC = () => {
 
           <div className="ion-margin">
             <div className={styles.header}>
-              <IonAvatar className={styles.avatar}>
-                <Avatar
-                  name={profile?.name}
-                  maxInitials={2}
-                  size="100%"
-                  round
-                />
-              </IonAvatar>
+              <Avatar
+                className={styles.avatar}
+                name={profile?.name}
+                maxInitials={2}
+                size="4rem"
+                round
+              />
               <div>
                 <h1 className="ion-no-margin">{profile?.name}</h1>
                 {profile?.gender !== Gender.PNTS && (
