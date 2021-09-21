@@ -1,6 +1,5 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
-  IonAvatar,
   IonContent,
   IonHeader,
   IonItem,
@@ -15,13 +14,22 @@ import {
 import { RefresherEventDetail } from '@ionic/core';
 import Avatar from 'react-avatar';
 
+import { useGetChatsQuery } from '../../api/chat';
+
 import OfflineCard from '../../components/OfflineCard';
 
 import styles from './Chats.module.scss';
 
 const Chats: React.FC = () => {
+  const { data: chats, refetch } = useGetChatsQuery();
+
+  useEffect(
+    () => window.navigator.serviceWorker.addEventListener('message', refetch),
+    [refetch]
+  );
+
   const handleRefresh = (event: CustomEvent<RefresherEventDetail>) => {
-    console.log('refresh');
+    refetch();
 
     setTimeout(() => {
       event.detail.complete();
@@ -35,7 +43,7 @@ const Chats: React.FC = () => {
           <IonTitle>Chats</IonTitle>
         </IonToolbar>
       </IonHeader>
-      <IonContent fullscreen>
+      <IonContent className={styles.chatContent} fullscreen>
         <IonRefresher slot="fixed" onIonRefresh={handleRefresh}>
           <IonRefresherContent />
         </IonRefresher>
@@ -46,21 +54,18 @@ const Chats: React.FC = () => {
         </IonHeader>
         <OfflineCard />
         <IonList>
-          {[...Array(16)].map((_e, i) => (
-            <IonItem routerLink={`/chat/${i}`}>
+          {chats?.map((chat, i) => (
+            <IonItem routerLink={`/chat/${chat.id}`}>
               <Avatar
                 className={styles.avatar}
-                name="Han"
+                name={chat.otherProfile.name}
                 maxInitials={2}
                 size="2.5rem"
                 round
               />
               <IonLabel>
-                <h2>Han</h2>
-                <p>
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                  Suspendisse fermentum finibus egestas.
-                </p>
+                <h2>{chat.otherProfile.name}</h2>
+                <p>{chat.lastMessage?.content}</p>
               </IonLabel>
             </IonItem>
           ))}

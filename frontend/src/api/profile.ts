@@ -21,7 +21,7 @@ const extendedApi = api.injectEndpoints({
       Omit<Profile, 'id'>
     >({
       query: (body) => ({
-        url: `profile`,
+        url: 'profile',
         method: 'POST',
         body,
       }),

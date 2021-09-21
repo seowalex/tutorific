@@ -1,11 +1,12 @@
+import { Profile } from './profile';
+
 export interface Chat {
   id: number;
-  profileIds: [number];
-  lastMessage: Message;
+  otherProfile: Profile;
+  lastMessage?: Message;
 }
 
-interface Message {
-  chatId: number;
-  profileId: number;
+export interface Message {
+  senderId: number;
   content: string;
 }

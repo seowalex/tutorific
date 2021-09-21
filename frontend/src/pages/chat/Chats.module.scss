@@ -1,3 +1,7 @@
+.chatContent {
+  --background: var(--ion-item-background);
+}
+
 .avatar:global(.sb-avatar) {
   margin: 0.5rem 1rem 0.5rem 0;
 }

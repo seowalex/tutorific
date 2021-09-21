@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   IonBackButton,
   IonButton,
@@ -12,101 +12,87 @@ import {
   IonTitle,
   IonToolbar,
 } from '@ionic/react';
+import { useRouteMatch } from 'react-router-dom';
 import clsx from 'clsx';
 import { person, send } from 'ionicons/icons';
+
+import { useAppSelector } from '../../app/hooks';
+import { useGetChatQuery } from '../../api/chat';
+import { selectCurrentUserId } from '../../reducers/auth';
 
 import OfflineCard from '../../components/OfflineCard';
 
 import styles from './Chat.module.scss';
 
-const Chat: React.FC = () => (
-  <IonPage>
-    <IonHeader>
-      <IonToolbar>
-        <IonTitle>Chat</IonTitle>
-        <IonButtons slot="start">
-          <IonBackButton defaultHref="/chats" />
-        </IonButtons>
-        <IonButtons slot="primary">
-          <IonButton routerLink={`/profile/${1}`}>
-            <IonIcon slot="icon-only" icon={person} />
-          </IonButton>
-        </IonButtons>
-      </IonToolbar>
-    </IonHeader>
-    <IonContent className={styles.chatContainer} fullscreen>
-      <OfflineCard />
+interface Params {
+  id: string;
+}
 
-      <div className={styles.chat}>
-        <div className={clsx(styles.chatBubble, styles.sent)}>
-          1. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-          Suspendisse fermentum finibus egestas.
-        </div>
+const Chat: React.FC = () => {
+  const {
+    params: { id },
+  } = useRouteMatch<Params>();
 
-        <div className={clsx(styles.chatBubble, styles.sent)}>
-          1. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-          Suspendisse fermentum finibus egestas.
-        </div>
+  const { data: chat, refetch } = useGetChatQuery(parseInt(id, 10));
+  const currentUserId = useAppSelector(selectCurrentUserId);
 
-        <div className={clsx(styles.chatBubble, styles.sent)}>
-          1. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-          Suspendisse fermentum finibus egestas.
-        </div>
+  useEffect(
+    () => window.navigator.serviceWorker.addEventListener('message', refetch),
+    [refetch]
+  );
 
-        <div className={clsx(styles.chatBubble, styles.received)}>
-          2. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-          Suspendisse fermentum finibus egestas.
-        </div>
+  return (
+    <IonPage>
+      <IonHeader>
+        <IonToolbar>
+          <IonTitle>Chat</IonTitle>
+          <IonButtons slot="start">
+            <IonBackButton defaultHref="/chats" />
+          </IonButtons>
+          <IonButtons slot="primary">
+            <IonButton routerLink={`/profile/${id}`}>
+              <IonIcon slot="icon-only" icon={person} />
+            </IonButton>
+          </IonButtons>
+        </IonToolbar>
+      </IonHeader>
+      <IonContent className={styles.chatContainer} fullscreen>
+        <OfflineCard />
 
-        <div className={clsx(styles.chatBubble, styles.received)}>
-          2. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-          Suspendisse fermentum finibus egestas.
+        <div className={styles.chat}>
+          {chat?.map((message) => (
+            <div
+              className={clsx(
+                styles.chatBubble,
+                currentUserId === message.senderId
+                  ? styles.sent
+                  : styles.received
+              )}
+            >
+              {message.content}
+            </div>
+          ))}
         </div>
-
-        <div className={clsx(styles.chatBubble, styles.sent)}>
-          3. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-          Suspendisse fermentum finibus egestas.
-        </div>
-
-        <div className={clsx(styles.chatBubble, styles.received)}>
-          4. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-          Suspendisse fermentum finibus egestas.
-        </div>
-
-        <div className={clsx(styles.chatBubble, styles.sent)}>
-          5. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-          Suspendisse fermentum finibus egestas.
-        </div>
-
-        <div className={clsx(styles.chatBubble, styles.received)}>
-          6. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-          Suspendisse fermentum finibus egestas.
-        </div>
-
-        <div className={clsx(styles.chatBubble, styles.sent)}>
-          7. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-          Suspendisse fermentum finibus egestas.
-        </div>
+      </IonContent>
+      <div className={styles.chatSend}>
+        <IonItem
+          className={styles.chatInputContainer}
+          fill="outline"
+          lines="full"
+        >
+          <IonTextarea
+            className={styles.chatInput}
+            placeholder="Message"
+            rows={1}
+            autoGrow
+          />
+        </IonItem>
+        <IonButton className={styles.chatButton}>
+          <IonIcon slot="icon-only" icon={send} />
+        </IonButton>
       </div>
-    </IonContent>
-    <div className={styles.chatSend}>
-      <IonItem
-        className={styles.chatInputContainer}
-        fill="outline"
-        lines="full"
-      >
-        <IonTextarea
-          className={styles.chatInput}
-          placeholder="Message"
-          rows={1}
-          autoGrow
-        />
-      </IonItem>
-      <IonButton className={styles.chatButton}>
-        <IonIcon slot="icon-only" icon={send} />
-      </IonButton>
-    </div>
-  </IonPage>
-);
+    </IonPage>
+  );
+};
 
 export default Chat;

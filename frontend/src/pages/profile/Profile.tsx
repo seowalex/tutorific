@@ -40,7 +40,6 @@ import type { ErrorResponse } from '../../types/error';
 import OfflineCard from '../../components/OfflineCard';
 
 import styles from './Profile.module.scss';
-import { unsetTutorListingFilters } from '../../reducers/tutorFilters';
 
 interface Params {
   id: string;
