@@ -6,7 +6,7 @@ const SALT_ROUNDS = 10;
 const JWT_EXPIRY = 900;
 const CRYPTO_BYTES = 40;
 const OPEN_ROUTES = {
-  GET: ['/tutor', '/tutee'],
+  GET: ['/tutor', '/tutee', '/profile'],
   POST: ['/auth'],
   DELETE: ['/auth'],
 };
