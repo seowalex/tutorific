@@ -1,9 +1,19 @@
 import api from './base';
-import { TutorListing } from '../app/types';
-import { TutorFiltersState } from '../reducers/tutorFilters';
+import { Gender, Level, TutorListing } from '../app/types';
 import { constructQueryString } from '../app/utils';
 
-type GetTutorListingsQueryParams = Partial<TutorFiltersState>;
+export type GetTutorListingsQueryParams = Partial<{
+  profileId: number;
+  priceMin: number;
+  priceMax: number;
+  timeSlots: number[];
+  subjects: string[];
+  levels: Level[];
+  gender: Gender;
+  skip: number;
+  limit: number;
+}>;
+
 type GetTutorListingsResponse = { listings: TutorListing[]; count: number };
 type GetTutorListingResponse = TutorListing;
 type CreateTutorListingRequest = Omit<

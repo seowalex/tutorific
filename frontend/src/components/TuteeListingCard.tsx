@@ -22,19 +22,26 @@ import { formatPriceRange, formatStringList } from '../app/utils';
 
 interface Props {
   listing: TuteeListing;
+  hideProfile?: boolean;
 }
 
 const TuteeListingCard: React.FC<Props> = (props: Props) => {
-  const { listing } = props;
+  const { listing, hideProfile } = props;
 
   const formatLevelAndGender = (level: Level, gender: Gender) =>
     `${level}${gender === Gender.PNTS ? '' : `\n${gender} Student`}`;
 
   return (
     <IonCard button routerLink={`/tutees/listing/${listing.id}`}>
-      <IonCardHeader>
-        <ProfileItem profile={listing.tutee} />
-        <IonGrid className={styles.listingCardHeaderContainer}>
+      {!hideProfile && <ProfileItem profile={listing.tutee} />}
+      <IonCardHeader
+        className={
+          hideProfile
+            ? styles.listingCardHeaderContainerWithoutProfile
+            : styles.listingCardHeaderContainer
+        }
+      >
+        <IonGrid>
           <IonRow>
             <IonCol>
               <IonCardTitle
@@ -72,6 +79,10 @@ const TuteeListingCard: React.FC<Props> = (props: Props) => {
       </IonCardContent>
     </IonCard>
   );
+};
+
+TuteeListingCard.defaultProps = {
+  hideProfile: false,
 };
 
 export default TuteeListingCard;

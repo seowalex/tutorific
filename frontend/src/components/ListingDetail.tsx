@@ -1,11 +1,5 @@
 import React from 'react';
-import {
-  IonItem,
-  IonItemDivider,
-  IonItemGroup,
-  IonLabel,
-  IonText,
-} from '@ionic/react';
+import { IonItem, IonLabel, IonText } from '@ionic/react';
 import styles from './ListingDetail.module.scss';
 
 interface Props {
@@ -18,18 +12,14 @@ const ListingDetail: React.FC<Props> = (props: Props) => {
   const { header, label, children } = props;
 
   return (
-    <IonItemGroup>
-      <IonItemDivider>
-        <IonLabel>{header}</IonLabel>
-      </IonItemDivider>
+    <IonItem fill="solid" lines="none">
+      <IonLabel position="stacked">{header}</IonLabel>
       {label ? (
-        <IonItem>
-          <IonText className={styles.itemText}>{label}</IonText>
-        </IonItem>
+        <IonText className={styles.itemText}>{label}</IonText>
       ) : (
         children
       )}
-    </IonItemGroup>
+    </IonItem>
   );
 };
 

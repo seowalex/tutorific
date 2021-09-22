@@ -1,15 +1,19 @@
 .listingCardHeaderContainer {
-  padding: 10px 0 0;
+  padding: 0rem 0.5rem;
+}
 
-  .listingCardTitle {
-    font-size: 18px;
-  }
+.listingCardHeaderContainerWithoutProfile {
+  padding: 0.5rem 0.5rem 0rem;
+}
+
+.listingCardTitle {
+  font-size: 1.2rem;
 }
 
 .listingCardDescription {
-  font-size: 14px;
+  font-size: 0.9rem;
 }
 
 .itemLabel {
-  font-size: 14px !important;
+  font-size: 0.9rem !important;
 }

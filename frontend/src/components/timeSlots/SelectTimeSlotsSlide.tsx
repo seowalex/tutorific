@@ -13,11 +13,12 @@ import SelectTimeSlotsRow from './SelectTimeSlotsRow';
 interface Props {
   day: WeekDay;
   value: SelectedTimeSlots;
-  onSubmit: (firstTimeSlot: number, selectedSlots: SelectedTimeSlots) => void;
+  disabled?: boolean;
+  onSubmit?: (firstTimeSlot: number, selectedSlots: SelectedTimeSlots) => void;
 }
 
 const SelectTimeSlotsSlide: React.FC<Props> = (props) => {
-  const { day, value, onSubmit } = props;
+  const { day, value, disabled, onSubmit } = props;
   const startingHour = 6; // start at 6am
   const numberOfRows = 4; // 4 rows
   const slotsPerRow = 8;
@@ -36,6 +37,7 @@ const SelectTimeSlotsSlide: React.FC<Props> = (props) => {
                 firstTimeSlotOfDay + row * slotsPerRow,
                 slotsPerRow
               )}
+              disabled={disabled}
               onSubmit={onSubmit}
             />
           </IonCol>
@@ -43,6 +45,11 @@ const SelectTimeSlotsSlide: React.FC<Props> = (props) => {
       ))}
     </IonGrid>
   );
+};
+
+SelectTimeSlotsSlide.defaultProps = {
+  disabled: false,
+  onSubmit: undefined,
 };
 
 export default SelectTimeSlotsSlide;

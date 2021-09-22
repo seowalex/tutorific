@@ -17,10 +17,13 @@ import {
 } from 'redux-persist';
 import storage from 'localforage';
 
+/* eslint-disable import/no-cycle */
 import api from '../api/base';
 import auth from '../reducers/auth';
 import tutorFilters from '../reducers/tutorFilters';
 import tuteeFilters from '../reducers/tuteeFilters';
+import profileListings from '../reducers/profileListings';
+/* eslint-enable import/no-cycle */
 
 storage.setDriver(storage.INDEXEDDB);
 
@@ -35,6 +38,7 @@ const rootReducer = combineReducers({
   auth,
   tutorFilters,
   tuteeFilters,
+  profileListings,
 });
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 
