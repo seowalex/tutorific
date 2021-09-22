@@ -1,0 +1,21 @@
+form ion-item.ion-color-danger {
+  --border-color: var(--ion-color-danger);
+}
+
+ion-content.flex-column::part(scroll) {
+  display: flex;
+  flex-direction: column;
+}
+
+ion-select::part(text) {
+  white-space: normal;
+}
+
+ion-toast::part(header) {
+  font-weight: 700;
+}
+
+.md ion-toolbar {
+  --background: var(--ion-color-primary);
+  --color: var(--ion-color-primary-contrast);
+}

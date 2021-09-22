@@ -21,10 +21,7 @@
 /* Layout utils */
 @import './layout/utils.scss';
 
-/* Module styles */
-@import './module/toast.scss';
-@import './module/toolbar.scss';
-
 /* Theme variables */
 @import './theme/fonts.scss';
+@import './theme/overrides.scss';
 @import './theme/variables.scss';

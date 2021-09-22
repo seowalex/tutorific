@@ -3,16 +3,13 @@ import {
   IonBackButton,
   IonButton,
   IonButtons,
-  IonCol,
   IonContent,
-  IonGrid,
   IonHeader,
   IonInput,
   IonItem,
   IonLabel,
   IonNote,
   IonPage,
-  IonRow,
   IonSpinner,
   IonTitle,
   IonToolbar,
@@ -101,119 +98,113 @@ const Register: React.FC = () => {
         </IonToolbar>
       </IonHeader>
       <IonContent className="ion-padding" fullscreen>
-        <IonGrid className="ion-no-padding">
-          <IonRow>
-            <IonCol className="ion-no-padding">
-              <div className={styles.header}>
-                <img className={styles.headerImg} src="/assets/welcome.png" />
-                <p className={styles.headerText}>
-                  Welcome to Tutorific! Register an account to start looking for
-                  tutors/tutees.
-                </p>
-              </div>
-              <form onSubmit={handleSubmit(onSubmit)}>
-                <IonItem
-                  fill="outline"
-                  lines="full"
-                  color={errors.email ? 'danger' : undefined}
-                  disabled={isLoading}
-                >
-                  <IonLabel position="floating">Email</IonLabel>
-                  <Controller
-                    name="email"
-                    control={control}
-                    render={({ field: { onChange, onBlur, value } }) => (
-                      <IonInput
-                        type="email"
-                        onIonChange={onChange}
-                        onIonBlur={onBlur}
-                        value={value}
-                      />
-                    )}
-                    rules={{
-                      required: 'Email is required',
-                    }}
-                  />
-                  {errors.email && (
-                    <IonNote slot="helper" color="danger">
-                      {errors.email.message}
-                    </IonNote>
-                  )}
-                </IonItem>
-                <IonItem
-                  fill="outline"
-                  lines="full"
-                  color={errors.password ? 'danger' : undefined}
-                  disabled={isLoading}
-                >
-                  <IonLabel position="floating">Password</IonLabel>
-                  <Controller
-                    name="password"
-                    control={control}
-                    render={({ field: { onChange, onBlur, value } }) => (
-                      <IonInput
-                        type="password"
-                        onIonChange={onChange}
-                        onIonBlur={onBlur}
-                        value={value}
-                      />
-                    )}
-                    rules={{
-                      required: 'Password is required',
-                    }}
-                  />
-                  {errors.password && (
-                    <IonNote slot="helper" color="danger">
-                      {errors.password.message}
-                    </IonNote>
-                  )}
-                </IonItem>
-                <IonItem
-                  fill="outline"
-                  lines="full"
-                  color={errors.confirm_password ? 'danger' : undefined}
-                  disabled={isLoading}
-                >
-                  <IonLabel position="floating">Confirm Password</IonLabel>
-                  <Controller
-                    name="confirm_password"
-                    control={control}
-                    render={({ field: { onChange, onBlur, value } }) => (
-                      <IonInput
-                        type="password"
-                        onIonChange={onChange}
-                        onIonBlur={onBlur}
-                        value={value}
-                      />
-                    )}
-                    rules={{
-                      required: 'Password is required',
-                      validate: {
-                        match: (value) =>
-                          value === getValues('password') ||
-                          'Passwords need to match',
-                      },
-                    }}
-                  />
-                  {errors.confirm_password && (
-                    <IonNote slot="helper" color="danger">
-                      {errors.confirm_password.message}
-                    </IonNote>
-                  )}
-                </IonItem>
-                <IonButton
-                  className="ion-no-margin ion-margin-top"
-                  expand="block"
-                  type="submit"
-                  disabled={isLoading}
-                >
-                  {isLoading ? <IonSpinner /> : 'Register'}
-                </IonButton>
-                <input type="submit" hidden />
-              </form>
-            </IonCol>
-          </IonRow>
-        </IonGrid>
+        <div className={styles.header}>
+          <img className={styles.headerImg} src="/assets/welcome.png" />
+          <p className={styles.headerText}>
+            Welcome to Tutorific! Register an account to start looking for
+            tutors/tutees.
+          </p>
+        </div>
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <IonItem
+            fill="outline"
+            lines="full"
+            color={errors.email ? 'danger' : undefined}
+            disabled={isLoading}
+          >
+            <IonLabel position="floating">Email</IonLabel>
+            <Controller
+              name="email"
+              control={control}
+              render={({ field: { onChange, onBlur, value } }) => (
+                <IonInput
+                  type="email"
+                  onIonChange={onChange}
+                  onIonBlur={onBlur}
+                  value={value}
+                />
+              )}
+              rules={{
+                required: 'Email is required',
+              }}
+            />
+            {errors.email && (
+              <IonNote slot="helper" color="danger">
+                {errors.email.message}
+              </IonNote>
+            )}
+          </IonItem>
+          <IonItem
+            fill="outline"
+            lines="full"
+            color={errors.password ? 'danger' : undefined}
+            disabled={isLoading}
+          >
+            <IonLabel position="floating">Password</IonLabel>
+            <Controller
+              name="password"
+              control={control}
+              render={({ field: { onChange, onBlur, value } }) => (
+                <IonInput
+                  type="password"
+                  onIonChange={onChange}
+                  onIonBlur={onBlur}
+                  value={value}
+                />
+              )}
+              rules={{
+                required: 'Password is required',
+              }}
+            />
+            {errors.password && (
+              <IonNote slot="helper" color="danger">
+                {errors.password.message}
+              </IonNote>
+            )}
+          </IonItem>
+          <IonItem
+            fill="outline"
+            lines="full"
+            color={errors.confirm_password ? 'danger' : undefined}
+            disabled={isLoading}
+          >
+            <IonLabel position="floating">Confirm Password</IonLabel>
+            <Controller
+              name="confirm_password"
+              control={control}
+              render={({ field: { onChange, onBlur, value } }) => (
+                <IonInput
+                  type="password"
+                  onIonChange={onChange}
+                  onIonBlur={onBlur}
+                  value={value}
+                />
+              )}
+              rules={{
+                required: 'Password is required',
+                validate: {
+                  match: (value) =>
+                    value === getValues('password') ||
+                    'Passwords need to match',
+                },
+              }}
+            />
+            {errors.confirm_password && (
+              <IonNote slot="helper" color="danger">
+                {errors.confirm_password.message}
+              </IonNote>
+            )}
+          </IonItem>
+          <IonButton
+            className="ion-no-margin ion-margin-top"
+            expand="block"
+            type="submit"
+            disabled={isLoading}
+          >
+            {isLoading ? <IonSpinner /> : 'Register'}
+          </IonButton>
+          <input type="submit" hidden />
+        </form>
       </IonContent>
     </IonPage>
   );

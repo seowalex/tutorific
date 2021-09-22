@@ -54,8 +54,8 @@ const Profile: React.FC = () => {
 
   const dispatch = useAppDispatch();
   const [logout] = useLogoutMutation();
-  const user = useAppSelector(selectCurrentUser);
   const { data: profile, refetch } = useGetProfileQuery(parseInt(id, 10));
+  const user = useAppSelector(selectCurrentUser);
   const hasListings = false;
 
   const router = useIonRouter();
@@ -138,7 +138,7 @@ const Profile: React.FC = () => {
           </IonButtons>
         </IonToolbar>
       </IonHeader>
-      <IonContent fullscreen>
+      <IonContent class={hasListings ? '' : 'flex-column'} fullscreen>
         <IonHeader collapse="condense">
           <IonToolbar>
             <IonTitle size="large">Profile</IonTitle>
@@ -161,96 +161,91 @@ const Profile: React.FC = () => {
           </IonToolbar>
         </IonHeader>
 
-        <div className={hasListings ? '' : styles.noListings}>
-          <OfflineCard />
+        <OfflineCard />
 
-          <div className="ion-margin">
-            <div className={styles.header}>
-              <Avatar
-                className={styles.avatar}
-                name={profile?.name}
-                maxInitials={2}
-                size="4rem"
-                round
-              />
-              <div>
-                <h1 className="ion-no-margin">{profile?.name}</h1>
-                {profile?.gender !== Gender.PNTS && (
-                  <IonText color="dark">
-                    {profile?.gender} <GenderIcon />
-                  </IonText>
-                )}
-              </div>
-            </div>
-
-            <p className="ion-text-prewrap">{profile?.description}</p>
+        <div className={styles.header}>
+          <Avatar
+            className={styles.avatar}
+            name={profile?.name}
+            maxInitials={2}
+            size="4rem"
+            round
+          />
+          <div className={styles.name}>
+            <h1 className="ion-no-margin">{profile?.name}</h1>
+            {profile?.gender !== Gender.PNTS && (
+              <IonText color="dark">
+                {profile?.gender} <GenderIcon />
+              </IonText>
+            )}
           </div>
-
-          {hasListings ? (
-            <>
-              <IonCard>
-                <IonCardHeader>
-                  <IonCardTitle>Math, Science, English</IonCardTitle>
-                  <IonCardSubtitle>Upper Primary</IonCardSubtitle>
-                </IonCardHeader>
-
-                <IonCardContent>
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi
-                  convallis ullamcorper tristique. Duis accumsan rhoncus dolor
-                  eget laoreet.
-                </IonCardContent>
-              </IonCard>
-
-              <IonCard>
-                <IonCardHeader>
-                  <IonCardTitle>Math, Science, English</IonCardTitle>
-                  <IonCardSubtitle>Upper Primary</IonCardSubtitle>
-                </IonCardHeader>
-
-                <IonCardContent>
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi
-                  convallis ullamcorper tristique. Duis accumsan rhoncus dolor
-                  eget laoreet.
-                </IonCardContent>
-              </IonCard>
-
-              <IonCard>
-                <IonCardHeader>
-                  <IonCardTitle>Math, Science, English</IonCardTitle>
-                  <IonCardSubtitle>Upper Primary</IonCardSubtitle>
-                </IonCardHeader>
-
-                <IonCardContent>
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi
-                  convallis ullamcorper tristique. Duis accumsan rhoncus dolor
-                  eget laoreet.
-                </IonCardContent>
-              </IonCard>
-
-              <IonCard>
-                <IonCardHeader>
-                  <IonCardTitle>Math, Science, English</IonCardTitle>
-                  <IonCardSubtitle>Upper Primary</IonCardSubtitle>
-                </IonCardHeader>
-
-                <IonCardContent>
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi
-                  convallis ullamcorper tristique. Duis accumsan rhoncus dolor
-                  eget laoreet.
-                </IonCardContent>
-              </IonCard>
-            </>
-          ) : (
-            <EmptyPlaceholder
-              icon={closeCircle}
-              text={`${
-                user.profileId === parseInt(id, 10)
-                  ? 'You have'
-                  : 'This person has'
-              } no tutor/tutee listings.`}
-            />
-          )}
+          <p className={styles.description}>{profile?.description}</p>
         </div>
+
+        {hasListings ? (
+          <>
+            <IonCard>
+              <IonCardHeader>
+                <IonCardTitle>Math, Science, English</IonCardTitle>
+                <IonCardSubtitle>Upper Primary</IonCardSubtitle>
+              </IonCardHeader>
+
+              <IonCardContent>
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi
+                convallis ullamcorper tristique. Duis accumsan rhoncus dolor
+                eget laoreet.
+              </IonCardContent>
+            </IonCard>
+
+            <IonCard>
+              <IonCardHeader>
+                <IonCardTitle>Math, Science, English</IonCardTitle>
+                <IonCardSubtitle>Upper Primary</IonCardSubtitle>
+              </IonCardHeader>
+
+              <IonCardContent>
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi
+                convallis ullamcorper tristique. Duis accumsan rhoncus dolor
+                eget laoreet.
+              </IonCardContent>
+            </IonCard>
+
+            <IonCard>
+              <IonCardHeader>
+                <IonCardTitle>Math, Science, English</IonCardTitle>
+                <IonCardSubtitle>Upper Primary</IonCardSubtitle>
+              </IonCardHeader>
+
+              <IonCardContent>
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi
+                convallis ullamcorper tristique. Duis accumsan rhoncus dolor
+                eget laoreet.
+              </IonCardContent>
+            </IonCard>
+
+            <IonCard>
+              <IonCardHeader>
+                <IonCardTitle>Math, Science, English</IonCardTitle>
+                <IonCardSubtitle>Upper Primary</IonCardSubtitle>
+              </IonCardHeader>
+
+              <IonCardContent>
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi
+                convallis ullamcorper tristique. Duis accumsan rhoncus dolor
+                eget laoreet.
+              </IonCardContent>
+            </IonCard>
+          </>
+        ) : (
+          <EmptyPlaceholder
+            icon={closeCircle}
+            text={`${
+              user.profileId === parseInt(id, 10)
+                ? 'You have'
+                : 'This person has'
+            } no tutor/tutee listings.`}
+          />
+        )}
       </IonContent>
     </IonPage>
   );

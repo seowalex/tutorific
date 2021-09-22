@@ -1,15 +1,17 @@
 .header {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  gap: 8px;
+  gap: 1rem;
+  margin: 1rem;
 
-  .avatar {
-    margin-right: 8px;
+  .name {
+    flex: 1 0 0;
   }
-}
 
-.noListings {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
+  .description {
+    flex: 0 0 100%;
+    margin: 0;
+    white-space: pre-wrap;
+  }
 }

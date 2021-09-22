@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   IonContent,
   IonHeader,
@@ -23,9 +23,12 @@ import EmptyPlaceholder from '../../components/EmptyPlaceholder';
 import styles from './Chats.module.scss';
 
 const Chats: React.FC = () => {
-  const { data: chats, refetch } = useGetChatsQuery(undefined as void, {
-    pollingInterval: 10000,
-  });
+  const { data: chats, refetch } = useGetChatsQuery();
+
+  useEffect(
+    () => window.navigator.serviceWorker.addEventListener('message', refetch),
+    [refetch]
+  );
 
   const handleRefresh = (event: CustomEvent<RefresherEventDetail>) => {
     refetch();
@@ -55,7 +58,7 @@ const Chats: React.FC = () => {
         {chats?.length ? (
           <IonList>
             {chats?.map((chat) => (
-              <IonItem routerLink={`/chat/${chat.id}`}>
+              <IonItem routerLink={`/chat/${chat.id}`} key={chat.id}>
                 <Avatar
                   className={styles.avatar}
                   name={chat.otherProfile.name}

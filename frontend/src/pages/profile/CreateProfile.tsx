@@ -2,12 +2,9 @@ import React from 'react';
 import {
   IonBackButton,
   IonButtons,
-  IonCol,
   IonContent,
-  IonGrid,
   IonHeader,
   IonPage,
-  IonRow,
   IonTitle,
   IonToolbar,
   useIonRouter,
@@ -93,18 +90,12 @@ const CreateProfile: React.FC = () => {
         </IonToolbar>
       </IonHeader>
       <IonContent className="ion-padding" fullscreen>
-        <IonGrid className="ion-no-padding">
-          <IonRow>
-            <IonCol className="ion-no-padding">
-              <ProfileForm
-                isLoading={isLoading}
-                errors={errors}
-                handleSubmit={handleSubmit(onSubmit)}
-                control={control}
-              />
-            </IonCol>
-          </IonRow>
-        </IonGrid>
+        <ProfileForm
+          isLoading={isLoading}
+          errors={errors}
+          handleSubmit={handleSubmit(onSubmit)}
+          control={control}
+        />
       </IonContent>
     </IonPage>
   );

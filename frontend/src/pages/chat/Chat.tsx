@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   IonBackButton,
   IonButton,
@@ -40,14 +40,17 @@ const Chat: React.FC = () => {
     params: { id },
   } = useRouteMatch<Params>();
 
-  const { data: chat } = useGetChatQuery(parseInt(id, 10), {
-    pollingInterval: 1000,
-  });
   const [addMessage] = useAddMessageMutation();
+  const { data: chat, refetch } = useGetChatQuery(parseInt(id, 10));
   const currentUserId = useAppSelector(selectCurrentUserId);
 
   const [present] = useIonToast();
   const { handleSubmit, reset, control } = useForm<MessageData>();
+
+  useEffect(
+    () => window.navigator.serviceWorker.addEventListener('message', refetch),
+    [refetch]
+  );
 
   const onSubmit = async (data: MessageData) => {
     reset();
@@ -103,7 +106,6 @@ const Chat: React.FC = () => {
             {chat?.messages.map((message) => (
               <div
                 className={clsx(
-                  'ion-text-prewrap',
                   styles.chatBubble,
                   currentUserId === message.senderId
                     ? styles.sent
