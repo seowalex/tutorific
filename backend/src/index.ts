@@ -8,6 +8,7 @@ import logger from 'koa-logger';
 import HttpStatus from 'http-status-codes';
 import helmet from 'koa-helmet';
 import jwt from 'koa-jwt';
+import webpush from 'web-push';
 import Exception from './utils/exception';
 import dbConnection from './database/connection';
 import config from './config/index';
@@ -15,6 +16,16 @@ import router from './routes/index';
 import authUtil from './utils/auth';
 
 const app = new Koa();
+
+const vapidKeys = webpush.generateVAPIDKeys();
+
+webpush.setVapidDetails(
+  'mailto:superwenjie@yahoo.com',
+  vapidKeys.publicKey,
+  vapidKeys.privateKey
+);
+
+export default webpush;
 
 app.use(serve(`../frontend/build`));
 
