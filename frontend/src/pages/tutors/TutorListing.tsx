@@ -34,12 +34,13 @@ import { useAppSelector } from '../../app/hooks';
 import ProfileItem from '../../components/ProfileItem';
 import { selectCurrentUserId } from '../../reducers/auth';
 import {
-  computeWeekDays,
+  arrayToSelectedTimeSlots,
   formatPriceRange,
   formatStringList,
 } from '../../app/utils';
 import ListingDetail from '../../components/ListingDetail';
 import { EventCategory, TutorEventAction } from '../../app/analytics';
+import SelectTimeSlotsItem from '../../components/timeSlots/SelectTimeSlotsItem';
 
 interface Params {
   id: string;
@@ -119,6 +120,12 @@ const TutorListing: React.FC = () => {
       {listing ? (
         <IonContent fullscreen>
           <ProfileItem profile={listing.tutor} />
+          <SelectTimeSlotsItem
+            value={arrayToSelectedTimeSlots(listing.timeSlots)}
+            disabled
+            fill="solid"
+            lines="none"
+          />
           <ListingDetail
             header="Subjects"
             label={formatStringList(listing.subjects)}
@@ -130,10 +137,6 @@ const TutorListing: React.FC = () => {
           <ListingDetail
             header="Hourly Rate"
             label={formatPriceRange(listing.priceMin, listing.priceMax)}
-          />
-          <ListingDetail
-            header="Available Times"
-            label={formatStringList(computeWeekDays(listing.timeSlots))}
           />
           <ListingDetail header="Description" label={listing.description} />
         </IonContent>

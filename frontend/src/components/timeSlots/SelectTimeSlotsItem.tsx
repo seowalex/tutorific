@@ -21,36 +21,42 @@ import styles from './TimeSlots.module.scss';
 type ListingFormData = TutorListingFormData | TuteeListingFormData;
 
 interface Props {
-  onChange: (value: SelectedTimeSlots) => void;
   value: SelectedTimeSlots;
+  disabled?: boolean;
   errors?: FieldErrors<ListingFormData>;
-  isSubmitting: boolean;
+  onChange?: (value: SelectedTimeSlots) => void;
+  isSubmitting?: boolean;
+  fill?: 'outline' | 'solid';
+  lines?: 'full' | 'inset' | 'none';
 }
 
 const SelectTimeSlotsItem: React.FC<Props> = (props) => {
-  const { onChange, value, errors, isSubmitting } = props;
+  const { value, disabled, errors, isSubmitting, onChange, fill, lines } =
+    props;
   const [weekDay, setWeekDay] = useState<WeekDay>(WeekDay.Mon);
 
   const handleSubmit = (
     firstTimeSlot: number,
     selectedSlots: SelectedTimeSlots
   ) => {
-    const updatedValue = Object.entries(selectedSlots).reduce(
-      (prev, [curr, isSelected]) => ({
-        ...prev,
-        [firstTimeSlot + parseInt(curr, 10)]: isSelected,
-      }),
-      value
-    );
+    if (onChange != null) {
+      const updatedValue = Object.entries(selectedSlots).reduce(
+        (prev, [curr, isSelected]) => ({
+          ...prev,
+          [firstTimeSlot + parseInt(curr, 10)]: isSelected,
+        }),
+        value
+      );
 
-    onChange(updatedValue);
+      onChange(updatedValue);
+    }
   };
 
   return (
     <>
       <IonItem
-        fill="outline"
-        lines="full"
+        fill={fill}
+        lines={lines}
         color={errors?.timeSlots ? 'danger' : undefined}
         disabled={isSubmitting}
       >
@@ -64,6 +70,7 @@ const SelectTimeSlotsItem: React.FC<Props> = (props) => {
               <SelectTimeSlotsSlide
                 day={key as WeekDay}
                 value={value}
+                disabled={disabled}
                 onSubmit={handleSubmit}
               />
             )
@@ -90,7 +97,12 @@ const SelectTimeSlotsItem: React.FC<Props> = (props) => {
 };
 
 SelectTimeSlotsItem.defaultProps = {
+  disabled: false,
   errors: undefined,
+  onChange: undefined,
+  isSubmitting: false,
+  fill: 'outline',
+  lines: 'full',
 };
 
 export default SelectTimeSlotsItem;
