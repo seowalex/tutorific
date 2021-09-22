@@ -40,6 +40,7 @@ import type { ErrorResponse } from '../../types/error';
 
 import OfflineCard from '../../components/OfflineCard';
 import EmptyPlaceholder from '../../components/EmptyPlaceholder';
+import ChatRouterLink from '../../components/ChatRouterLink';
 
 import styles from './Profile.module.scss';
 
@@ -126,9 +127,11 @@ const Profile: React.FC = () => {
                 <IonIcon slot="icon-only" icon={createOutline} />
               </IonButton>
             ) : (
-              <IonButton routerLink={`/chats/${id}`}>
-                <IonIcon slot="icon-only" icon={chatbubbleOutline} />
-              </IonButton>
+              <ChatRouterLink profileId={parseInt(id, 10)}>
+                <IonButton>
+                  <IonIcon slot="icon-only" icon={chatbubbleOutline} />
+                </IonButton>
+              </ChatRouterLink>
             )}
             {user.profileId === parseInt(id, 10) && (
               <IonButton onClick={handleLogout}>
@@ -148,9 +151,11 @@ const Profile: React.FC = () => {
                   <IonIcon slot="icon-only" icon={createOutline} />
                 </IonButton>
               ) : (
-                <IonButton routerLink={`/chats/${id}`}>
-                  <IonIcon slot="icon-only" icon={chatbubbleOutline} />
-                </IonButton>
+                <ChatRouterLink profileId={parseInt(id, 10)}>
+                  <IonButton routerLink={`/chats/${id}`}>
+                    <IonIcon slot="icon-only" icon={chatbubbleOutline} />
+                  </IonButton>
+                </ChatRouterLink>
               )}
               {user.profileId === parseInt(id, 10) && (
                 <IonButton onClick={handleLogout}>

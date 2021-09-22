@@ -11,7 +11,6 @@ import {
   IonNote,
   IonPage,
   IonSpinner,
-  IonTitle,
   IonToolbar,
   useIonRouter,
   useIonToast,
@@ -90,11 +89,10 @@ const Register: React.FC = () => {
   return (
     <IonPage>
       <IonHeader>
-        <IonToolbar>
+        <IonToolbar color="light">
           <IonButtons slot="start">
             <IonBackButton defaultHref="/login" disabled={isLoading} />
           </IonButtons>
-          <IonTitle>Register</IonTitle>
         </IonToolbar>
       </IonHeader>
       <IonContent className="ion-padding" fullscreen>

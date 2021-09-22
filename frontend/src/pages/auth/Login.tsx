@@ -1,9 +1,12 @@
 import React from 'react';
 import {
+  IonBackButton,
   IonButton,
+  IonButtons,
   IonCol,
   IonContent,
   IonGrid,
+  IonHeader,
   IonInput,
   IonItem,
   IonLabel,
@@ -11,6 +14,7 @@ import {
   IonPage,
   IonRow,
   IonSpinner,
+  IonToolbar,
   useIonRouter,
   useIonToast,
 } from '@ionic/react';
@@ -74,6 +78,13 @@ const Login: React.FC = () => {
 
   return (
     <IonPage>
+      <IonHeader>
+        <IonToolbar color="light">
+          <IonButtons slot="start">
+            <IonBackButton disabled={isLoading} />
+          </IonButtons>
+        </IonToolbar>
+      </IonHeader>
       <IonContent className="ion-padding" fullscreen>
         <IonGrid className="ion-no-padding h-100">
           <IonRow className="ion-align-items-center h-100">
