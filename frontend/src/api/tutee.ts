@@ -1,9 +1,19 @@
 import api from './base';
-import { TuteeListing } from '../app/types';
-import { TuteeFiltersState } from '../reducers/tuteeFilters';
+import { Gender, Level, Town, TuteeListing } from '../app/types';
 import { constructQueryString } from '../app/utils';
 
-type GetTuteeListingsQueryParams = Partial<TuteeFiltersState>;
+export type GetTuteeListingsQueryParams = Partial<{
+  profileId: number;
+  priceMin: number;
+  priceMax: number;
+  timeSlots: number[];
+  subjects: string[];
+  levels: Level[];
+  locations: Town[];
+  gender: Gender;
+  skip: number;
+  limit: number;
+}>;
 type GetTuteeListingsResponse = { listings: TuteeListing[]; count: number };
 type GetTuteeListingResponse = TuteeListing;
 type CreateTuteeListingRequest = Omit<

@@ -18,16 +18,23 @@ import { formatPriceRange, formatStringList } from '../app/utils';
 
 interface Props {
   listing: TutorListing;
+  hideProfile?: boolean;
 }
 
 const TutorListingCard: React.FC<Props> = (props: Props) => {
-  const { listing } = props;
+  const { listing, hideProfile } = props;
 
   return (
     <IonCard button routerLink={`/tutor/${listing.id}`}>
-      <IonCardHeader>
-        <ProfileItem profile={listing.tutor} />
-        <IonGrid className={styles.listingCardHeaderContainer}>
+      {!hideProfile && <ProfileItem profile={listing.tutor} />}
+      <IonCardHeader
+        className={
+          hideProfile
+            ? styles.listingCardHeaderContainerWithoutProfile
+            : styles.listingCardHeaderContainer
+        }
+      >
+        <IonGrid>
           <IonRow>
             <IonCol>
               <IonCardTitle
@@ -61,6 +68,10 @@ const TutorListingCard: React.FC<Props> = (props: Props) => {
       </IonCardContent>
     </IonCard>
   );
+};
+
+TutorListingCard.defaultProps = {
+  hideProfile: false,
 };
 
 export default TutorListingCard;

@@ -14,6 +14,7 @@ import {
   IonTitle,
   IonToolbar,
   useIonAlert,
+  useIonRouter,
   useIonViewWillEnter,
 } from '@ionic/react';
 import {
@@ -25,7 +26,7 @@ import {
   shareSocialOutline,
   trashOutline,
 } from 'ionicons/icons';
-import { useHistory, useRouteMatch } from 'react-router';
+import { useRouteMatch } from 'react-router';
 import {
   useDeleteTutorListingMutation,
   useGetTutorListingQuery,
@@ -57,7 +58,7 @@ const TutorListing: React.FC = () => {
     isLoading,
     refetch,
   } = useGetTutorListingQuery(listingId);
-  const history = useHistory();
+  const router = useIonRouter();
 
   const isOwnListing = userId === listing?.tutor.id;
   const [popoverState, setShowPopover] = useState({
@@ -76,7 +77,7 @@ const TutorListing: React.FC = () => {
           category: EventCategory.Tutor,
           action: TutorEventAction.Delete,
         });
-        history.push('/tutors');
+        router.push('/tutors', 'back');
         setShowPopover({ showPopover: false, event: undefined });
       }
     } catch (err) {
@@ -94,7 +95,7 @@ const TutorListing: React.FC = () => {
       <IonHeader>
         <IonToolbar>
           <IonButtons slot="secondary" collapse>
-            <IonButton routerLink="/tutors" disabled={isLoading}>
+            <IonButton disabled={isLoading} onClick={() => router.goBack()}>
               <IonIcon slot="icon-only" icon={arrowBackOutline} />
             </IonButton>
           </IonButtons>
@@ -119,7 +120,7 @@ const TutorListing: React.FC = () => {
       </IonHeader>
       {listing ? (
         <IonContent fullscreen>
-          <ProfileItem profile={listing.tutor} />
+          <ProfileItem profile={listing.tutor} enableLink />
           <SelectTimeSlotsItem
             value={arrayToSelectedTimeSlots(listing.timeSlots)}
             disabled

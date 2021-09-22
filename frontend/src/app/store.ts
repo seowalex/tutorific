@@ -21,6 +21,7 @@ import auth from '../reducers/auth';
 /* eslint-disable import/no-cycle */
 import tutorFilters from '../reducers/tutorFilters';
 import tuteeFilters from '../reducers/tuteeFilters';
+import profileListings from '../reducers/profileListings';
 /* eslint-enable import/no-cycle */
 
 const persistConfig = {
@@ -34,6 +35,7 @@ const rootReducer = combineReducers({
   auth,
   tutorFilters,
   tuteeFilters,
+  profileListings,
 });
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 
