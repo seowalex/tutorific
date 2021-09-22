@@ -1,4 +1,5 @@
 import Koa from 'koa';
+import HttpStatus from 'http-status-codes';
 import subscriptionService from '../services/subscription';
 
 const addSubscription = async (ctx: Koa.Context): Promise<void> => {
@@ -20,6 +21,8 @@ const deleteSubscription = async (ctx: Koa.Context): Promise<void> => {
   await subscriptionService.deleteSubscription(
     JSON.stringify(subscriptionJson)
   );
+  ctx.status = HttpStatus.OK;
+  ctx.body = {};
 };
 
 const getSubscriptions = async (ctx: Koa.Context): Promise<void> => {
