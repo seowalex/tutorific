@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import ReactGA from 'react-ga';
 import {
   IonBackButton,
   IonButton,
@@ -26,6 +27,7 @@ import OfflineCard from '../../components/OfflineCard';
 import EmptyPlaceholder from '../../components/EmptyPlaceholder';
 
 import styles from './Chat.module.scss';
+import { ChatEventAction, EventCategory } from '../../app/analytics';
 
 interface Params {
   id: string;
@@ -62,6 +64,10 @@ const Chat: React.FC = () => {
           senderId: currentUserId,
           ...data,
         }).unwrap();
+        ReactGA.event({
+          category: EventCategory.Chat,
+          action: ChatEventAction.Send,
+        });
       }
     } catch (error) {
       if (!window.navigator.onLine) {
