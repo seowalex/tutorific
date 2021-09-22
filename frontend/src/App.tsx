@@ -69,104 +69,95 @@ const App: React.FC = () => {
     <IonApp>
       <IonReactRouter>
         <IonRouterOutlet>
-          {!currentUserId ? (
-            <Route exact path="/login">
-              <Login />
-            </Route>
-          ) : (
-            <></>
-          )}
-          {!currentUserId ? (
-            <Route exact path="/register">
-              <Register />
-            </Route>
-          ) : (
-            <></>
-          )}
-          {!currentUserId ? (
-            <Route exact path="/profile">
-              <CreateProfile />
-            </Route>
-          ) : (
-            <></>
-          )}
-          {!currentUserId ? <Redirect exact path="/" to="/login" /> : <></>}
-          {!currentUserId ? (
-            <Redirect to="/login" />
-          ) : (
-            <Route>
-              <IonTabs>
-                <IonTabBar slot="bottom">
-                  <IonTabButton tab="tutors" href="/tutors">
-                    <IonIcon icon={school} />
-                    <IonLabel>Tutors</IonLabel>
-                  </IonTabButton>
-                  <IonTabButton tab="tutees" href="/tutees">
-                    <IonIcon icon={bulb} />
-                    <IonLabel>Tutees</IonLabel>
-                  </IonTabButton>
-                  <IonTabButton tab="chats" href="/chats">
-                    <IonIcon icon={chatbubbles} />
-                    <IonLabel>Chats</IonLabel>
-                  </IonTabButton>
-                  <IonTabButton
-                    tab="profile"
-                    href={`/profile/${currentUserId}`}
-                  >
-                    <IonIcon icon={person} />
-                    <IonLabel>Profile</IonLabel>
-                  </IonTabButton>
-                </IonTabBar>
+          <Route exact path="/login">
+            <Login />
+          </Route>
+          <Route exact path="/register">
+            <Register />
+          </Route>
+          <Route exact path="/profile">
+            <CreateProfile />
+          </Route>
+          <Route>
+            <IonTabs>
+              <IonTabBar slot="bottom">
+                <IonTabButton tab="tutors" href="/tutors">
+                  <IonIcon icon={school} />
+                  <IonLabel>Tutors</IonLabel>
+                </IonTabButton>
+                <IonTabButton tab="tutees" href="/tutees">
+                  <IonIcon icon={bulb} />
+                  <IonLabel>Tutees</IonLabel>
+                </IonTabButton>
+                <IonTabButton
+                  className={currentUserId ? '' : 'ion-hide'}
+                  tab="chats"
+                  href="/chats"
+                >
+                  <IonIcon icon={chatbubbles} />
+                  <IonLabel>Chats</IonLabel>
+                </IonTabButton>
+                <IonTabButton
+                  className={currentUserId ? '' : 'ion-hide'}
+                  tab="profile"
+                  href={`/profile/${currentUserId}`}
+                >
+                  <IonIcon icon={person} />
+                  <IonLabel>Profile</IonLabel>
+                </IonTabButton>
+              </IonTabBar>
 
-                <IonRouterOutlet>
-                  <Route exact path="/tutors">
-                    <Tutors />
-                  </Route>
-                  <Route exact path="/tutor/:id" component={TutorListing} />
-                  <Route exact path="/tutor/add">
-                    <AddTutorListing />
-                  </Route>
-                  <Route
-                    exact
-                    path="/tutor/:id/edit"
-                    component={EditTutorListing}
-                  />
-                  <Route exact path="/tutor/search">
-                    <FilterTutorListings />
-                  </Route>
-                  <Route exact path="/tutees">
-                    <Tutees />
-                  </Route>
-                  <Route exact path="/tutee/:id" component={TuteeListing} />
-                  <Route exact path="/tutee/add">
-                    <AddTuteeListing />
-                  </Route>
-                  <Route
-                    exact
-                    path="/tutee/:id/edit"
-                    component={EditTuteeListing}
-                  />
-                  <Route exact path="/tutee/search">
-                    <FilterTuteeListings />
-                  </Route>
-                  <Route exact path="/chats">
-                    <Chats />
-                  </Route>
-                  <Route exact path="/chat/:id">
-                    <Chat />
-                  </Route>
-                  <Route exact path="/profile/:id">
-                    <Profile />
-                  </Route>
-                  <Route exact path="/profile/:id/edit">
-                    <EditProfile />
-                  </Route>
-                  <Redirect exact path="/" to="/tutors" />
-                  <Redirect to="/tutors" />
-                </IonRouterOutlet>
-              </IonTabs>
-            </Route>
-          )}
+              <IonRouterOutlet>
+                <Route exact path="/tutors">
+                  <Tutors />
+                </Route>
+                <Route exact path="/tutors/search">
+                  <FilterTutorListings />
+                </Route>
+                <Route exact path="/tutors/add">
+                  <AddTutorListing />
+                </Route>
+                <Route exact path="/tutors/listing/:id">
+                  <TutorListing />
+                </Route>
+                <Route exact path="/tutors/listing/:id/edit">
+                  <EditTutorListing />
+                </Route>
+
+                <Route exact path="/tutees">
+                  <Tutees />
+                </Route>
+                <Route exact path="/tutees/search">
+                  <FilterTuteeListings />
+                </Route>
+                <Route exact path="/tutees/add">
+                  <AddTuteeListing />
+                </Route>
+                <Route exact path="/tutees/listing/:id">
+                  <TuteeListing />
+                </Route>
+                <Route exact path="/tutees/listing/:id/edit">
+                  <EditTuteeListing />
+                </Route>
+
+                <Route exact path="/chats">
+                  <Chats />
+                </Route>
+                <Route exact path="/chats/:id">
+                  <Chat />
+                </Route>
+
+                <Route exact path="/profile/:id">
+                  <Profile />
+                </Route>
+                <Route exact path="/profile/:id/edit">
+                  <EditProfile />
+                </Route>
+              </IonRouterOutlet>
+            </IonTabs>
+          </Route>
+
+          <Redirect exact path="/" to="/tutors" />
         </IonRouterOutlet>
       </IonReactRouter>
     </IonApp>

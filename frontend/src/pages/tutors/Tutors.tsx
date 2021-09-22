@@ -81,10 +81,10 @@ const Tutors: React.FC = () => {
         <IonToolbar>
           <IonTitle>Tutor Listings</IonTitle>
           <IonButtons slot="primary" collapse>
-            <IonButton routerLink="/tutor/add">
+            <IonButton routerLink="/tutors/add">
               <IonIcon slot="icon-only" icon={addOutline} />
             </IonButton>
-            <IonButton routerLink="/tutor/search">
+            <IonButton routerLink="/tutors/search">
               <IonIcon
                 slot="icon-only"
                 icon={areFiltersEmpty(filters) ? funnelOutline : funnel}

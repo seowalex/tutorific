@@ -53,7 +53,7 @@ const Register: React.FC = () => {
         dispatch(setCredentials(credentials));
 
         if (credentials.profileId) {
-          router.push('/');
+          router.push('/tutors');
         } else {
           router.push('/profile');
         }

@@ -31,7 +31,7 @@ const TuteeListingCard: React.FC<Props> = (props: Props) => {
     `${level}${gender === Gender.PNTS ? '' : `\n${gender} Student`}`;
 
   return (
-    <IonCard button routerLink={`/tutee/${listing.id}`}>
+    <IonCard button routerLink={`/tutees/listing/${listing.id}`}>
       <IonCardHeader>
         <ProfileItem profile={listing.tutee} />
         <IonGrid className={styles.listingCardHeaderContainer}>

@@ -43,7 +43,7 @@ const CreateProfile: React.FC = () => {
           dispatch(setToken(profile.token));
         }
 
-        router.push('/');
+        router.push('/tutors');
       } catch (error) {
         const { errors: errorMessages } = (error as FetchBaseQueryError)
           .data as ErrorResponse;
@@ -85,7 +85,7 @@ const CreateProfile: React.FC = () => {
         <IonToolbar>
           <IonTitle>Create Profile</IonTitle>
           <IonButtons slot="start">
-            <IonBackButton defaultHref="/login" />
+            <IonBackButton />
           </IonButtons>
         </IonToolbar>
       </IonHeader>

@@ -24,7 +24,7 @@ const TutorListingCard: React.FC<Props> = (props: Props) => {
   const { listing } = props;
 
   return (
-    <IonCard button routerLink={`/tutor/${listing.id}`}>
+    <IonCard button routerLink={`/tutors/listing/${listing.id}`}>
       <IonCardHeader>
         <ProfileItem profile={listing.tutor} />
         <IonGrid className={styles.listingCardHeaderContainer}>

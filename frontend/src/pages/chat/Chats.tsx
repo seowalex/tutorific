@@ -58,7 +58,7 @@ const Chats: React.FC = () => {
         {chats?.length ? (
           <IonList>
             {chats?.map((chat) => (
-              <IonItem routerLink={`/chat/${chat.id}`} key={chat.id}>
+              <IonItem routerLink={`/chats/${chat.id}`} key={chat.id}>
                 <Avatar
                   className={styles.avatar}
                   name={chat.otherProfile.name}

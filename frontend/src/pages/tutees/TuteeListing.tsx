@@ -146,7 +146,7 @@ const TuteeListing: React.FC = () => {
           <IonItem
             button
             detail={false}
-            routerLink={`/tutee/${listingId}/edit`}
+            routerLink={`/tutees/listing/${listingId}/edit`}
             onClick={() => {
               setShowPopover({ showPopover: false, event: undefined });
             }}

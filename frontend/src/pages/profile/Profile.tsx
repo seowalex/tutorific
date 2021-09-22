@@ -78,7 +78,7 @@ const Profile: React.FC = () => {
 
         dispatch(api.util.resetApiState());
         dispatch(unsetCredentials());
-        router.push('/', 'back');
+        router.push('/tutors', 'back');
       } catch (error) {
         const message = (
           (error as FetchBaseQueryError).data as ErrorResponse
@@ -126,7 +126,7 @@ const Profile: React.FC = () => {
                 <IonIcon slot="icon-only" icon={createOutline} />
               </IonButton>
             ) : (
-              <IonButton routerLink={`/chat/${id}`}>
+              <IonButton routerLink={`/chats/${id}`}>
                 <IonIcon slot="icon-only" icon={chatbubbleOutline} />
               </IonButton>
             )}
@@ -148,7 +148,7 @@ const Profile: React.FC = () => {
                   <IonIcon slot="icon-only" icon={createOutline} />
                 </IonButton>
               ) : (
-                <IonButton routerLink={`/chat/${id}`}>
+                <IonButton routerLink={`/chats/${id}`}>
                   <IonIcon slot="icon-only" icon={chatbubbleOutline} />
                 </IonButton>
               )}
