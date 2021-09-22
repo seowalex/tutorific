@@ -20,6 +20,7 @@ import {
 import { useRouteMatch } from 'react-router-dom';
 import type { FetchBaseQueryError } from '@reduxjs/toolkit/query/react';
 import {
+  arrowBackOutline,
   chatbubbleOutline,
   createOutline,
   female,
@@ -114,20 +115,29 @@ const Profile: React.FC = () => {
     <IonPage>
       <IonHeader>
         <IonToolbar>
+          {!isOwnProfile && (
+            <IonButtons slot="secondary" collapse>
+              <IonButton onClick={() => router.goBack()}>
+                <IonIcon slot="icon-only" icon={arrowBackOutline} />
+              </IonButton>
+            </IonButtons>
+          )}
           <IonTitle>Profile</IonTitle>
           <IonButtons slot="primary" collapse>
-            {user.profileId === parseInt(id, 10) ? (
-              <IonButton routerLink={`/profile/${id}/edit`}>
-                <IonIcon slot="icon-only" icon={createOutline} />
-              </IonButton>
+            {isOwnProfile ? (
+              <>
+                <IonButton routerLink={`/profile/${id}/edit`}>
+                  <IonIcon slot="icon-only" icon={createOutline} />
+                </IonButton>
+                <IonButton onClick={handleLogout}>
+                  <IonIcon slot="icon-only" icon={logOutOutline} />
+                </IonButton>
+              </>
             ) : (
               <IonButton routerLink={`/chat/${id}`} routerDirection="none">
                 <IonIcon slot="icon-only" icon={chatbubbleOutline} />
               </IonButton>
             )}
-            <IonButton onClick={handleLogout}>
-              <IonIcon slot="icon-only" icon={logOutOutline} />
-            </IonButton>
           </IonButtons>
         </IonToolbar>
       </IonHeader>
@@ -191,6 +201,7 @@ const Profile: React.FC = () => {
             filters={{ profileId, ...tutorFilters }}
             owner={isOwnProfile ? 'self' : 'other'}
             disableRefresh
+            hideProfiles
           />
         )}
 
@@ -199,6 +210,7 @@ const Profile: React.FC = () => {
             filters={{ profileId, ...tuteeFilters }}
             owner={isOwnProfile ? 'self' : 'other'}
             disableRefresh
+            hideProfiles
           />
         )}
       </IonContent>

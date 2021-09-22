@@ -6,22 +6,35 @@ import { Profile } from '../app/types';
 
 interface Props {
   profile: Profile;
+  enableLink?: boolean;
 }
 
 const ProfileItem: React.FC<Props> = (props: Props) => {
-  const { profile } = props;
+  const { profile, enableLink } = props;
 
   return (
-    <IonItem color="none" lines="full" className={styles.profileHeader}>
+    <IonItem
+      color="none"
+      lines="full"
+      className={styles.profileHeader}
+      button={enableLink}
+      mode="ios"
+      routerLink={enableLink ? `/profile/${profile.id}` : undefined}
+    >
       <IonAvatar slot="start">
         <img
-          src="https://gravatar.com/avatar/dba6bae8c566f9d4041fb9cd9ada7741?d=identicon&f=y"
-          alt=""
+          src={`https://ui-avatars.com/api/?name=${encodeURIComponent(
+            profile.name
+          )}&background=random`}
         />
       </IonAvatar>
       <IonLabel>{profile.name}</IonLabel>
     </IonItem>
   );
+};
+
+ProfileItem.defaultProps = {
+  enableLink: false,
 };
 
 export default ProfileItem;

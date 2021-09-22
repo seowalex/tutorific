@@ -24,11 +24,12 @@ interface Props {
   filters: GetTutorListingsQueryParams;
   owner: 'self' | 'other' | 'all';
   disableRefresh?: boolean;
+  hideProfiles?: boolean;
 }
 
 const TutorListings: React.FC<Props> = (props) => {
   const dispatch = useDispatch();
-  const { filters, owner, disableRefresh } = props;
+  const { filters, owner, disableRefresh, hideProfiles } = props;
   const { data, isFetching } = useGetTutorListingsQuery(filters);
   const [listings, setListings] = useState<TutorListing[]>([]);
   const [isAppending, setIsAppending] = useState<boolean>(false);
@@ -73,7 +74,7 @@ const TutorListings: React.FC<Props> = (props) => {
         </IonRefresher>
       )}
       {listings.map((listing) => (
-        <TutorListingCard listing={listing} />
+        <TutorListingCard listing={listing} hideProfile={hideProfiles} />
       ))}
       <IonInfiniteScroll
         threshold="100px"
@@ -90,6 +91,7 @@ const TutorListings: React.FC<Props> = (props) => {
 
 TutorListings.defaultProps = {
   disableRefresh: false,
+  hideProfiles: false,
 };
 
 export default TutorListings;

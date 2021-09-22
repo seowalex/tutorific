@@ -24,11 +24,12 @@ interface Props {
   filters: GetTuteeListingsQueryParams;
   owner: 'self' | 'other' | 'all';
   disableRefresh?: boolean;
+  hideProfiles?: boolean;
 }
 
 const TuteeListings: React.FC<Props> = (props) => {
   const dispatch = useDispatch();
-  const { filters, owner, disableRefresh } = props;
+  const { filters, owner, disableRefresh, hideProfiles } = props;
   const { data, isFetching } = useGetTuteeListingsQuery(filters);
   const [listings, setListings] = useState<TuteeListing[]>([]);
   const [isAppending, setIsAppending] = useState<boolean>(false);
@@ -73,7 +74,7 @@ const TuteeListings: React.FC<Props> = (props) => {
         </IonRefresher>
       )}
       {listings.map((listing) => (
-        <TuteeListingCard listing={listing} />
+        <TuteeListingCard listing={listing} hideProfile={hideProfiles} />
       ))}
       <IonInfiniteScroll
         threshold="100px"
@@ -90,6 +91,7 @@ const TuteeListings: React.FC<Props> = (props) => {
 
 TuteeListings.defaultProps = {
   disableRefresh: false,
+  hideProfiles: false,
 };
 
 export default TuteeListings;
