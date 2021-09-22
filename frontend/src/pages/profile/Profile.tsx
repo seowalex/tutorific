@@ -87,10 +87,14 @@ const Profile: React.FC = () => {
   const handleLogout = async () => {
     if (window.navigator.onLine) {
       try {
+        const registration = await window.navigator.serviceWorker.ready;
+        const subscription = await registration?.pushManager.getSubscription();
+
         if (user.id && user.refreshToken) {
           await logout({
             id: user.id,
             refreshToken: user.refreshToken,
+            subscriptionJson: subscription,
           }).unwrap();
 
           ReactGA.event({
@@ -99,6 +103,7 @@ const Profile: React.FC = () => {
           });
         }
 
+        subscription?.unsubscribe();
         dispatch(api.util.resetApiState());
         dispatch(unsetCredentials());
         dispatch(unsetTutorListingFilters());

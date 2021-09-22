@@ -9,11 +9,13 @@ import {
   IonTabBar,
   IonTabButton,
   IonTabs,
+  useIonToast,
 } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
 import { bulb, chatbubbles, logIn, person, school } from 'ionicons/icons';
 
 import { useAppSelector } from './app/hooks';
+import { useSubscribeMutation } from './api/auth';
 import { usePrefetch as useTutorPrefetch } from './api/tutor';
 import { usePrefetch as useTuteePrefetch } from './api/tutee';
 import { usePrefetch as useChatPrefetch } from './api/chat';
@@ -50,25 +52,46 @@ const GA_TRACKING_ID = 'UA-208131644-1';
 
 const App: React.FC = () => {
   const currentUserId = useAppSelector(selectCurrentUserId);
+  const [subscribe] = useSubscribeMutation();
   const prefetchTutorListings = useTutorPrefetch('getTutorListings');
   const prefetchTuteeListings = useTuteePrefetch('getTuteeListings');
   const prefetchChats = useChatPrefetch('getChats');
   const prefetchProfile = useProfilePrefetch('getProfile');
 
+  const [present] = useIonToast();
+
   useEffect(() => {
+    const setupPushApi = async () => {
+      const permission = await Notification.requestPermission();
+
+      if (permission === 'granted') {
+        const registration = await window.navigator.serviceWorker.ready;
+        const subscription = await registration?.pushManager.subscribe({
+          userVisibleOnly: true,
+          applicationServerKey: process.env.REACT_APP_VAPID_PUBLIC_KEY,
+        });
+
+        subscribe(subscription);
+      } else {
+        present({
+          header: 'Notification Permission Denied',
+          message:
+            'You will not be able to receive push notifications or automatically update your chats',
+          duration: 5000,
+        });
+      }
+    };
+
+    prefetchTutorListings({});
+    prefetchTuteeListings({});
+
     if (currentUserId) {
-      prefetchTutorListings({});
-      prefetchTuteeListings({});
       prefetchChats();
       prefetchProfile(currentUserId);
+      setupPushApi();
     }
-  }, [
-    prefetchTutorListings,
-    prefetchTuteeListings,
-    prefetchChats,
-    prefetchProfile,
-    currentUserId,
-  ]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentUserId]);
 
   useEffect(() => {
     ReactGA.initialize(GA_TRACKING_ID, {

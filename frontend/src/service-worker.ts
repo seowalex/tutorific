@@ -81,9 +81,9 @@ const backgroundSync = new NetworkOnly({
 
         const response = await fetch('/api/auth/refresh', {
           method: 'POST',
-          headers: new Headers({
-            'Content-Type': 'application/json',
-          }),
+          headers: {
+            'content-type': 'application/json',
+          },
           body: JSON.stringify({
             userId: auth.id,
             refreshToken: auth.refreshToken,
@@ -142,4 +142,20 @@ self.addEventListener('message', (event) => {
   if (event.data && event.data.type === 'SKIP_WAITING') {
     self.skipWaiting();
   }
+});
+
+self.addEventListener('push', async (event) => {
+  const data = event.data?.json();
+  const clients = await self.clients.matchAll();
+
+  self.registration.showNotification(data.title, data);
+
+  for (const client of clients) {
+    client.postMessage(data);
+  }
+});
+
+self.addEventListener('notificationclick', (event) => {
+  event.notification.close();
+  self.clients.openWindow(`/chats/${event.notification.data.chatId}`);
 });

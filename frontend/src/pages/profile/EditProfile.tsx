@@ -86,7 +86,7 @@ const EditProfile: React.FC = () => {
         present({
           header: 'No Internet Connection',
           message: 'Profile will be updated when you are online',
-          duration: 2000,
+          duration: 5000,
         });
         router.push(`/profile/${id}`, 'back');
       }

@@ -74,7 +74,7 @@ const Chat: React.FC = () => {
         present({
           header: 'No Internet Connection',
           message: 'Message will be sent when you are online',
-          duration: 2000,
+          duration: 5000,
         });
       }
     }
