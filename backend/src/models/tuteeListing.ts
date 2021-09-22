@@ -33,7 +33,7 @@ export default class TuteeListing {
   })
   priceMax: number;
 
-  @Column('text')
+  @Column('text', { nullable: true })
   description: string;
 
   @Column('int', { array: true })
