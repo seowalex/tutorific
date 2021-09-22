@@ -11,6 +11,7 @@ import {
   IonToolbar,
 } from '@ionic/react';
 import React from 'react';
+import ReactGA from 'react-ga';
 import { SubmitHandler } from 'react-hook-form';
 import { useHistory } from 'react-router';
 import { useDispatch } from 'react-redux';
@@ -22,6 +23,7 @@ import TuteeListingForm from '../../components/TuteeListingForm';
 import { selectedTimeSlotsToArray } from '../../app/utils';
 import { unsetTuteeListingFilters } from '../../reducers/tuteeFilters';
 import { TuteeListingFormData } from '../../app/types';
+import { EventCategory, TuteeEventAction } from '../../app/analytics';
 
 const AddTuteeListing: React.FC = () => {
   const dispatch = useDispatch();
@@ -49,6 +51,10 @@ const AddTuteeListing: React.FC = () => {
       const result = await createTuteeListing(listingData);
 
       if ('data' in result && result.data) {
+        ReactGA.event({
+          category: EventCategory.Tutee,
+          action: TuteeEventAction.Create,
+        });
         dispatch(unsetTuteeListingFilters());
         history.push('/tutees');
       }

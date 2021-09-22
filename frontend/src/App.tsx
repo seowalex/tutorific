@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import ReactGA from 'react-ga';
 import { Redirect, Route } from 'react-router-dom';
 import {
   IonApp,
@@ -18,6 +19,8 @@ import { usePrefetch as useTuteePrefetch } from './api/tutee';
 import { usePrefetch as useChatPrefetch } from './api/chat';
 import { usePrefetch as useProfilePrefetch } from './api/profile';
 import { selectCurrentUserId } from './reducers/auth';
+
+import withTracker from './withTracker';
 
 import Login from './pages/auth/Login';
 import Register from './pages/auth/Register';
@@ -45,6 +48,8 @@ import AuthenticatedComponent from './components/AuthenticatedRoute';
 
 import './styles/main.scss';
 
+const GA_TRACKING_ID = 'UA-208131644-1';
+
 const App: React.FC = () => {
   const currentUserId = useAppSelector(selectCurrentUserId);
   const prefetchTutorListings = useTutorPrefetch('getTutorListings');
@@ -66,6 +71,12 @@ const App: React.FC = () => {
     prefetchProfile,
     currentUserId,
   ]);
+
+  useEffect(() => {
+    ReactGA.initialize(GA_TRACKING_ID, {
+      debug: process.env.NODE_ENV !== 'production',
+    });
+  }, []);
 
   return (
     <IonApp>
@@ -118,65 +129,68 @@ const App: React.FC = () => {
               </IonTabBar>
 
               <IonRouterOutlet>
-                <Route exact path="/tutors">
-                  <Tutors />
-                </Route>
-                <Route exact path="/tutors/search">
-                  <FilterTutorListings />
-                </Route>
-                <Route exact path="/tutors/add">
-                  <AuthenticatedComponent>
-                    <AddTutorListing />
-                  </AuthenticatedComponent>
-                </Route>
-                <Route exact path="/tutors/listing/:id">
-                  <TutorListing />
-                </Route>
-                <Route exact path="/tutors/listing/:id/edit">
-                  <AuthenticatedComponent>
-                    <EditTutorListing />
-                  </AuthenticatedComponent>
-                </Route>
-
-                <Route exact path="/tutees">
-                  <Tutees />
-                </Route>
-                <Route exact path="/tutees/search">
-                  <FilterTuteeListings />
-                </Route>
-                <Route exact path="/tutees/add">
-                  <AuthenticatedComponent>
-                    <AddTuteeListing />
-                  </AuthenticatedComponent>
-                </Route>
-                <Route exact path="/tutees/listing/:id">
-                  <TuteeListing />
-                </Route>
-                <Route exact path="/tutees/listing/:id/edit">
-                  <AuthenticatedComponent>
-                    <EditTuteeListing />
-                  </AuthenticatedComponent>
-                </Route>
-
-                <Route exact path="/chats">
-                  <AuthenticatedComponent>
-                    <Chats />
-                  </AuthenticatedComponent>
-                </Route>
-                <Route exact path="/chats/:id">
-                  <AuthenticatedComponent>
-                    <Chat />
-                  </AuthenticatedComponent>
-                </Route>
-
-                <Route exact path="/profile/:id">
-                  <Profile />
-                </Route>
-                <Route exact path="/profile/:id/edit">
-                  <AuthenticatedComponent>
-                    <EditProfile />
-                  </AuthenticatedComponent>
-                </Route>
+                <Route exact path="/tutors" component={withTracker(Tutors)} />
+                <Route
+                  exact
+                  path="/tutors/search"
+                  component={withTracker(FilterTutorListings)}
+                />
+                <Route
+                  exact
+                  path="/tutors/add"
+                  component={withTracker(AddTutorListing, { checkAuth: true })}
+                />
+                <Route
+                  exact
+                  path="/tutors/listing/:id"
+                  component={withTracker(TutorListing)}
+                />
+                <Route
+                  exact
+                  path="/tutors/listing/:id/edit"
+                  component={withTracker(EditTutorListing, { checkAuth: true })}
+                />
+                <Route exact path="/tutees" component={withTracker(Tutees)} />
+                <Route
+                  exact
+                  path="/tutees/search"
+                  component={withTracker(FilterTuteeListings)}
+                />
+                <Route
+                  exact
+                  path="/tutees/add"
+                  component={withTracker(AddTuteeListing, { checkAuth: true })}
+                />
+                <Route
+                  exact
+                  path="/tutees/listing/:id"
+                  component={withTracker(TuteeListing)}
+                />
+                <Route
+                  exact
+                  path="/tutees/listing/:id/edit"
+                  component={withTracker(EditTuteeListing, { checkAuth: true })}
+                />
+                <Route
+                  exact
+                  path="/chats"
+                  component={withTracker(Chats, { checkAuth: true })}
+                />
+                <Route
+                  exact
+                  path="/chats/:id"
+                  component={withTracker(Chat, { checkAuth: true })}
+                />
+                <Route
+                  exact
+                  path="/profile/:id"
+                  component={withTracker(Profile)}
+                />
+                <Route
+                  exact
+                  path="/profile/:id/edit"
+                  component={withTracker(EditProfile, { checkAuth: true })}
+                />
               </IonRouterOutlet>
             </IonTabs>
           </Route>

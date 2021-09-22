@@ -1,4 +1,5 @@
 import React from 'react';
+import ReactGA from 'react-ga';
 import {
   IonBackButton,
   IonButton,
@@ -24,6 +25,7 @@ import { setCredentials } from '../../reducers/auth';
 import type { ErrorResponse } from '../../types/error';
 
 import styles from './Register.module.scss';
+import { EventCategory, UserEventAction } from '../../app/analytics';
 
 interface RegisterData {
   email: string;
@@ -49,6 +51,10 @@ const Register: React.FC = () => {
     if (window.navigator.onLine) {
       try {
         const credentials = await registerUser(data).unwrap();
+        ReactGA.event({
+          category: EventCategory.User,
+          action: UserEventAction.Create,
+        });
         dispatch(setCredentials(credentials));
 
         if (credentials.profileId) {

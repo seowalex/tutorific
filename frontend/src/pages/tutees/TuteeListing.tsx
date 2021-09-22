@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import ReactGA from 'react-ga';
 import {
   IonButton,
   IonButtons,
@@ -38,6 +39,7 @@ import {
   formatStringList,
 } from '../../app/utils';
 import ListingDetail from '../../components/ListingDetail';
+import { EventCategory, TuteeEventAction } from '../../app/analytics';
 
 interface Params {
   id: string;
@@ -69,6 +71,10 @@ const TuteeListing: React.FC = () => {
       const result = await deleteTuteeListing(listingId);
 
       if ('data' in result && result.data) {
+        ReactGA.event({
+          category: EventCategory.Tutee,
+          action: TuteeEventAction.Delete,
+        });
         history.push('/tutees');
         setShowPopover({ showPopover: false, event: undefined });
       }

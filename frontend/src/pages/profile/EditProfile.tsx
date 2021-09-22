@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import ReactGA from 'react-ga';
 import {
   IonBackButton,
   IonButtons,
@@ -21,6 +22,7 @@ import {
 import type { ErrorResponse } from '../../types/error';
 
 import ProfileForm, { ProfileData } from '../../components/ProfileForm';
+import { EventCategory, ProfileEventAction } from '../../app/analytics';
 
 interface Params {
   id: string;
@@ -49,6 +51,10 @@ const EditProfile: React.FC = () => {
   const onSubmit = async (data: ProfileData) => {
     try {
       await updateProfile({ id: parseInt(id, 10), ...data }).unwrap();
+      ReactGA.event({
+        category: EventCategory.Profile,
+        action: ProfileEventAction.Update,
+      });
       router.push(`/profile/${id}`, 'back');
     } catch (error) {
       if (window.navigator.onLine) {

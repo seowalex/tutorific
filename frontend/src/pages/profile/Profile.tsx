@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import ReactGA from 'react-ga';
 import {
   IonBackButton,
   IonButton,
@@ -42,6 +43,10 @@ import OfflineCard from '../../components/OfflineCard';
 import EmptyPlaceholder from '../../components/EmptyPlaceholder';
 import ChatRouterLink from '../../components/ChatRouterLink';
 
+import { unsetTutorListingFilters } from '../../reducers/tutorFilters';
+import { unsetTuteeListingFilters } from '../../reducers/tuteeFilters';
+import { EventCategory, UserEventAction } from '../../app/analytics';
+
 import styles from './Profile.module.scss';
 
 interface Params {
@@ -75,10 +80,17 @@ const Profile: React.FC = () => {
             id: user.id,
             refreshToken: user.refreshToken,
           }).unwrap();
+
+          ReactGA.event({
+            category: EventCategory.User,
+            action: UserEventAction.Logout,
+          });
         }
 
         dispatch(api.util.resetApiState());
         dispatch(unsetCredentials());
+        dispatch(unsetTutorListingFilters());
+        dispatch(unsetTuteeListingFilters());
         router.push('/tutors', 'back');
       } catch (error) {
         const message = (

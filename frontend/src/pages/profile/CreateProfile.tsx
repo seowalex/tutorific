@@ -1,4 +1,5 @@
 import React from 'react';
+import ReactGA from 'react-ga';
 import {
   IonBackButton,
   IonButtons,
@@ -19,6 +20,7 @@ import { setProfileId, setToken } from '../../reducers/auth';
 import type { ErrorResponse } from '../../types/error';
 
 import ProfileForm, { ProfileData } from '../../components/ProfileForm';
+import { EventCategory, ProfileEventAction } from '../../app/analytics';
 
 const CreateProfile: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -37,7 +39,10 @@ const CreateProfile: React.FC = () => {
     if (window.navigator.onLine) {
       try {
         const profile = await addProfile(data).unwrap();
-
+        ReactGA.event({
+          category: EventCategory.Profile,
+          action: ProfileEventAction.Create,
+        });
         if (profile.profileId && profile.token) {
           dispatch(setProfileId(profile.profileId));
           dispatch(setToken(profile.token));
