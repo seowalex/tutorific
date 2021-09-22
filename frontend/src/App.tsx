@@ -20,7 +20,7 @@ import { usePrefetch as useChatPrefetch } from './api/chat';
 import { usePrefetch as useProfilePrefetch } from './api/profile';
 import { selectCurrentUserId } from './reducers/auth';
 
-import withTracker from './withTracker';
+import RouteComponent from './RouteComponent';
 
 import Login from './pages/auth/Login';
 import Register from './pages/auth/Register';
@@ -43,8 +43,6 @@ import Chat from './pages/chat/Chat';
 import Profile from './pages/profile/Profile';
 import CreateProfile from './pages/profile/CreateProfile';
 import EditProfile from './pages/profile/EditProfile';
-
-import AuthenticatedComponent from './components/AuthenticatedRoute';
 
 import './styles/main.scss';
 
@@ -129,68 +127,70 @@ const App: React.FC = () => {
               </IonTabBar>
 
               <IonRouterOutlet>
-                <Route exact path="/tutors" component={withTracker(Tutors)} />
-                <Route
-                  exact
-                  path="/tutors/search"
-                  component={withTracker(FilterTutorListings)}
-                />
-                <Route
-                  exact
-                  path="/tutors/add"
-                  component={withTracker(AddTutorListing, { checkAuth: true })}
-                />
-                <Route
-                  exact
-                  path="/tutors/listing/:id"
-                  component={withTracker(TutorListing)}
-                />
-                <Route
-                  exact
-                  path="/tutors/listing/:id/edit"
-                  component={withTracker(EditTutorListing, { checkAuth: true })}
-                />
-                <Route exact path="/tutees" component={withTracker(Tutees)} />
-                <Route
-                  exact
-                  path="/tutees/search"
-                  component={withTracker(FilterTuteeListings)}
-                />
-                <Route
-                  exact
-                  path="/tutees/add"
-                  component={withTracker(AddTuteeListing, { checkAuth: true })}
-                />
-                <Route
-                  exact
-                  path="/tutees/listing/:id"
-                  component={withTracker(TuteeListing)}
-                />
-                <Route
-                  exact
-                  path="/tutees/listing/:id/edit"
-                  component={withTracker(EditTuteeListing, { checkAuth: true })}
-                />
-                <Route
-                  exact
-                  path="/chats"
-                  component={withTracker(Chats, { checkAuth: true })}
-                />
-                <Route
-                  exact
-                  path="/chats/:id"
-                  component={withTracker(Chat, { checkAuth: true })}
-                />
-                <Route
-                  exact
-                  path="/profile/:id"
-                  component={withTracker(Profile)}
-                />
-                <Route
-                  exact
-                  path="/profile/:id/edit"
-                  component={withTracker(EditProfile, { checkAuth: true })}
-                />
+                <Route exact path="/tutors">
+                  <RouteComponent path="/tutors" track>
+                    <Tutors />
+                  </RouteComponent>
+                </Route>
+                <Route exact path="/tutors/search">
+                  <RouteComponent path="/tutors/search" track>
+                    <FilterTutorListings />
+                  </RouteComponent>
+                </Route>
+                <Route exact path="/tutors/add">
+                  <RouteComponent path="/tutors/add" authenticate track>
+                    <AddTutorListing />
+                  </RouteComponent>
+                </Route>
+                <Route exact path="/tutors/listing/:id">
+                  <TutorListing />
+                </Route>
+                <Route exact path="/tutors/listing/:id/edit">
+                  <RouteComponent authenticate>
+                    <EditTutorListing />
+                  </RouteComponent>
+                </Route>
+                <Route exact path="/tutees">
+                  <RouteComponent path="/tutees" track>
+                    <Tutees />
+                  </RouteComponent>
+                </Route>
+                <Route exact path="/tutees/search">
+                  <RouteComponent path="/tutees/search" track>
+                    <FilterTuteeListings />
+                  </RouteComponent>
+                </Route>
+                <Route exact path="/tutees/add">
+                  <RouteComponent path="/tutees/add" authenticate track>
+                    <AddTuteeListing />
+                  </RouteComponent>
+                </Route>
+                <Route exact path="/tutees/listing/:id">
+                  <TuteeListing />
+                </Route>
+                <Route exact path="/tutees/listing/:id/edit">
+                  <RouteComponent authenticate>
+                    <EditTuteeListing />
+                  </RouteComponent>
+                </Route>
+                <Route exact path="/chats">
+                  <RouteComponent path="/chats" authenticate track>
+                    <Chats />
+                  </RouteComponent>
+                </Route>
+                <Route exact path="/chats/:id">
+                  <RouteComponent authenticate>
+                    <Chat />
+                  </RouteComponent>
+                </Route>
+                <Route exact path="/profile/:id">
+                  <Profile />
+                </Route>
+                <Route exact path="/profile/:id/edit">
+                  <RouteComponent authenticate>
+                    <EditProfile />
+                  </RouteComponent>
+                </Route>
               </IonRouterOutlet>
             </IonTabs>
           </Route>
