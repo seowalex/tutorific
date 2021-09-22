@@ -146,18 +146,25 @@ const Profile: React.FC = () => {
           <IonToolbar>
             <IonTitle size="large">Profile</IonTitle>
             <IonButtons slot="primary">
-              {user.profileId === parseInt(id, 10) ? (
-                <IonButton routerLink={`/profile/${id}/edit`}>
-                  <IonIcon slot="icon-only" icon={createOutline} />
-                </IonButton>
+              {isOwnProfile ? (
+                <>
+                  <IonButton routerLink={`/profile/${id}/edit`}>
+                    <IonIcon slot="icon-only" icon={createOutline} />
+                  </IonButton>
+                  <IonButton onClick={handleLogout}>
+                    <IonIcon slot="icon-only" icon={logOutOutline} />
+                  </IonButton>
+                </>
               ) : (
-                <IonButton routerLink={`/chat/${id}`} routerDirection="none">
-                  <IonIcon slot="icon-only" icon={chatbubbleOutline} />
-                </IonButton>
+                <>
+                  <IonButton onClick={() => router.goBack()}>
+                    <IonIcon slot="icon-only" icon={arrowBackOutline} />
+                  </IonButton>
+                  <IonButton routerLink={`/chat/${id}`} routerDirection="none">
+                    <IonIcon slot="icon-only" icon={chatbubbleOutline} />
+                  </IonButton>
+                </>
               )}
-              <IonButton onClick={handleLogout}>
-                <IonIcon slot="icon-only" icon={logOutOutline} />
-              </IonButton>
             </IonButtons>
           </IonToolbar>
         </IonHeader>
