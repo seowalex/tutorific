@@ -20,7 +20,7 @@ const app = new Koa();
 const vapidKeys = webpush.generateVAPIDKeys();
 
 webpush.setVapidDetails(
-  'mailto:superwenjie@yahoo.com',
+  'mailto:example@gmail.com',
   vapidKeys.publicKey,
   vapidKeys.privateKey
 );

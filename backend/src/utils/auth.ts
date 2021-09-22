@@ -3,7 +3,7 @@ import jwt from 'jsonwebtoken';
 import crypto from 'crypto';
 
 const SALT_ROUNDS = 10;
-const JWT_EXPIRY = 3000;
+const JWT_EXPIRY = 300;
 const CRYPTO_BYTES = 40;
 const OPEN_ROUTES = {
   GET: ['/tutor', '/tutee', '/profile'],
