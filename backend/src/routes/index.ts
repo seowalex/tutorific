@@ -5,6 +5,7 @@ import tutorListingRouter from './tutorListing';
 import tuteeListingRouter from './tuteeListing';
 import conversationRouter from './conversation';
 import messageRouter from './message';
+import subscriptionRouter from './subscription';
 
 const router = new Router({ prefix: '/api' });
 
@@ -14,5 +15,6 @@ router.use('/tutee', tuteeListingRouter.routes());
 router.use('/conversation', conversationRouter.routes());
 router.use('/message', messageRouter.routes());
 router.use('/auth', authRouter.routes());
+router.use('/subscription', subscriptionRouter.routes());
 
 export default router;

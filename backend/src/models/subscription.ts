@@ -12,3 +12,5 @@ export default class Subscription {
   @Column('text')
   subscriptionJson: string;
 }
+
+export type CreateSubscription = Omit<Subscription, 'id'>;
