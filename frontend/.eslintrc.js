@@ -55,5 +55,6 @@ module.exports = {
       },
     ],
     'react/prop-types': 'off',
+    'react/require-default-props': 'off',
   },
 };

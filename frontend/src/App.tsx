@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import ReactGA from 'react-ga';
-import { Redirect, Route } from 'react-router-dom';
+import { Redirect } from 'react-router-dom';
 import {
   IonApp,
   IonIcon,
@@ -22,7 +22,7 @@ import { usePrefetch as useChatPrefetch } from './api/chat';
 import { usePrefetch as useProfilePrefetch } from './api/profile';
 import { selectCurrentUserId } from './reducers/auth';
 
-import RouteComponent from './RouteComponent';
+import Route from './components/Route';
 
 import Login from './pages/auth/Login';
 import Register from './pages/auth/Register';
@@ -49,16 +49,24 @@ import EditProfile from './pages/profile/EditProfile';
 import './styles/main.scss';
 
 const GA_TRACKING_ID = 'UA-208131644-1';
+const VAPID_PUBLIC_KEY =
+  'BKxmcujZqk4f63bDygXTLcH6g9RG0g5Sws1sZaNhOmEVQE8St4HXO9M-6AQHqgF22dG6-imDXJx0maGDw7xAIio';
 
 const App: React.FC = () => {
-  const currentUserId = useAppSelector(selectCurrentUserId);
   const [subscribe] = useSubscribeMutation();
   const prefetchTutorListings = useTutorPrefetch('getTutorListings');
   const prefetchTuteeListings = useTuteePrefetch('getTuteeListings');
   const prefetchChats = useChatPrefetch('getChats');
   const prefetchProfile = useProfilePrefetch('getProfile');
+  const currentUserId = useAppSelector(selectCurrentUserId);
 
   const [present] = useIonToast();
+
+  useEffect(() => {
+    ReactGA.initialize(GA_TRACKING_ID, {
+      debug: process.env.NODE_ENV !== 'production',
+    });
+  }, []);
 
   useEffect(() => {
     const setupPushApi = async () => {
@@ -68,7 +76,7 @@ const App: React.FC = () => {
         const registration = await window.navigator.serviceWorker.ready;
         const subscription = await registration?.pushManager.subscribe({
           userVisibleOnly: true,
-          applicationServerKey: process.env.REACT_APP_VAPID_PUBLIC_KEY,
+          applicationServerKey: VAPID_PUBLIC_KEY,
         });
 
         subscribe(subscription);
@@ -93,20 +101,14 @@ const App: React.FC = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentUserId]);
 
-  useEffect(() => {
-    ReactGA.initialize(GA_TRACKING_ID, {
-      debug: process.env.NODE_ENV !== 'production',
-    });
-  }, []);
-
   return (
     <IonApp>
       <IonReactRouter>
         <IonRouterOutlet>
-          <Route exact path="/login">
+          <Route exact path="/login" track>
             <Login />
           </Route>
-          <Route exact path="/register">
+          <Route exact path="/register" track>
             <Register />
           </Route>
           <Route exact path="/profile">
@@ -150,69 +152,47 @@ const App: React.FC = () => {
               </IonTabBar>
 
               <IonRouterOutlet>
-                <Route exact path="/tutors">
-                  <RouteComponent path="/tutors" track>
-                    <Tutors />
-                  </RouteComponent>
+                <Route exact path="/tutors" track>
+                  <Tutors />
                 </Route>
-                <Route exact path="/tutors/search">
-                  <RouteComponent path="/tutors/search" track>
-                    <FilterTutorListings />
-                  </RouteComponent>
+                <Route exact path="/tutors/search" track>
+                  <FilterTutorListings />
                 </Route>
-                <Route exact path="/tutors/add">
-                  <RouteComponent path="/tutors/add" authenticate track>
-                    <AddTutorListing />
-                  </RouteComponent>
+                <Route exact path="/tutors/add" authenticate track>
+                  <AddTutorListing />
                 </Route>
-                <Route exact path="/tutors/listing/:id">
+                <Route exact path="/tutors/listing/:id" track>
                   <TutorListing />
                 </Route>
-                <Route exact path="/tutors/listing/:id/edit">
-                  <RouteComponent authenticate>
-                    <EditTutorListing />
-                  </RouteComponent>
+                <Route exact path="/tutors/listing/:id/edit" authenticate track>
+                  <EditTutorListing />
                 </Route>
-                <Route exact path="/tutees">
-                  <RouteComponent path="/tutees" track>
-                    <Tutees />
-                  </RouteComponent>
+                <Route exact path="/tutees" track>
+                  <Tutees />
                 </Route>
-                <Route exact path="/tutees/search">
-                  <RouteComponent path="/tutees/search" track>
-                    <FilterTuteeListings />
-                  </RouteComponent>
+                <Route exact path="/tutees/search" track>
+                  <FilterTuteeListings />
                 </Route>
-                <Route exact path="/tutees/add">
-                  <RouteComponent path="/tutees/add" authenticate track>
-                    <AddTuteeListing />
-                  </RouteComponent>
+                <Route exact path="/tutees/add" authenticate track>
+                  <AddTuteeListing />
                 </Route>
-                <Route exact path="/tutees/listing/:id">
+                <Route exact path="/tutees/listing/:id" track>
                   <TuteeListing />
                 </Route>
-                <Route exact path="/tutees/listing/:id/edit">
-                  <RouteComponent authenticate>
-                    <EditTuteeListing />
-                  </RouteComponent>
+                <Route exact path="/tutees/listing/:id/edit" authenticate track>
+                  <EditTuteeListing />
                 </Route>
-                <Route exact path="/chats">
-                  <RouteComponent path="/chats" authenticate track>
-                    <Chats />
-                  </RouteComponent>
+                <Route exact path="/chats" authenticate track>
+                  <Chats />
                 </Route>
-                <Route exact path="/chats/:id">
-                  <RouteComponent authenticate>
-                    <Chat />
-                  </RouteComponent>
+                <Route exact path="/chats/:id" authenticate track>
+                  <Chat />
                 </Route>
-                <Route exact path="/profile/:id">
+                <Route exact path="/profile/:id" track>
                   <Profile />
                 </Route>
-                <Route exact path="/profile/:id/edit">
-                  <RouteComponent authenticate>
-                    <EditProfile />
-                  </RouteComponent>
+                <Route exact path="/profile/:id/edit" authenticate track>
+                  <EditProfile />
                 </Route>
               </IonRouterOutlet>
             </IonTabs>
