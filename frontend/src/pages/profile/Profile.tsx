@@ -38,7 +38,6 @@ import { Gender } from '../../types/profile';
 import type { ErrorResponse } from '../../types/error';
 
 import OfflineCard from '../../components/OfflineCard';
-import EmptyPlaceholder from '../../components/EmptyPlaceholder';
 import ChatRouterLink from '../../components/ChatRouterLink';
 
 import { unsetTutorListingFilters } from '../../reducers/tutorFilters';
@@ -177,7 +176,7 @@ const Profile: React.FC = () => {
                   <IonIcon slot="icon-only" icon={arrowBackOutline} />
                 </IonButton>
                 <ChatRouterLink profileId={profileId}>
-                  <IonButton routerLink={`/chats/${id}`}>
+                  <IonButton>
                     <IonIcon slot="icon-only" icon={chatbubbleOutline} />
                   </IonButton>
                 </ChatRouterLink>
@@ -206,7 +205,7 @@ const Profile: React.FC = () => {
                     <IonIcon slot="icon-only" icon={arrowBackOutline} />
                   </IonButton>
                   <ChatRouterLink profileId={profileId}>
-                    <IonButton routerLink={`/chats/${id}`}>
+                    <IonButton>
                       <IonIcon slot="icon-only" icon={chatbubbleOutline} />
                     </IonButton>
                   </ChatRouterLink>
