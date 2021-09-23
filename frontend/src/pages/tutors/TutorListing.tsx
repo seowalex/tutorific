@@ -45,7 +45,7 @@ import {
   formatStringList,
 } from '../../app/utils';
 import ListingDetail from '../../components/ListingDetail';
-import { EventCategory, TutorEventAction } from '../../app/analytics';
+import { EventCategory, TutorEventAction } from '../../types/analytics';
 import SelectTimeSlotsItem from '../../components/timeSlots/SelectTimeSlotsItem';
 import ChatRouterLink from '../../components/ChatRouterLink';
 
@@ -119,12 +119,14 @@ const TutorListing: React.FC = () => {
               >
                 <IonIcon slot="icon-only" icon={ellipsisVertical} />
               </IonButton>
-            ) : (listing &&
-              <ChatRouterLink profileId={listing.tutor.id}>
-                <IonButton>
-                  <IonIcon slot="icon-only" icon={chatbubbleOutline} />
-                </IonButton>
-              </ChatRouterLink>
+            ) : (
+              listing && (
+                <ChatRouterLink profileId={listing.tutor.id}>
+                  <IonButton>
+                    <IonIcon slot="icon-only" icon={chatbubbleOutline} />
+                  </IonButton>
+                </ChatRouterLink>
+              )
             )}
           </IonButtons>
         </IonToolbar>

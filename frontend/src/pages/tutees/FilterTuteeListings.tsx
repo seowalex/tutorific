@@ -23,7 +23,7 @@ import {
   setTuteeListingFilters,
 } from '../../reducers/tuteeFilters';
 import { selectedTimeSlotsToArray } from '../../app/utils';
-import { EventCategory, TuteeEventAction } from '../../app/analytics';
+import { EventCategory, TuteeEventAction } from '../../types/analytics';
 
 const FilterTuteeListings: React.FC = () => {
   const dispatch = useAppDispatch();

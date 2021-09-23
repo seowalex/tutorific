@@ -45,7 +45,7 @@ import {
   formatStringList,
 } from '../../app/utils';
 import ListingDetail from '../../components/ListingDetail';
-import { EventCategory, TuteeEventAction } from '../../app/analytics';
+import { EventCategory, TuteeEventAction } from '../../types/analytics';
 import SelectTimeSlotsItem from '../../components/timeSlots/SelectTimeSlotsItem';
 import ChatRouterLink from '../../components/ChatRouterLink';
 

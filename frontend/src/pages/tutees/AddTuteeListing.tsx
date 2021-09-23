@@ -23,7 +23,7 @@ import TuteeListingForm from '../../components/TuteeListingForm';
 import { selectedTimeSlotsToArray } from '../../app/utils';
 import { unsetTuteeListingFilters } from '../../reducers/tuteeFilters';
 import { TuteeListingFormData } from '../../types/listing';
-import { EventCategory, TuteeEventAction } from '../../app/analytics';
+import { EventCategory, TuteeEventAction } from '../../types/analytics';
 
 const AddTuteeListing: React.FC = () => {
   const dispatch = useDispatch();

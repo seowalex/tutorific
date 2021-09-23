@@ -25,7 +25,7 @@ import { setCredentials } from '../../reducers/auth';
 import type { ErrorResponse } from '../../types/error';
 
 import styles from './Register.module.scss';
-import { EventCategory, UserEventAction } from '../../app/analytics';
+import { EventCategory, UserEventAction } from '../../types/analytics';
 
 interface RegisterData {
   email: string;

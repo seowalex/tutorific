@@ -41,9 +41,4 @@ const Route: React.FC<Props> = ({
   return <ReactRoute {...props} />;
 };
 
-// Route.defaultProps = {
-//   authenticate: false,
-//   track: false,
-// };
-
 export default Route;

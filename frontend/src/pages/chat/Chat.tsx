@@ -27,7 +27,7 @@ import OfflineCard from '../../components/OfflineCard';
 import EmptyPlaceholder from '../../components/EmptyPlaceholder';
 
 import styles from './Chat.module.scss';
-import { ChatEventAction, EventCategory } from '../../app/analytics';
+import { ChatEventAction, EventCategory } from '../../types/analytics';
 
 interface Params {
   id: string;

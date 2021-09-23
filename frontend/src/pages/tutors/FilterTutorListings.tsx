@@ -23,7 +23,7 @@ import {
   setTutorListingFilters,
 } from '../../reducers/tutorFilters';
 import { selectedTimeSlotsToArray } from '../../app/utils';
-import { EventCategory, TutorEventAction } from '../../app/analytics';
+import { EventCategory, TutorEventAction } from '../../types/analytics';
 
 const FilterTutorListings: React.FC = () => {
   const dispatch = useAppDispatch();

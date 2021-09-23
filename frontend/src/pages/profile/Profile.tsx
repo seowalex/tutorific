@@ -46,7 +46,7 @@ import ChatRouterLink from '../../components/ChatRouterLink';
 
 import { unsetTutorListingFilters } from '../../reducers/tutorFilters';
 import { unsetTuteeListingFilters } from '../../reducers/tuteeFilters';
-import { EventCategory, UserEventAction } from '../../app/analytics';
+import { EventCategory, UserEventAction } from '../../types/analytics';
 import {
   selectProfileTuteePagination,
   selectProfileTutorPagination,

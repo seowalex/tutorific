@@ -20,7 +20,7 @@ import { setProfileId, setToken } from '../../reducers/auth';
 import type { ErrorResponse } from '../../types/error';
 
 import ProfileForm, { ProfileData } from '../../components/ProfileForm';
-import { EventCategory, ProfileEventAction } from '../../app/analytics';
+import { EventCategory, ProfileEventAction } from '../../types/analytics';
 
 const CreateProfile: React.FC = () => {
   const dispatch = useAppDispatch();

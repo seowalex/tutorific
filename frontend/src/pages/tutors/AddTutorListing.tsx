@@ -23,7 +23,7 @@ import TutorListingForm from '../../components/TutorListingForm';
 import { Level, TutorListingFormData } from '../../types/listing';
 import { unsetTutorListingFilters } from '../../reducers/tutorFilters';
 import { selectedTimeSlotsToArray } from '../../app/utils';
-import { EventCategory, TutorEventAction } from '../../app/analytics';
+import { EventCategory, TutorEventAction } from '../../types/analytics';
 
 const AddTutorListing: React.FC = () => {
   const dispatch = useDispatch();

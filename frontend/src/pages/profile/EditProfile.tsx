@@ -22,7 +22,7 @@ import {
 import type { ErrorResponse } from '../../types/error';
 
 import ProfileForm, { ProfileData } from '../../components/ProfileForm';
-import { EventCategory, ProfileEventAction } from '../../app/analytics';
+import { EventCategory, ProfileEventAction } from '../../types/analytics';
 
 interface Params {
   id: string;
