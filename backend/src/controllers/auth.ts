@@ -84,7 +84,7 @@ const register = async (ctx: Koa.Context): Promise<void> => {
 const logout = async (ctx: Koa.Context): Promise<void> => {
   const { userId, refreshToken, subscriptionJson } = ctx.request.body;
   const isSuccess = await revokeRefreshToken(userId, refreshToken);
-  if (subscriptionJson !== undefined) {
+  if (subscriptionJson !== null) {
     await subscriptionService.deleteSubscription(
       JSON.stringify(subscriptionJson)
     );
