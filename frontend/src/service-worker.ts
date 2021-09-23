@@ -52,6 +52,12 @@ imageCache({
     '/assets/icon/icon.png',
     '/assets/icon/maskable.png',
     '/assets/welcome.png',
+    '/assets/splashscreens/iphone5_splash.png',
+    '/assets/splashscreens/iphone6_splash.png',
+    '/assets/splashscreens/iphoneplus_splash.png',
+    '/assets/splashscreens/iphonex_splash.png',
+    '/assets/splashscreens/iphonexr_splash.png',
+    '/assets/splashscreens/iphonexsmax_splash.png',
   ],
 });
 
