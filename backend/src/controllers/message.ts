@@ -36,7 +36,7 @@ const createMessage = async (ctx: Koa.Context): Promise<void> => {
       : conversation.secondProfile.id;
 
   const senderName =
-    conversation.firstProfile.id !== profileId
+    conversation.firstProfile.id === profileId
       ? conversation.firstProfile.name
       : conversation.secondProfile.name;
 
@@ -48,12 +48,16 @@ const createMessage = async (ctx: Koa.Context): Promise<void> => {
     tag: conversation.id,
   };
 
-  subscriptions.forEach((pushSubscription) =>
-    webpush.sendNotification(
-      JSON.parse(pushSubscription.subscriptionJson),
-      JSON.stringify(payload)
-    )
-  );
+  subscriptions.forEach(async (pushSubscription) => {
+    try {
+      await webpush.sendNotification(
+        JSON.parse(pushSubscription.subscriptionJson),
+        JSON.stringify(payload)
+      );
+    } catch {
+      subscriptionService.deleteSubscription(JSON.stringify(pushSubscription));
+    }
+  });
 
   ctx.body = {
     data: newMessage,
