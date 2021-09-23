@@ -17,12 +17,10 @@ import authUtil from './utils/auth';
 
 const app = new Koa();
 
-const vapidKeys = webpush.generateVAPIDKeys();
-
 webpush.setVapidDetails(
-  'mailto:example@gmail.com',
-  vapidKeys.publicKey,
-  vapidKeys.privateKey
+  'mailto:cs3216-staff@googlegroups.com',
+  process.env.VAPID_PUBLIC_KEY,
+  process.env.VAPID_PRIVATE_KEY
 );
 
 export default webpush;

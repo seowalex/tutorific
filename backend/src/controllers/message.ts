@@ -51,7 +51,10 @@ const createMessage = async (ctx: Koa.Context): Promise<void> => {
   };
 
   subscriptions.forEach((pushSubscription) =>
-    webpush.sendNotification(pushSubscription, payload)
+    webpush.sendNotification(
+      JSON.parse(pushSubscription.subscriptionJson),
+      JSON.stringify(payload)
+    )
   );
 
   ctx.body = {

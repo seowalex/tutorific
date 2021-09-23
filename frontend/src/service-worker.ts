@@ -148,7 +148,10 @@ self.addEventListener('push', async (event) => {
   const data = event.data?.json();
   const clients = await self.clients.matchAll();
 
-  self.registration.showNotification(data.title, data);
+  self.registration.showNotification(data.title, {
+    ...data,
+    tag: data.data.chatId,
+  });
 
   for (const client of clients) {
     client.postMessage(data);
