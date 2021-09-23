@@ -2,6 +2,11 @@
   font-weight: bold;
 }
 
+.timeSlotsItem {
+  // this prevents item from scrolling to top on rerender
+  min-height: 22rem;
+}
+
 .timeSlotSlideContainer {
   padding: 2rem 0rem 1rem;
   display: flex;
