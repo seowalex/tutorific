@@ -87,8 +87,12 @@ const Profile: React.FC = () => {
   const handleLogout = async () => {
     if (window.navigator.onLine) {
       try {
-        const registration = await window.navigator.serviceWorker.ready;
-        const subscription = await registration?.pushManager.getSubscription();
+        let subscription = null;
+
+        if (window.navigator.serviceWorker.controller?.state === 'activated') {
+          const registration = await window.navigator.serviceWorker.ready;
+          subscription = await registration?.pushManager.getSubscription();
+        }
 
         if (user.id && user.refreshToken) {
           await logout({
