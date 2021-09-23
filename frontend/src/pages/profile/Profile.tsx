@@ -92,6 +92,8 @@ const Profile: React.FC = () => {
   );
 
   const handleLogout = async () => {
+    setPopoverState({ showPopover: false, event: undefined });
+
     if (window.navigator.onLine) {
       try {
         let subscription = null;
