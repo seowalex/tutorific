@@ -5,7 +5,6 @@ import { PersistGate } from 'redux-persist/integration/react';
 import { IonSpinner } from '@ionic/react';
 
 import * as serviceWorkerRegistration from './serviceWorkerRegistration';
-import reportWebVitals from './reportWebVitals';
 import { persistor, store } from './app/store';
 
 import App from './App';
@@ -22,5 +21,3 @@ ReactDOM.render(
 );
 
 serviceWorkerRegistration.register();
-
-reportWebVitals();
