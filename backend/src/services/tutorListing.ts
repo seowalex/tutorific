@@ -63,6 +63,9 @@ const getTutorListings = async (
     cache: true,
     skip: queries.skip ?? 0,
     take: queries.limit ?? 10,
+    order: {
+      createdAt: 'DESC',
+    },
   });
 };
 const getTutorListing = async (id: number): Promise<TutorListing | undefined> =>
