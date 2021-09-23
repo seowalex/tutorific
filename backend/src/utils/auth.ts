@@ -21,10 +21,9 @@ const comparePassword = async (
 
 const generateJwtToken = async (
   userId: number,
-  email: string,
   profileId: number | null
 ): Promise<string> =>
-  jwt.sign({ userId, email, profileId }, process.env.JWT_SECRET ?? 'secret', {
+  jwt.sign({ userId, profileId }, process.env.JWT_SECRET ?? 'secret', {
     expiresIn: JWT_EXPIRY,
   });
 

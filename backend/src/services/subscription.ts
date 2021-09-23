@@ -24,8 +24,20 @@ const getSubscriptions = async (profileId: number): Promise<Subscription[]> =>
     },
   });
 
+const getExisitingSubscription = async (
+  profileId: number,
+  targetSubscription: string
+): Promise<Subscription | undefined> =>
+  getRepository(Subscription).findOne({
+    where: {
+      profile: profileId,
+      subscriptionJson: targetSubscription,
+    },
+  });
+
 export default {
   createSubscription,
   deleteSubscription,
   getSubscriptions,
+  getExisitingSubscription,
 };

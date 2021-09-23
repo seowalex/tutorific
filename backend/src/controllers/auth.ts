@@ -10,7 +10,6 @@ import subscriptionService from '../services/subscription';
 const onAuthSuccess = async (ctx: Koa.Context, user: User): Promise<void> => {
   const jwtToken = await authUtil.generateJwtToken(
     user.id,
-    user.email,
     user.profile ? user.profile.id : null
   );
   const refreshToken = authUtil.generateRefreshToken();
@@ -110,7 +109,6 @@ const refreshJwt = async (ctx: Koa.Context): Promise<void> => {
 
   const jwtToken = await authUtil.generateJwtToken(
     fetchedUser.id,
-    fetchedUser.email,
     fetchedUser.profile ? fetchedUser.profile.id : null
   );
 

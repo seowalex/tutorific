@@ -6,7 +6,7 @@ export default class Subscription {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToOne(() => Profile, { nullable: false, eager: true })
+  @ManyToOne(() => Profile, { nullable: false })
   profile: Profile;
 
   @Column('text')
