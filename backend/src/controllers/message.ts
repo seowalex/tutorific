@@ -45,9 +45,7 @@ const createMessage = async (ctx: Koa.Context): Promise<void> => {
   const payload = {
     title: senderName,
     body: message.content,
-    data: {
-      chatId: conversation.id,
-    },
+    tag: conversation.id,
   };
 
   subscriptions.forEach((pushSubscription) =>
