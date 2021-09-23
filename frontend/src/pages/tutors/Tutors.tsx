@@ -10,17 +10,19 @@ import {
   IonToolbar,
 } from '@ionic/react';
 import { addOutline, funnel, funnelOutline } from 'ionicons/icons';
+
+import { useAppSelector } from '../../app/hooks';
 import {
   selectTutorFilters,
   TutorFiltersState,
 } from '../../reducers/tutorFilters';
-import { useAppSelector } from '../../app/hooks';
+
 import TutorListings from '../../components/TutorListings';
 
 const Tutors: React.FC = () => {
   const filters = useAppSelector(selectTutorFilters);
 
-  const areFiltersEmpty = (filtersState: TutorFiltersState): boolean =>
+  const areFiltersEmpty = (filtersState: TutorFiltersState) =>
     filtersState.priceMin == null &&
     filtersState.priceMax == null &&
     (filtersState.subjects == null || filtersState.subjects.length === 0) &&
@@ -47,6 +49,22 @@ const Tutors: React.FC = () => {
         </IonToolbar>
       </IonHeader>
       <IonContent fullscreen>
+        <IonHeader collapse="condense">
+          <IonToolbar>
+            <IonTitle size="large">Tutor Listings</IonTitle>
+            <IonButtons slot="primary">
+              <IonButton routerLink="/tutors/add">
+                <IonIcon slot="icon-only" icon={addOutline} />
+              </IonButton>
+              <IonButton routerLink="/tutors/search">
+                <IonIcon
+                  slot="icon-only"
+                  icon={areFiltersEmpty(filters) ? funnelOutline : funnel}
+                />
+              </IonButton>
+            </IonButtons>
+          </IonToolbar>
+        </IonHeader>
         <TutorListings filters={filters} owner="all" />
       </IonContent>
     </IonPage>

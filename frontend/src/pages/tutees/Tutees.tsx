@@ -10,17 +10,19 @@ import {
   IonToolbar,
 } from '@ionic/react';
 import { addOutline, funnel, funnelOutline } from 'ionicons/icons';
+
+import { useAppSelector } from '../../app/hooks';
 import {
   selectTuteeFilters,
   TuteeFiltersState,
 } from '../../reducers/tuteeFilters';
-import { useAppSelector } from '../../app/hooks';
+
 import TuteeListings from '../../components/TuteeListings';
 
 const Tutees: React.FC = () => {
   const filters = useAppSelector(selectTuteeFilters);
 
-  const areFiltersEmpty = (filtersState: TuteeFiltersState): boolean =>
+  const areFiltersEmpty = (filtersState: TuteeFiltersState) =>
     filtersState.priceMin == null &&
     filtersState.priceMax == null &&
     (filtersState.subjects == null || filtersState.subjects.length === 0) &&
@@ -48,6 +50,22 @@ const Tutees: React.FC = () => {
         </IonToolbar>
       </IonHeader>
       <IonContent fullscreen>
+        <IonHeader collapse="condense">
+          <IonToolbar>
+            <IonTitle size="large">Tutee Listings</IonTitle>
+            <IonButtons slot="primary">
+              <IonButton routerLink="/tutees/add">
+                <IonIcon slot="icon-only" icon={addOutline} />
+              </IonButton>
+              <IonButton routerLink="/tutees/search">
+                <IonIcon
+                  slot="icon-only"
+                  icon={areFiltersEmpty(filters) ? funnelOutline : funnel}
+                />
+              </IonButton>
+            </IonButtons>
+          </IonToolbar>
+        </IonHeader>
         <TuteeListings filters={filters} owner="all" />
       </IonContent>
     </IonPage>

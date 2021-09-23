@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import ReactGA from 'react-ga';
 import {
   IonActionSheet,
+  IonBackButton,
   IonButton,
   IonButtons,
   IonContent,
@@ -12,14 +13,12 @@ import {
   IonList,
   IonPage,
   IonPopover,
-  IonTitle,
   IonToolbar,
   useIonAlert,
   useIonRouter,
   useIonViewWillEnter,
 } from '@ionic/react';
 import {
-  arrowBackOutline,
   chatbubbleOutline,
   closeOutline,
   createOutline,
@@ -59,11 +58,7 @@ const TuteeListing: React.FC = () => {
   } = useRouteMatch<Params>();
   const listingId = parseInt(id, 10);
   const userId = useAppSelector(selectCurrentUserId);
-  const {
-    data: listing,
-    isLoading,
-    refetch,
-  } = useGetTuteeListingQuery(listingId);
+  const { data: listing, refetch } = useGetTuteeListingQuery(listingId);
   const router = useIonRouter();
 
   const isOwnListing = userId === listing?.tutee.id;
@@ -103,12 +98,9 @@ const TuteeListing: React.FC = () => {
     <IonPage>
       <IonHeader>
         <IonToolbar>
-          <IonButtons slot="secondary" collapse>
-            <IonButton disabled={isLoading} onClick={() => router.goBack()}>
-              <IonIcon slot="icon-only" icon={arrowBackOutline} />
-            </IonButton>
+          <IonButtons slot="start">
+            <IonBackButton defaultHref="/tutees" />
           </IonButtons>
-          <IonTitle>{JSON.stringify(listingId)}</IonTitle>
           <IonButtons slot="primary" collapse>
             {isOwnListing ? (
               <IonButton
