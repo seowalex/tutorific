@@ -1,7 +1,6 @@
 import React from 'react';
 import {
   IonCard,
-  IonCardContent,
   IonCardHeader,
   IonCardSubtitle,
   IonCardTitle,
@@ -63,9 +62,6 @@ const TutorListingCard: React.FC<Props> = (props: Props) => {
         </IonGrid>
       </IonCardHeader>
       <WeekDaysItem timeSlots={listing.timeSlots} />
-      <IonCardContent className={styles.listingCardDescription}>
-        {listing.description}
-      </IonCardContent>
     </IonCard>
   );
 };

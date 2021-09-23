@@ -1,7 +1,6 @@
 import React from 'react';
 import {
   IonCard,
-  IonCardContent,
   IonCardHeader,
   IonCardSubtitle,
   IonCardTitle,
@@ -74,9 +73,6 @@ const TuteeListingCard: React.FC<Props> = (props: Props) => {
         <IonIcon icon={locationOutline} slot="start" />
         <IonLabel className={styles.itemLabel}>{listing.location}</IonLabel>
       </IonItem>
-      <IonCardContent className={styles.listingCardDescription}>
-        {listing.description}
-      </IonCardContent>
     </IonCard>
   );
 };
