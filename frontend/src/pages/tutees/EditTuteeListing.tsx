@@ -9,6 +9,7 @@ import {
   IonRow,
   IonTitle,
   IonToolbar,
+  useIonToast,
 } from '@ionic/react';
 import React from 'react';
 import ReactGA from 'react-ga';
@@ -43,11 +44,10 @@ const EditTuteeListing: React.FC = () => {
   const [updateTuteeListing] = useUpdateTuteeListingMutation();
   const dispatch = useDispatch();
   const history = useHistory();
+  const [present] = useIonToast();
 
   const onSubmit: SubmitHandler<TuteeListingFormData> = async (data) => {
     if (userId == null) {
-      // eslint-disable-next-line no-console
-      console.log('User is not logged in');
       return;
     }
 
@@ -62,19 +62,23 @@ const EditTuteeListing: React.FC = () => {
         subjects: details.subjects as string[],
         timeSlots: selectedTimeSlotsToArray(details.timeSlots),
       };
-      const result = await updateTuteeListing(listingData);
+      const result = await updateTuteeListing(listingData).unwrap();
 
-      if ('data' in result && result.data) {
-        ReactGA.event({
-          category: EventCategory.Tutee,
-          action: TuteeEventAction.Update,
+      ReactGA.event({
+        category: EventCategory.Tutee,
+        action: TuteeEventAction.Update,
+      });
+      dispatch(resetTuteeListingPagination());
+      history.push(`/tutees/listing/${id}`);
+    } catch {
+      if (!window.navigator.onLine) {
+        present({
+          header: 'No Internet Connection',
+          message: 'Listing will be updated when you are online',
+          duration: 5000,
         });
-        dispatch(resetTuteeListingPagination());
         history.push(`/tutees/listing/${id}`);
       }
-    } catch (err) {
-      // eslint-disable-next-line no-console
-      console.log(err);
     }
   };
 

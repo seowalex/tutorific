@@ -36,7 +36,16 @@ const extendedApi = api.injectEndpoints({
       }),
       transformResponse: (response: { data: GetTuteeListingsResponse }) =>
         response.data,
-      providesTags: ['TuteeListing'],
+      providesTags: (result) =>
+        result
+          ? [
+              ...result.listings.map(({ id }) => ({
+                type: 'TuteeListing' as const,
+                id,
+              })),
+              { type: 'TuteeListing', id: 'LIST' },
+            ]
+          : [{ type: 'TuteeListing', id: 'LIST' }],
     }),
     getTuteeListing: builder.query<GetTuteeListingResponse, number>({
       query: (id) => ({
@@ -52,7 +61,8 @@ const extendedApi = api.injectEndpoints({
         method: 'POST',
         body: listing,
       }),
-      invalidatesTags: ['TuteeListing'],
+      invalidatesTags: (result) =>
+        result ? [{ type: 'TuteeListing', id: 'LIST' }] : [],
     }),
     updateTuteeListing: builder.mutation<
       void,
@@ -63,16 +73,16 @@ const extendedApi = api.injectEndpoints({
         method: 'PUT',
         body: update,
       }),
-      invalidatesTags: (result, error, arg) => [
-        { type: 'TuteeListing', id: arg.id },
-      ],
+      invalidatesTags: (result, error, arg) =>
+        result ? [{ type: 'TuteeListing', id: arg.id }] : [],
     }),
     deleteTuteeListing: builder.mutation<void, number>({
       query: (id) => ({
         url: `tutee/${id}`,
         method: 'DELETE',
       }),
-      invalidatesTags: ['TuteeListing'],
+      invalidatesTags: (result, error, id) =>
+        result ? [{ type: 'TuteeListing', id }] : [],
     }),
   }),
 });

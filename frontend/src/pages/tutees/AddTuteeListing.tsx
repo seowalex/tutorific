@@ -9,6 +9,7 @@ import {
   IonRow,
   IonTitle,
   IonToolbar,
+  useIonToast,
 } from '@ionic/react';
 import React from 'react';
 import ReactGA from 'react-ga';
@@ -30,6 +31,7 @@ const AddTuteeListing: React.FC = () => {
   const userId = useAppSelector(selectCurrentUserId);
   const [createTuteeListing] = useCreateTuteeListingMutation();
   const history = useHistory();
+  const [present] = useIonToast();
 
   const onSubmit: SubmitHandler<TuteeListingFormData> = async (data) => {
     if (userId == null) {
@@ -48,19 +50,23 @@ const AddTuteeListing: React.FC = () => {
         subjects: details.subjects as string[],
         timeSlots: selectedTimeSlotsToArray(details.timeSlots),
       };
-      const result = await createTuteeListing(listingData);
+      await createTuteeListing(listingData).unwrap();
 
-      if ('data' in result && result.data) {
-        ReactGA.event({
-          category: EventCategory.Tutee,
-          action: TuteeEventAction.Create,
+      ReactGA.event({
+        category: EventCategory.Tutee,
+        action: TuteeEventAction.Create,
+      });
+      dispatch(unsetTuteeListingFilters());
+      history.push('/tutees');
+    } catch {
+      if (!window.navigator.onLine) {
+        present({
+          header: 'No Internet Connection',
+          message: 'Listing will be added when you are online',
+          duration: 5000,
         });
-        dispatch(unsetTuteeListingFilters());
         history.push('/tutees');
       }
-    } catch (err) {
-      // eslint-disable-next-line no-console
-      console.log(err);
     }
   };
 

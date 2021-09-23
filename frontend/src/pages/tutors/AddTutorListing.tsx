@@ -9,6 +9,7 @@ import {
   IonRow,
   IonTitle,
   IonToolbar,
+  useIonToast,
 } from '@ionic/react';
 import React from 'react';
 import ReactGA from 'react-ga';
@@ -30,6 +31,7 @@ const AddTutorListing: React.FC = () => {
   const userId = useAppSelector(selectCurrentUserId);
   const [createTutorListing] = useCreateTutorListingMutation();
   const history = useHistory();
+  const [present] = useIonToast();
 
   const onSubmit: SubmitHandler<TutorListingFormData> = async (data) => {
     if (userId == null) {
@@ -49,19 +51,23 @@ const AddTutorListing: React.FC = () => {
         levels: details.levels as Level[],
         timeSlots: selectedTimeSlotsToArray(details.timeSlots),
       };
-      const result = await createTutorListing(listingData);
+      await createTutorListing(listingData).unwrap();
 
-      if ('data' in result && result.data) {
-        ReactGA.event({
-          category: EventCategory.Tutor,
-          action: TutorEventAction.Create,
+      ReactGA.event({
+        category: EventCategory.Tutor,
+        action: TutorEventAction.Create,
+      });
+      dispatch(unsetTutorListingFilters());
+      history.push('/tutors');
+    } catch {
+      if (!window.navigator.onLine) {
+        present({
+          header: 'No Internet Connection',
+          message: 'Listing will be added when you are online',
+          duration: 5000,
         });
-        dispatch(unsetTutorListingFilters());
         history.push('/tutors');
       }
-    } catch (err) {
-      // eslint-disable-next-line no-console
-      console.log(err);
     }
   };
 

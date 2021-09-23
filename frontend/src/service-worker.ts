@@ -185,6 +185,13 @@ registerRoute(
   'PUT'
 );
 
+registerRoute(
+  ({ url }) =>
+    url.origin === self.location.origin && apiRegexp.test(url.pathname),
+  backgroundSync,
+  'DELETE'
+);
+
 // This allows the web app to trigger skipWaiting via
 // registration.waiting.postMessage({type: 'SKIP_WAITING'})
 self.addEventListener('message', (event) => {

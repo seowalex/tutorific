@@ -36,7 +36,16 @@ const extendedApi = api.injectEndpoints({
       }),
       transformResponse: (response: { data: GetTutorListingsResponse }) =>
         response.data,
-      providesTags: ['TutorListing'],
+      providesTags: (result) =>
+        result
+          ? [
+              ...result.listings.map(({ id }) => ({
+                type: 'TutorListing' as const,
+                id,
+              })),
+              { type: 'TutorListing', id: 'LIST' },
+            ]
+          : [{ type: 'TutorListing', id: 'LIST' }],
     }),
     getTutorListing: builder.query<GetTutorListingResponse, number>({
       query: (id) => ({
@@ -52,7 +61,8 @@ const extendedApi = api.injectEndpoints({
         method: 'POST',
         body: listing,
       }),
-      invalidatesTags: ['TutorListing'],
+      invalidatesTags: (result) =>
+        result ? [{ type: 'TutorListing', id: 'LIST' }] : [],
     }),
     updateTutorListing: builder.mutation<
       void,
@@ -63,16 +73,16 @@ const extendedApi = api.injectEndpoints({
         method: 'PUT',
         body: update,
       }),
-      invalidatesTags: (result, error, arg) => [
-        { type: 'TutorListing', id: arg.id },
-      ],
+      invalidatesTags: (result, error, arg) =>
+        result ? [{ type: 'TutorListing', id: arg.id }] : [],
     }),
     deleteTutorListing: builder.mutation<void, number>({
       query: (id) => ({
         url: `tutor/${id}`,
         method: 'DELETE',
       }),
-      invalidatesTags: ['TutorListing'],
+      invalidatesTags: (result, error, id) =>
+        result ? [{ type: 'TutorListing', id }] : [],
     }),
   }),
 });

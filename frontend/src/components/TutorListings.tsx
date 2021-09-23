@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { RefresherEventDetail } from '@ionic/core';
 
@@ -7,6 +7,7 @@ import {
   IonInfiniteScrollContent,
   IonRefresher,
   IonRefresherContent,
+  useIonToast,
 } from '@ionic/react';
 import TutorListingCard from './TutorListingCard';
 import {
@@ -35,8 +36,9 @@ const TutorListings: React.FC<Props> = (props) => {
   const [isAppending, setIsAppending] = useState<boolean>(false);
   const [disableInfiniteScroll, setDisableInfiniteScroll] =
     useState<boolean>(false);
+  const [present] = useIonToast();
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (isAppending) {
       setListings([...listings, ...(data?.listings ?? [])]);
       setDisableInfiniteScroll(data ? data.listings.length < 10 : false);
@@ -51,6 +53,14 @@ const TutorListings: React.FC<Props> = (props) => {
   const fetchNext = ($event: CustomEvent<void>) => {
     setIsAppending(true);
     dispatch(incrementTutorListingPagination());
+
+    if (!window.navigator.onLine) {
+      present({
+        message: 'No internet connection',
+        color: 'danger',
+        duration: 2000,
+      });
+    }
 
     setTimeout(() => {
       ($event.target as HTMLIonInfiniteScrollElement).complete();

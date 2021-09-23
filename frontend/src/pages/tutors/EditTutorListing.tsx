@@ -9,6 +9,7 @@ import {
   IonRow,
   IonTitle,
   IonToolbar,
+  useIonToast,
 } from '@ionic/react';
 import React from 'react';
 import ReactGA from 'react-ga';
@@ -42,11 +43,10 @@ const EditTutorListing: React.FC = () => {
   const [updateTutorListing] = useUpdateTutorListingMutation();
   const dispatch = useDispatch();
   const history = useHistory();
+  const [present] = useIonToast();
 
   const onSubmit: SubmitHandler<TutorListingFormData> = async (data) => {
     if (userId == null) {
-      // eslint-disable-next-line no-console
-      console.log('User is not logged in');
       return;
     }
 
@@ -62,19 +62,23 @@ const EditTutorListing: React.FC = () => {
         levels: details.levels as Level[],
         timeSlots: selectedTimeSlotsToArray(details.timeSlots),
       };
-      const result = await updateTutorListing(listingData);
+      await updateTutorListing(listingData).unwrap();
 
-      if ('data' in result && result.data) {
-        ReactGA.event({
-          category: EventCategory.Tutor,
-          action: TutorEventAction.Update,
+      ReactGA.event({
+        category: EventCategory.Tutor,
+        action: TutorEventAction.Update,
+      });
+      dispatch(resetTutorListingPagination());
+      history.push(`/tutors/listing/${id}`);
+    } catch {
+      if (!window.navigator.onLine) {
+        present({
+          header: 'No Internet Connection',
+          message: 'Listing will be updated when you are online',
+          duration: 5000,
         });
-        dispatch(resetTutorListingPagination());
         history.push(`/tutors/listing/${id}`);
       }
-    } catch (err) {
-      // eslint-disable-next-line no-console
-      console.log(err);
     }
   };
 

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import ReactGA from 'react-ga';
 import {
   IonActionSheet,
@@ -16,6 +16,7 @@ import {
   IonToolbar,
   useIonAlert,
   useIonRouter,
+  useIonToast,
   useIonViewWillEnter,
 } from '@ionic/react';
 import {
@@ -69,24 +70,35 @@ const TuteeListing: React.FC = () => {
   const [showShareSheet, setShowShareSheet] = useState<boolean>(false);
   const [presentDeleteAlert] = useIonAlert();
   const [deleteTuteeListing] = useDeleteTuteeListingMutation();
+  const [present] = useIonToast();
 
   const listingUrl = `${baseUrl}/tutees/listing/${listingId}`;
 
+  useEffect(
+    () => window.navigator.serviceWorker.addEventListener('message', refetch),
+    [refetch]
+  );
+
   const handleDeleteListing = async () => {
     try {
-      const result = await deleteTuteeListing(listingId);
+      await deleteTuteeListing(listingId).unwrap();
 
-      if ('data' in result && result.data) {
-        ReactGA.event({
-          category: EventCategory.Tutee,
-          action: TuteeEventAction.Delete,
+      ReactGA.event({
+        category: EventCategory.Tutee,
+        action: TuteeEventAction.Delete,
+      });
+      router.push('/tutees', 'back');
+      setShowPopover({ showPopover: false, event: undefined });
+    } catch {
+      if (!window.navigator.onLine) {
+        present({
+          header: 'No Internet Connection',
+          message: 'Listing will be deleted when you are online',
+          duration: 5000,
         });
         router.push('/tutees', 'back');
         setShowPopover({ showPopover: false, event: undefined });
       }
-    } catch (err) {
-      // eslint-disable-next-line no-console
-      console.log(err);
     }
   };
 
@@ -191,8 +203,8 @@ const TuteeListing: React.FC = () => {
               })
             }
           >
-            <IonIcon icon={trashOutline} slot="end" />
-            <IonLabel>Delete Listing</IonLabel>
+            <IonIcon color="danger" icon={trashOutline} slot="end" />
+            <IonLabel color="danger">Delete Listing</IonLabel>
           </IonItem>
         </IonList>
       </IonPopover>

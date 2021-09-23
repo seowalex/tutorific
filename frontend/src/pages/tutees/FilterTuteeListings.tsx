@@ -11,6 +11,7 @@ import {
   IonRow,
   IonTitle,
   IonToolbar,
+  useIonToast,
 } from '@ionic/react';
 import { SubmitHandler } from 'react-hook-form';
 import { useHistory } from 'react-router';
@@ -29,20 +30,29 @@ const FilterTuteeListings: React.FC = () => {
   const dispatch = useAppDispatch();
   const history = useHistory();
   const currentFilters = useAppSelector(selectTuteeFilters);
+  const [present] = useIonToast();
 
   const onSubmit: SubmitHandler<FilterTuteeListingFormData> = (data) => {
-    const filters = {
-      ...data,
-      timeSlots: selectedTimeSlotsToArray(data.timeSlots),
-      skip: 0,
-      limit: 10,
-    };
-    dispatch(setTuteeListingFilters(filters));
-    ReactGA.event({
-      category: EventCategory.Tutee,
-      action: TuteeEventAction.Filter,
-    });
-    history.push('/tutees');
+    if (window.navigator.onLine) {
+      const filters = {
+        ...data,
+        timeSlots: selectedTimeSlotsToArray(data.timeSlots),
+        skip: 0,
+        limit: 10,
+      };
+      dispatch(setTuteeListingFilters(filters));
+      ReactGA.event({
+        category: EventCategory.Tutee,
+        action: TuteeEventAction.Filter,
+      });
+      history.push('/tutees');
+    } else {
+      present({
+        message: 'No internet connection',
+        color: 'danger',
+        duration: 2000,
+      });
+    }
   };
 
   return (
