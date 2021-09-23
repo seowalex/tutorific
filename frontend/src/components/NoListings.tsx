@@ -1,10 +1,10 @@
 import React from 'react';
 
-import { IonIcon } from '@ionic/react';
 import { closeCircle } from 'ionicons/icons';
 import { ListingType } from '../app/types';
 
 import styles from './NoListings.module.scss';
+import EmptyPlaceholder from './EmptyPlaceholder';
 
 interface Props {
   listingType: ListingType;
@@ -28,9 +28,11 @@ const NoListings: React.FC<Props> = (props) => {
   };
 
   return (
-    <div className={styles.noListingsMessage}>
-      <IonIcon className={styles.noListingsIcon} icon={closeCircle} />
-      <p className="ion-no-margin">{getMessage()}</p>
+    <div className={styles.noListingsContainer}>
+      <EmptyPlaceholder
+        icon={closeCircle}
+        text={getMessage()}
+      />
     </div>
   );
 };
