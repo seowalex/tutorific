@@ -13,6 +13,8 @@ const numberToWeekDay: Record<number, WeekDay> = {
   6: WeekDay.Sun,
 };
 
+export const baseUrl = 'https://tutorific.herokuapp.com';
+
 // #region APIs
 
 export const constructQueryString = (params: Record<string, any>): string => {
