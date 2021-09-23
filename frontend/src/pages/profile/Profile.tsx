@@ -149,13 +149,6 @@ const Profile: React.FC = () => {
     <IonPage>
       <IonHeader>
         <IonToolbar>
-          {!isOwnProfile && (
-            <IonButtons slot="secondary" collapse>
-              <IonButton onClick={() => router.goBack()}>
-                <IonIcon slot="icon-only" icon={arrowBackOutline} />
-              </IonButton>
-            </IonButtons>
-          )}
           <IonTitle>Profile</IonTitle>
           <IonButtons slot="start">
             <IonBackButton />
@@ -171,16 +164,11 @@ const Profile: React.FC = () => {
                 </IonButton>
               </>
             ) : (
-              <>
-                <IonButton onClick={() => router.goBack()}>
-                  <IonIcon slot="icon-only" icon={arrowBackOutline} />
+              <ChatRouterLink profileId={profileId}>
+                <IonButton>
+                  <IonIcon slot="icon-only" icon={chatbubbleOutline} />
                 </IonButton>
-                <ChatRouterLink profileId={profileId}>
-                  <IonButton>
-                    <IonIcon slot="icon-only" icon={chatbubbleOutline} />
-                  </IonButton>
-                </ChatRouterLink>
-              </>
+              </ChatRouterLink>
             )}
           </IonButtons>
         </IonToolbar>
@@ -200,16 +188,11 @@ const Profile: React.FC = () => {
                   </IonButton>
                 </>
               ) : (
-                <>
-                  <IonButton onClick={() => router.goBack()}>
-                    <IonIcon slot="icon-only" icon={arrowBackOutline} />
+                <ChatRouterLink profileId={profileId}>
+                  <IonButton>
+                    <IonIcon slot="icon-only" icon={chatbubbleOutline} />
                   </IonButton>
-                  <ChatRouterLink profileId={profileId}>
-                    <IonButton>
-                      <IonIcon slot="icon-only" icon={chatbubbleOutline} />
-                    </IonButton>
-                  </ChatRouterLink>
-                </>
+                </ChatRouterLink>
               )}
             </IonButtons>
           </IonToolbar>
