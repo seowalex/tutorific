@@ -79,7 +79,11 @@ const Profile: React.FC = () => {
   const [present] = useIonToast();
 
   useEffect(
-    () => window.navigator.serviceWorker.addEventListener('message', refetch),
+    () =>
+      window.navigator.serviceWorker.addEventListener('message', (message) => {
+        console.log(message);
+        refetch();
+      }),
     [refetch]
   );
 
@@ -106,6 +110,7 @@ const Profile: React.FC = () => {
           });
         }
 
+        caches.delete('api');
         subscription?.unsubscribe();
         dispatch(api.util.resetApiState());
         dispatch(unsetCredentials());

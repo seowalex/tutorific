@@ -9,7 +9,11 @@ import { googleFontsCache, imageCache } from 'workbox-recipes';
 import { registerRoute } from 'workbox-routing';
 import { NetworkFirst, NetworkOnly } from 'workbox-strategies';
 
+import { MessageType } from './types/serviceWorker';
+
 declare const self: ServiceWorkerGlobalScope;
+
+storage.setDriver(storage.INDEXEDDB);
 
 clientsClaim();
 
@@ -70,6 +74,42 @@ registerRoute(
   })
 );
 
+const parseRequest = (request: Request) => {
+  const { pathname } = new URL(request.url);
+  const id =
+    parseInt(pathname.substring(pathname.lastIndexOf('/') + 1), 10) || null;
+
+  if (/^\/api\/tutor/.test(pathname)) {
+    return {
+      id,
+      type: MessageType.TutorListing,
+    };
+  }
+
+  if (/^\/api\/tutee/.test(pathname)) {
+    return {
+      id,
+      type: MessageType.TuteeListing,
+    };
+  }
+
+  if (/^\/api\/(?:conversation|message)/.test(pathname)) {
+    return {
+      id,
+      type: MessageType.Chat,
+    };
+  }
+
+  if (/^\/api\/profile/.test(pathname)) {
+    return {
+      id,
+      type: MessageType.Profile,
+    };
+  }
+
+  return null;
+};
+
 // Custom logic to get a new auth token before replaying requests
 const backgroundSync = new NetworkOnly({
   plugins: [
@@ -90,6 +130,7 @@ const backgroundSync = new NetworkOnly({
           }),
         });
         const data = await response.json();
+        const clients = await self.clients.matchAll();
 
         let entry;
 
@@ -100,6 +141,14 @@ const backgroundSync = new NetworkOnly({
             request.headers.set('Authorization', `Bearer ${data.jwtToken}`);
 
             await fetch(request);
+
+            const message = parseRequest(request);
+
+            if (message) {
+              for (const client of clients) {
+                client.postMessage(message);
+              }
+            }
           } catch (error) {
             await queue.unshiftRequest(entry);
 
@@ -109,12 +158,6 @@ const backgroundSync = new NetworkOnly({
           }
         }
         /* eslint-enable no-await-in-loop, no-cond-assign */
-
-        const clients = await self.clients.matchAll();
-
-        for (const client of clients) {
-          client.postMessage({});
-        }
       },
     }),
   ],
@@ -148,10 +191,17 @@ self.addEventListener('push', async (event) => {
   const data = event.data?.json();
   const clients = await self.clients.matchAll();
 
-  self.registration.showNotification(data.title, data);
+  self.registration.showNotification(data.title, {
+    ...data,
+    badge: '/assets/icon/favicon.png',
+    icon: '/assets/icon/icon.png',
+  });
 
   for (const client of clients) {
-    client.postMessage(data);
+    client.postMessage({
+      id: data.tag,
+      type: MessageType.Chat,
+    });
   }
 });
 

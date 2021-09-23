@@ -4,8 +4,8 @@ import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
 import { IonSpinner } from '@ionic/react';
 
-import * as serviceWorkerRegistration from './serviceWorkerRegistration';
 import { persistor, store } from './app/store';
+import * as serviceWorkerRegistration from './serviceWorkerRegistration';
 
 import App from './App';
 
