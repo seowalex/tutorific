@@ -3,6 +3,7 @@ import HttpStatus from 'http-status-codes';
 import authUtil from '../utils/auth';
 import User from '../models/user';
 import userService from '../services/user';
+import subscriptionService from '../services/subscription';
 
 // helpers
 
@@ -81,8 +82,14 @@ const register = async (ctx: Koa.Context): Promise<void> => {
 };
 
 const logout = async (ctx: Koa.Context): Promise<void> => {
-  const { userId, refreshToken } = ctx.request.body;
+  const { userId, refreshToken, subscriptionJson } = ctx.request.body;
   const isSuccess = await revokeRefreshToken(userId, refreshToken);
+  if (subscriptionJson !== null) {
+    await subscriptionService.deleteSubscription(
+      JSON.stringify(subscriptionJson)
+    );
+  }
+
   if (isSuccess) {
     ctx.status = HttpStatus.OK;
     ctx.body = {};

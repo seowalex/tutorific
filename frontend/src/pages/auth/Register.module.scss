@@ -1,21 +1,15 @@
 .header {
-  margin: 20px 0;
+  margin: 1rem 0;
 
   .headerImg {
     display: block;
     margin: auto;
     width: 100%;
-    max-width: 240px;
+    max-width: 15rem;
   }
 
   .headerText {
     text-align: center;
-    margin: 40px 0;
+    margin: 2rem 0;
   }
-}
-
-.form {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
 }

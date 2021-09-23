@@ -30,3 +30,7 @@ export enum TuteeEventAction {
   Update = 'Updated a Tutee Listing',
   Delete = 'Deleted a Tutee Listing',
 }
+
+export enum ChatEventAction {
+  Send = 'Sent a Chat Message',
+}

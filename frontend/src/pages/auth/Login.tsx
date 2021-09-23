@@ -1,10 +1,13 @@
 import React from 'react';
 import ReactGA from 'react-ga';
 import {
+  IonBackButton,
   IonButton,
+  IonButtons,
   IonCol,
   IonContent,
   IonGrid,
+  IonHeader,
   IonInput,
   IonItem,
   IonLabel,
@@ -12,9 +15,11 @@ import {
   IonPage,
   IonRow,
   IonSpinner,
+  IonToolbar,
   useIonRouter,
+  useIonToast,
 } from '@ionic/react';
-import { useForm } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import type { FetchBaseQueryError } from '@reduxjs/toolkit/query/react';
 
 import { useAppDispatch } from '../../app/hooks';
@@ -35,41 +40,57 @@ const Login: React.FC = () => {
   const [login, { isLoading }] = useLoginMutation();
 
   const router = useIonRouter();
+  const [present] = useIonToast();
   const {
-    register,
     formState: { errors },
     handleSubmit,
     setError,
+    control,
   } = useForm<LoginData>();
 
   const onSubmit = async (data: LoginData) => {
-    try {
-      const credentials = await login(data).unwrap();
-      ReactGA.event({
-        category: EventCategory.User,
-        action: UserEventAction.Login,
-      });
-      dispatch(setCredentials(credentials));
+    if (window.navigator.onLine) {
+      try {
+        const credentials = await login(data).unwrap();
+        ReactGA.event({
+          category: EventCategory.User,
+          action: UserEventAction.Login,
+        });
+        dispatch(setCredentials(credentials));
 
-      if (credentials.profileId) {
-        router.push('/');
-      } else {
-        router.push('/profile');
+        if (credentials.profileId) {
+          router.push('/tutors');
+        } else {
+          router.push('/profile');
+        }
+      } catch (error) {
+        const message = (
+          (error as FetchBaseQueryError).data as ErrorResponse
+        ).errors
+          .flatMap((errorMessage) => errorMessage.detail)
+          .join(', ');
+
+        setError('email', { message });
+        setError('password', { message });
       }
-    } catch (error) {
-      const message = (
-        (error as FetchBaseQueryError).data as ErrorResponse
-      ).errors
-        .flatMap((errorMessage) => errorMessage.detail)
-        .join(', ');
-
-      setError('email', { message });
-      setError('password', { message });
+    } else {
+      present({
+        message: 'No internet connection',
+        color: 'danger',
+        duration: 2000,
+      });
     }
   };
 
   return (
     <IonPage>
+      <IonHeader>
+        <IonToolbar color="light">
+          <IonButtons slot="start">
+            <IonBackButton disabled={isLoading} />
+          </IonButtons>
+        </IonToolbar>
+      </IonHeader>
       <IonContent className="ion-padding" fullscreen>
         <IonGrid className="ion-no-padding h-100">
           <IonRow className="ion-align-items-center h-100">
@@ -78,7 +99,7 @@ const Login: React.FC = () => {
                 <img className={styles.headerImg} src="/assets/icon/icon.png" />
                 <h1 className={styles.headerName}>Tutorific</h1>
               </div>
-              <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
+              <form onSubmit={handleSubmit(onSubmit)}>
                 <IonItem
                   fill="outline"
                   lines="full"
@@ -86,11 +107,20 @@ const Login: React.FC = () => {
                   disabled={isLoading}
                 >
                   <IonLabel position="floating">Email</IonLabel>
-                  <IonInput
-                    type="email"
-                    {...register('email', {
+                  <Controller
+                    name="email"
+                    control={control}
+                    render={({ field: { onChange, onBlur, value } }) => (
+                      <IonInput
+                        type="email"
+                        onIonChange={onChange}
+                        onIonBlur={onBlur}
+                        value={value}
+                      />
+                    )}
+                    rules={{
                       required: 'Email is required',
-                    })}
+                    }}
                   />
                   {errors.email && (
                     <IonNote slot="helper" color="danger">
@@ -105,11 +135,20 @@ const Login: React.FC = () => {
                   disabled={isLoading}
                 >
                   <IonLabel position="floating">Password</IonLabel>
-                  <IonInput
-                    type="password"
-                    {...register('password', {
+                  <Controller
+                    name="password"
+                    control={control}
+                    render={({ field: { onChange, onBlur, value } }) => (
+                      <IonInput
+                        type="password"
+                        onIonChange={onChange}
+                        onIonBlur={onBlur}
+                        value={value}
+                      />
+                    )}
+                    rules={{
                       required: 'Password is required',
-                    })}
+                    }}
                   />
                   {errors.password && (
                     <IonNote slot="helper" color="danger">
@@ -134,6 +173,7 @@ const Login: React.FC = () => {
                 >
                   Register
                 </IonButton>
+                <input type="submit" hidden />
               </form>
             </IonCol>
           </IonRow>

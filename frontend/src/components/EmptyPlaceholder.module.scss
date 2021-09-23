@@ -1,0 +1,22 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  flex: 1 0 10rem;
+  gap: 1rem;
+  color: #a6a6a6;
+
+  @media (prefers-color-scheme: dark) {
+    color: #656565;
+  }
+
+  .icon {
+    font-size: 4rem;
+  }
+
+  .text {
+    margin: 0 2rem;
+    text-align: center;
+  }
+}

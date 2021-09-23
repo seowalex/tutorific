@@ -15,6 +15,7 @@ import {
   IonTitle,
   IonToolbar,
   useIonAlert,
+  useIonRouter,
   useIonViewWillEnter,
 } from '@ionic/react';
 import {
@@ -23,14 +24,13 @@ import {
   closeOutline,
   createOutline,
   ellipsisVertical,
-  lockClosedOutline,
   logoFacebook,
   logoWhatsapp,
   paperPlaneOutline,
   shareSocialOutline,
   trashOutline,
 } from 'ionicons/icons';
-import { useHistory, useRouteMatch } from 'react-router';
+import { useRouteMatch } from 'react-router';
 import {
   useDeleteTuteeListingMutation,
   useGetTuteeListingQuery,
@@ -39,13 +39,14 @@ import { useAppSelector } from '../../app/hooks';
 import ProfileItem from '../../components/ProfileItem';
 import { selectCurrentUserId } from '../../reducers/auth';
 import {
+  arrayToSelectedTimeSlots,
   baseUrl,
-  computeWeekDays,
   formatPriceRange,
   formatStringList,
 } from '../../app/utils';
 import ListingDetail from '../../components/ListingDetail';
 import { EventCategory, TuteeEventAction } from '../../app/analytics';
+import SelectTimeSlotsItem from '../../components/timeSlots/SelectTimeSlotsItem';
 
 interface Params {
   id: string;
@@ -62,7 +63,7 @@ const TuteeListing: React.FC = () => {
     isLoading,
     refetch,
   } = useGetTuteeListingQuery(listingId);
-  const history = useHistory();
+  const router = useIonRouter();
 
   const isOwnListing = userId === listing?.tutee.id;
   const [popoverState, setShowPopover] = useState({
@@ -73,7 +74,7 @@ const TuteeListing: React.FC = () => {
   const [presentDeleteAlert] = useIonAlert();
   const [deleteTuteeListing] = useDeleteTuteeListingMutation();
 
-  const listingUrl = `${baseUrl}/tutee/${listingId}`;
+  const listingUrl = `${baseUrl}/tutees/listing/${listingId}`;
 
   const handleDeleteListing = async () => {
     try {
@@ -84,7 +85,7 @@ const TuteeListing: React.FC = () => {
           category: EventCategory.Tutee,
           action: TuteeEventAction.Delete,
         });
-        history.push('/tutees');
+        router.push('/tutees', 'back');
         setShowPopover({ showPopover: false, event: undefined });
       }
     } catch (err) {
@@ -102,7 +103,7 @@ const TuteeListing: React.FC = () => {
       <IonHeader>
         <IonToolbar>
           <IonButtons slot="secondary" collapse>
-            <IonButton routerLink="/tutees" disabled={isLoading}>
+            <IonButton disabled={isLoading} onClick={() => router.goBack()}>
               <IonIcon slot="icon-only" icon={arrowBackOutline} />
             </IonButton>
           </IonButtons>
@@ -127,7 +128,13 @@ const TuteeListing: React.FC = () => {
       </IonHeader>
       {listing ? (
         <IonContent fullscreen>
-          <ProfileItem profile={listing.tutee} />
+          <ProfileItem profile={listing.tutee} enableLink />
+          <SelectTimeSlotsItem
+            value={arrayToSelectedTimeSlots(listing.timeSlots)}
+            disabled
+            fill="solid"
+            lines="none"
+          />
           <ListingDetail
             header="Subjects"
             label={formatStringList(listing.subjects)}
@@ -136,10 +143,6 @@ const TuteeListing: React.FC = () => {
           <ListingDetail
             header="Hourly Rate"
             label={formatPriceRange(listing.priceMin, listing.priceMax)}
-          />
-          <ListingDetail
-            header="Available Times"
-            label={formatStringList(computeWeekDays(listing.timeSlots))}
           />
           <ListingDetail header="Gender" label={listing.gender} />
           <ListingDetail header="Location" label={listing.location} />
@@ -165,7 +168,7 @@ const TuteeListing: React.FC = () => {
           <IonItem
             button
             detail={false}
-            routerLink={`/tutee/${listingId}/edit`}
+            routerLink={`/tutees/listing/${listingId}/edit`}
             onClick={() => {
               setShowPopover({ showPopover: false, event: undefined });
             }}

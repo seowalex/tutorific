@@ -1,5 +1,10 @@
 import { NestedValue } from 'react-hook-form';
 
+export enum ListingType {
+  Tutor = 'Tutor',
+  Tutee = 'Tutee',
+}
+
 export enum Gender {
   MALE = 'Male',
   FEMALE = 'Female',

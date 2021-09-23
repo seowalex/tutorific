@@ -1,18 +1,16 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import ReactGA from 'react-ga';
 import {
-  IonAvatar,
+  IonBackButton,
   IonButton,
   IonButtons,
-  IonCard,
-  IonCardContent,
-  IonCardHeader,
-  IonCardSubtitle,
-  IonCardTitle,
   IonContent,
   IonHeader,
   IonIcon,
+  IonLabel,
   IonPage,
+  IonSegment,
+  IonSegmentButton,
   IonText,
   IonTitle,
   IonToolbar,
@@ -21,9 +19,10 @@ import {
 } from '@ionic/react';
 import { useRouteMatch } from 'react-router-dom';
 import type { FetchBaseQueryError } from '@reduxjs/toolkit/query/react';
+import Avatar from 'react-avatar';
 import {
+  arrowBackOutline,
   chatbubbleOutline,
-  closeCircle,
   createOutline,
   female,
   logOutOutline,
@@ -31,15 +30,29 @@ import {
 } from 'ionicons/icons';
 
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
+import api from '../../api/base';
 import { useLogoutMutation } from '../../api/auth';
-import { Gender, useGetProfileQuery } from '../../api/profile';
+import { useGetProfileQuery } from '../../api/profile';
 import { selectCurrentUser, unsetCredentials } from '../../reducers/auth';
+import { Gender } from '../../types/profile';
 import type { ErrorResponse } from '../../types/error';
 
-import styles from './Profile.module.scss';
+import OfflineCard from '../../components/OfflineCard';
+import EmptyPlaceholder from '../../components/EmptyPlaceholder';
+import ChatRouterLink from '../../components/ChatRouterLink';
+
 import { unsetTutorListingFilters } from '../../reducers/tutorFilters';
 import { unsetTuteeListingFilters } from '../../reducers/tuteeFilters';
 import { EventCategory, UserEventAction } from '../../app/analytics';
+import {
+  selectProfileTuteePagination,
+  selectProfileTutorPagination,
+} from '../../reducers/profileListings';
+import { ListingType } from '../../app/types';
+import TutorListings from '../../components/TutorListings';
+import TuteeListings from '../../components/TuteeListings';
+
+import styles from './Profile.module.scss';
 
 interface Params {
   id: string;
@@ -49,39 +62,73 @@ const Profile: React.FC = () => {
   const {
     params: { id },
   } = useRouteMatch<Params>();
-
+  const profileId = parseInt(id, 10);
   const dispatch = useAppDispatch();
   const [logout] = useLogoutMutation();
+
   const user = useAppSelector(selectCurrentUser);
-  const { data: profile } = useGetProfileQuery(parseInt(id, 10));
-  const hasListings = false;
+  const { data: profile, refetch } = useGetProfileQuery(profileId);
+  const isOwnProfile = user.profileId === profileId;
+
+  const [listingType, setListingType] = useState<ListingType>(
+    ListingType.Tutor
+  );
+  const tutorFilters = useAppSelector(selectProfileTutorPagination);
+  const tuteeFilters = useAppSelector(selectProfileTuteePagination);
 
   const router = useIonRouter();
   const [present] = useIonToast();
 
+  useEffect(
+    () => window.navigator.serviceWorker.addEventListener('message', refetch),
+    [refetch]
+  );
+
   const handleLogout = async () => {
-    try {
-      if (user.id && user.refreshToken) {
-        await logout({ id: user.id, refreshToken: user.refreshToken }).unwrap();
+    if (window.navigator.onLine) {
+      try {
+        let subscription = null;
+
+        if (window.navigator.serviceWorker.controller?.state === 'activated') {
+          const registration = await window.navigator.serviceWorker.ready;
+          subscription = await registration?.pushManager.getSubscription();
+        }
+
+        if (user.id && user.refreshToken) {
+          await logout({
+            id: user.id,
+            refreshToken: user.refreshToken,
+            subscriptionJson: subscription,
+          }).unwrap();
+
+          ReactGA.event({
+            category: EventCategory.User,
+            action: UserEventAction.Logout,
+          });
+        }
+
+        subscription?.unsubscribe();
+        dispatch(api.util.resetApiState());
+        dispatch(unsetCredentials());
+        dispatch(unsetTutorListingFilters());
+        dispatch(unsetTuteeListingFilters());
+        router.push('/tutors', 'back');
+      } catch (error) {
+        const message = (
+          (error as FetchBaseQueryError).data as ErrorResponse
+        ).errors
+          .flatMap((errorMessage) => errorMessage.detail)
+          .join(', ');
+
+        present({
+          message,
+          color: 'danger',
+          duration: 2000,
+        });
       }
-
-      ReactGA.event({
-        category: EventCategory.User,
-        action: UserEventAction.Logout,
-      });
-      dispatch(unsetCredentials());
-      dispatch(unsetTutorListingFilters());
-      dispatch(unsetTuteeListingFilters());
-      router.push('/', 'back');
-    } catch (error) {
-      const message = (
-        (error as FetchBaseQueryError).data as ErrorResponse
-      ).errors
-        .flatMap((errorMessage) => errorMessage.detail)
-        .join(', ');
-
+    } else {
       present({
-        message,
+        message: 'No internet connection',
         color: 'danger',
         duration: 2000,
       });
@@ -103,20 +150,39 @@ const Profile: React.FC = () => {
     <IonPage>
       <IonHeader>
         <IonToolbar>
+          {!isOwnProfile && (
+            <IonButtons slot="secondary" collapse>
+              <IonButton onClick={() => router.goBack()}>
+                <IonIcon slot="icon-only" icon={arrowBackOutline} />
+              </IonButton>
+            </IonButtons>
+          )}
           <IonTitle>Profile</IonTitle>
+          <IonButtons slot="start">
+            <IonBackButton />
+          </IonButtons>
           <IonButtons slot="primary" collapse>
-            {user.profileId === parseInt(id, 10) ? (
-              <IonButton routerLink={`/profile/${id}/edit`}>
-                <IonIcon slot="icon-only" icon={createOutline} />
-              </IonButton>
+            {isOwnProfile ? (
+              <>
+                <IonButton routerLink={`/profile/${id}/edit`}>
+                  <IonIcon slot="icon-only" icon={createOutline} />
+                </IonButton>
+                <IonButton onClick={handleLogout}>
+                  <IonIcon slot="icon-only" icon={logOutOutline} />
+                </IonButton>
+              </>
             ) : (
-              <IonButton routerLink={`/chat/${id}`} routerDirection="none">
-                <IonIcon slot="icon-only" icon={chatbubbleOutline} />
-              </IonButton>
+              <>
+                <IonButton onClick={() => router.goBack()}>
+                  <IonIcon slot="icon-only" icon={arrowBackOutline} />
+                </IonButton>
+                <ChatRouterLink profileId={profileId}>
+                  <IonButton routerLink={`/chats/${id}`}>
+                    <IonIcon slot="icon-only" icon={chatbubbleOutline} />
+                  </IonButton>
+                </ChatRouterLink>
+              </>
             )}
-            <IonButton onClick={handleLogout}>
-              <IonIcon slot="icon-only" icon={logOutOutline} />
-            </IonButton>
           </IonButtons>
         </IonToolbar>
       </IonHeader>
@@ -125,111 +191,81 @@ const Profile: React.FC = () => {
           <IonToolbar>
             <IonTitle size="large">Profile</IonTitle>
             <IonButtons slot="primary">
-              {user.profileId === parseInt(id, 10) ? (
-                <IonButton routerLink={`/profile/${id}/edit`}>
-                  <IonIcon slot="icon-only" icon={createOutline} />
-                </IonButton>
+              {isOwnProfile ? (
+                <>
+                  <IonButton routerLink={`/profile/${id}/edit`}>
+                    <IonIcon slot="icon-only" icon={createOutline} />
+                  </IonButton>
+                  <IonButton onClick={handleLogout}>
+                    <IonIcon slot="icon-only" icon={logOutOutline} />
+                  </IonButton>
+                </>
               ) : (
-                <IonButton routerLink={`/chat/${id}`} routerDirection="none">
-                  <IonIcon slot="icon-only" icon={chatbubbleOutline} />
-                </IonButton>
+                <>
+                  <IonButton onClick={() => router.goBack()}>
+                    <IonIcon slot="icon-only" icon={arrowBackOutline} />
+                  </IonButton>
+                  <ChatRouterLink profileId={profileId}>
+                    <IonButton routerLink={`/chats/${id}`}>
+                      <IonIcon slot="icon-only" icon={chatbubbleOutline} />
+                    </IonButton>
+                  </ChatRouterLink>
+                </>
               )}
-              <IonButton onClick={handleLogout}>
-                <IonIcon slot="icon-only" icon={logOutOutline} />
-              </IonButton>
             </IonButtons>
           </IonToolbar>
         </IonHeader>
 
-        <div className={hasListings ? '' : styles.noListings}>
-          <div className="ion-margin">
-            <div className={styles.header}>
-              <IonAvatar className={styles.avatar}>
-                <img
-                  src={`https://ui-avatars.com/api/?name=${encodeURIComponent(
-                    profile?.name ?? ''
-                  )}&background=random`}
-                />
-              </IonAvatar>
-              <div>
-                <h1 className="ion-no-margin">{profile?.name}</h1>
-                {profile?.gender !== Gender.PNTS && (
-                  <IonText color="dark">
-                    {profile?.gender} <GenderIcon />
-                  </IonText>
-                )}
-              </div>
-            </div>
+        <OfflineCard />
 
-            <p>{profile?.description}</p>
+        <div>
+          <div className={styles.header}>
+            <Avatar
+              className={styles.avatar}
+              name={profile?.name}
+              maxInitials={2}
+              size="4rem"
+              round
+            />
+            <div className={styles.name}>
+              <h1 className="ion-no-margin">{profile?.name}</h1>
+              {profile?.gender !== Gender.PNTS && (
+                <IonText color="dark">
+                  {profile?.gender} <GenderIcon />
+                </IonText>
+              )}
+            </div>
+            <p className={styles.description}>{profile?.description}</p>
           </div>
-
-          {hasListings ? (
-            <>
-              <IonCard>
-                <IonCardHeader>
-                  <IonCardTitle>Math, Science, English</IonCardTitle>
-                  <IonCardSubtitle>Upper Primary</IonCardSubtitle>
-                </IonCardHeader>
-
-                <IonCardContent>
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi
-                  convallis ullamcorper tristique. Duis accumsan rhoncus dolor
-                  eget laoreet.
-                </IonCardContent>
-              </IonCard>
-
-              <IonCard>
-                <IonCardHeader>
-                  <IonCardTitle>Math, Science, English</IonCardTitle>
-                  <IonCardSubtitle>Upper Primary</IonCardSubtitle>
-                </IonCardHeader>
-
-                <IonCardContent>
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi
-                  convallis ullamcorper tristique. Duis accumsan rhoncus dolor
-                  eget laoreet.
-                </IonCardContent>
-              </IonCard>
-
-              <IonCard>
-                <IonCardHeader>
-                  <IonCardTitle>Math, Science, English</IonCardTitle>
-                  <IonCardSubtitle>Upper Primary</IonCardSubtitle>
-                </IonCardHeader>
-
-                <IonCardContent>
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi
-                  convallis ullamcorper tristique. Duis accumsan rhoncus dolor
-                  eget laoreet.
-                </IonCardContent>
-              </IonCard>
-
-              <IonCard>
-                <IonCardHeader>
-                  <IonCardTitle>Math, Science, English</IonCardTitle>
-                  <IonCardSubtitle>Upper Primary</IonCardSubtitle>
-                </IonCardHeader>
-
-                <IonCardContent>
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi
-                  convallis ullamcorper tristique. Duis accumsan rhoncus dolor
-                  eget laoreet.
-                </IonCardContent>
-              </IonCard>
-            </>
-          ) : (
-            <div className={styles.noListingsMessage}>
-              <IonIcon className={styles.noListingsIcon} icon={closeCircle} />
-              <p className="ion-no-margin">
-                {user.profileId === parseInt(id, 10)
-                  ? 'You have'
-                  : 'This person has'}{' '}
-                no tutor/tutee listings.
-              </p>
-            </div>
-          )}
+          <IonSegment
+            value={listingType}
+            onIonChange={(e) => setListingType(e.detail.value as ListingType)}
+          >
+            {Object.keys(ListingType).map((key) => (
+              <IonSegmentButton value={key as ListingType}>
+                <IonLabel>{key}</IonLabel>
+              </IonSegmentButton>
+            ))}
+          </IonSegment>
         </div>
+
+        {listingType === ListingType.Tutor && (
+          <TutorListings
+            filters={{ profileId, ...tutorFilters }}
+            owner={isOwnProfile ? 'self' : 'other'}
+            disableRefresh
+            hideProfiles
+          />
+        )}
+
+        {listingType === ListingType.Tutee && (
+          <TuteeListings
+            filters={{ profileId, ...tuteeFilters }}
+            owner={isOwnProfile ? 'self' : 'other'}
+            disableRefresh
+            hideProfiles
+          />
+        )}
       </IonContent>
     </IonPage>
   );

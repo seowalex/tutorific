@@ -18,16 +18,17 @@ interface Props {
   firstTimeSlot: number;
   numberOfSlots: number;
   value: SelectedTimeSlots;
-  onSubmit: (firstTimeSlot: number, selectedSlots: SelectedTimeSlots) => void;
+  disabled?: boolean;
+  onSubmit?: (firstTimeSlot: number, selectedSlots: SelectedTimeSlots) => void;
 }
 
 const SelectTimeSlotsRow: React.FC<Props> = (props) => {
-  const { firstTimeSlot, numberOfSlots, value, onSubmit } = props;
+  const { firstTimeSlot, numberOfSlots, value, disabled, onSubmit } = props;
   const boxRef = React.useRef<HTMLDivElement>(null);
   const [selectedSlots, setSelectedSlots] = useState<SelectedTimeSlots>(value);
 
   React.useEffect(() => {
-    if (boxRef.current) {
+    if (!disabled && onSubmit != null && boxRef.current) {
       const getBoxDimensions = (boxElement: HTMLDivElement | null) => {
         const boxDimensions = boxElement?.getBoundingClientRect();
         const baseX = boxDimensions?.x ?? 0;
@@ -133,6 +134,11 @@ const SelectTimeSlotsRow: React.FC<Props> = (props) => {
       </div>
     </>
   );
+};
+
+SelectTimeSlotsRow.defaultProps = {
+  disabled: false,
+  onSubmit: undefined,
 };
 
 export default SelectTimeSlotsRow;

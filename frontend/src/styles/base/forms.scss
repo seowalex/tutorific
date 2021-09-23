@@ -1,5 +1,5 @@
 form {
-  ion-item.ion-color-danger {
-    --border-color: var(--ion-color-danger);
-  }
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 }

@@ -54,5 +54,6 @@ module.exports = {
         custom: 'ignore',
       },
     ],
+    'react/prop-types': 'off',
   },
 };

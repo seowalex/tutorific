@@ -70,7 +70,7 @@ const EditTuteeListing: React.FC = () => {
           action: TuteeEventAction.Update,
         });
         dispatch(resetTuteeListingPagination());
-        history.push(`/tutee/${id}`);
+        history.push(`/tutees/listing/${id}`);
       }
     } catch (err) {
       // eslint-disable-next-line no-console
@@ -84,7 +84,7 @@ const EditTuteeListing: React.FC = () => {
         <IonToolbar>
           <IonTitle>Edit Tutee Listing</IonTitle>
           <IonButtons slot="start">
-            <IonBackButton defaultHref={`/tutee/${id}`} />
+            <IonBackButton defaultHref={`/tutees/listing/${id}`} />
           </IonButtons>
         </IonToolbar>
       </IonHeader>

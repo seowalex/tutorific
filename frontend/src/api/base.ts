@@ -65,7 +65,7 @@ const baseQueryWithReauth: BaseQueryFn<
 const api = createApi({
   baseQuery: baseQueryWithReauth,
   endpoints: () => ({}),
-  tagTypes: ['Profile', 'TutorListing', 'TuteeListing'],
+  tagTypes: ['Chat', 'Profile', 'TuteeListing', 'TutorListing'],
   refetchOnReconnect: true,
 });
 

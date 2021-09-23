@@ -15,18 +15,22 @@ import {
   PURGE,
   REGISTER,
 } from 'redux-persist';
-import storage from 'redux-persist/lib/storage';
+import storage from 'localforage';
+
+/* eslint-disable import/no-cycle */
 import api from '../api/base';
 import auth from '../reducers/auth';
-/* eslint-disable import/no-cycle */
 import tutorFilters from '../reducers/tutorFilters';
 import tuteeFilters from '../reducers/tuteeFilters';
+import profileListings from '../reducers/profileListings';
 /* eslint-enable import/no-cycle */
+
+storage.setDriver(storage.INDEXEDDB);
 
 const persistConfig = {
   key: 'root',
   storage,
-  blacklist: [api.reducerPath],
+  whitelist: ['auth'],
 };
 
 const rootReducer = combineReducers({
@@ -34,12 +38,12 @@ const rootReducer = combineReducers({
   auth,
   tutorFilters,
   tuteeFilters,
+  profileListings,
 });
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 
 export const store = configureStore({
   reducer: persistedReducer,
-  devTools: true,
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: {

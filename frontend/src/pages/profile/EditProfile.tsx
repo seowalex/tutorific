@@ -1,17 +1,15 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import ReactGA from 'react-ga';
 import {
   IonBackButton,
   IonButtons,
-  IonCol,
   IonContent,
-  IonGrid,
   IonHeader,
   IonPage,
-  IonRow,
   IonTitle,
   IonToolbar,
   useIonRouter,
+  useIonToast,
 } from '@ionic/react';
 import { useRouteMatch } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
@@ -39,14 +37,16 @@ const EditProfile: React.FC = () => {
   const { data: profile } = useGetProfileQuery(parseInt(id, 10));
 
   const router = useIonRouter();
+  const [present] = useIonToast();
   const {
-    register,
     formState: { errors },
     handleSubmit,
+    reset,
     setError,
-  } = useForm<ProfileData>({
-    defaultValues: profile,
-  });
+    control,
+  } = useForm<ProfileData>();
+
+  useEffect(() => reset(profile), [reset, profile]);
 
   const onSubmit = async (data: ProfileData) => {
     try {
@@ -57,29 +57,38 @@ const EditProfile: React.FC = () => {
       });
       router.push(`/profile/${id}`, 'back');
     } catch (error) {
-      const { errors: errorMessages } = (error as FetchBaseQueryError)
-        .data as ErrorResponse;
+      if (window.navigator.onLine) {
+        const { errors: errorMessages } = (error as FetchBaseQueryError)
+          .data as ErrorResponse;
 
-      for (const errorMessage of errorMessages) {
-        switch (errorMessage.field) {
-          case 'name':
-            setError('name', {
-              message: errorMessage.detail.join(', '),
-            });
-            break;
-          case 'gender':
-            setError('gender', {
-              message: errorMessage.detail.join(', '),
-            });
-            break;
-          case 'description':
-            setError('description', {
-              message: errorMessage.detail.join(', '),
-            });
-            break;
-          default:
-            break;
+        for (const errorMessage of errorMessages) {
+          switch (errorMessage.field) {
+            case 'name':
+              setError('name', {
+                message: errorMessage.detail.join(', '),
+              });
+              break;
+            case 'gender':
+              setError('gender', {
+                message: errorMessage.detail.join(', '),
+              });
+              break;
+            case 'description':
+              setError('description', {
+                message: errorMessage.detail.join(', '),
+              });
+              break;
+            default:
+              break;
+          }
         }
+      } else {
+        present({
+          header: 'No Internet Connection',
+          message: 'Profile will be updated when you are online',
+          duration: 5000,
+        });
+        router.push(`/profile/${id}`, 'back');
       }
     }
   };
@@ -95,18 +104,12 @@ const EditProfile: React.FC = () => {
         </IonToolbar>
       </IonHeader>
       <IonContent className="ion-padding" fullscreen>
-        <IonGrid className="ion-no-padding">
-          <IonRow>
-            <IonCol className="ion-no-padding">
-              <ProfileForm
-                isLoading={isLoading}
-                register={register}
-                errors={errors}
-                handleSubmit={handleSubmit(onSubmit)}
-              />
-            </IonCol>
-          </IonRow>
-        </IonGrid>
+        <ProfileForm
+          isLoading={isLoading}
+          errors={errors}
+          handleSubmit={handleSubmit(onSubmit)}
+          control={control}
+        />
       </IonContent>
     </IonPage>
   );

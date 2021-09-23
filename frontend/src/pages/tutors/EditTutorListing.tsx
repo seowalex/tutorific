@@ -70,7 +70,7 @@ const EditTutorListing: React.FC = () => {
           action: TutorEventAction.Update,
         });
         dispatch(resetTutorListingPagination());
-        history.push(`/tutor/${id}`);
+        history.push(`/tutors/listing/${id}`);
       }
     } catch (err) {
       // eslint-disable-next-line no-console
@@ -84,7 +84,7 @@ const EditTutorListing: React.FC = () => {
         <IonToolbar>
           <IonTitle>Edit Tutor Listing</IonTitle>
           <IonButtons slot="start">
-            <IonBackButton defaultHref={`/tutor/${id}`} />
+            <IonBackButton defaultHref={`/tutors/listing/${id}`} />
           </IonButtons>
         </IonToolbar>
       </IonHeader>

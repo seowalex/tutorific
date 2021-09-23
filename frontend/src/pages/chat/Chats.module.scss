@@ -1,0 +1,12 @@
+.chatsContainer {
+  --background: var(--ion-item-background);
+
+  &::part(scroll) {
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+.avatar:global(.sb-avatar) {
+  margin: 0.5rem 1rem 0.5rem 0;
+}

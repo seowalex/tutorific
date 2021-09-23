@@ -1,5 +1,5 @@
 import api from './base';
-import { AuthState } from '../reducers/auth';
+import type { AuthState } from '../reducers/auth';
 
 interface LoginRequest {
   email: string;
@@ -16,6 +16,7 @@ interface LoginResponse {
 interface LogoutRequest {
   id: number;
   refreshToken: string;
+  subscriptionJson: PushSubscription | null;
 }
 
 type RegisterRequest = LoginRequest;
@@ -59,8 +60,19 @@ const extendedApi = api.injectEndpoints({
         refreshToken: response.refreshToken,
       }),
     }),
+    subscribe: builder.mutation<void, PushSubscription>({
+      query: (subscription) => ({
+        url: 'subscription',
+        method: 'POST',
+        body: subscription,
+      }),
+    }),
   }),
 });
 
-export const { useLoginMutation, useLogoutMutation, useRegisterMutation } =
-  extendedApi;
+export const {
+  useLoginMutation,
+  useLogoutMutation,
+  useRegisterMutation,
+  useSubscribeMutation,
+} = extendedApi;
