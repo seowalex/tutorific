@@ -18,6 +18,7 @@ import {
   IonToolbar,
   useIonRouter,
   useIonToast,
+  useIonViewWillEnter,
 } from '@ionic/react';
 import { Controller, useForm } from 'react-hook-form';
 import type { FetchBaseQueryError } from '@reduxjs/toolkit/query/react';
@@ -25,10 +26,10 @@ import type { FetchBaseQueryError } from '@reduxjs/toolkit/query/react';
 import { useAppDispatch } from '../../app/hooks';
 import { useLoginMutation } from '../../api/auth';
 import { setCredentials } from '../../reducers/auth';
+import { EventCategory, UserEventAction } from '../../types/analytics';
 import type { ErrorResponse } from '../../types/error';
 
 import styles from './Login.module.scss';
-import { EventCategory, UserEventAction } from '../../types/analytics';
 
 interface LoginData {
   email: string;
@@ -45,18 +46,22 @@ const Login: React.FC = () => {
     formState: { errors },
     handleSubmit,
     setError,
+    reset,
     control,
   } = useForm<LoginData>();
+
+  useIonViewWillEnter(() => reset());
 
   const onSubmit = async (data: LoginData) => {
     if (window.navigator.onLine) {
       try {
         const credentials = await login(data).unwrap();
+        dispatch(setCredentials(credentials));
+
         ReactGA.event({
           category: EventCategory.User,
           action: UserEventAction.Login,
         });
-        dispatch(setCredentials(credentials));
 
         if (credentials.profileId) {
           router.push('/tutors');
@@ -87,7 +92,7 @@ const Login: React.FC = () => {
       <IonHeader>
         <IonToolbar color="light">
           <IonButtons slot="start">
-            <IonBackButton disabled={isLoading} />
+            <IonBackButton defaultHref="/tutors" disabled={isLoading} />
           </IonButtons>
         </IonToolbar>
       </IonHeader>

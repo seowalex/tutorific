@@ -15,6 +15,7 @@ import {
   IonToolbar,
   useIonRouter,
   useIonToast,
+  useIonViewWillEnter,
 } from '@ionic/react';
 import { Controller, useForm } from 'react-hook-form';
 import type { FetchBaseQueryError } from '@reduxjs/toolkit/query/react';
@@ -22,10 +23,10 @@ import type { FetchBaseQueryError } from '@reduxjs/toolkit/query/react';
 import { useAppDispatch } from '../../app/hooks';
 import { useRegisterMutation } from '../../api/auth';
 import { setCredentials } from '../../reducers/auth';
+import { EventCategory, UserEventAction } from '../../types/analytics';
 import type { ErrorResponse } from '../../types/error';
 
 import styles from './Register.module.scss';
-import { EventCategory, UserEventAction } from '../../types/analytics';
 
 interface RegisterData {
   email: string;
@@ -44,18 +45,22 @@ const Register: React.FC = () => {
     handleSubmit,
     setError,
     getValues,
+    reset,
     control,
   } = useForm<RegisterData>();
+
+  useIonViewWillEnter(() => reset());
 
   const onSubmit = async (data: RegisterData) => {
     if (window.navigator.onLine) {
       try {
         const credentials = await registerUser(data).unwrap();
+        dispatch(setCredentials(credentials));
+
         ReactGA.event({
           category: EventCategory.User,
           action: UserEventAction.Create,
         });
-        dispatch(setCredentials(credentials));
 
         if (credentials.profileId) {
           router.push('/tutors');

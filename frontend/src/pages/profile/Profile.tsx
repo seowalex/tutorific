@@ -24,7 +24,6 @@ import { useRouteMatch } from 'react-router-dom';
 import type { FetchBaseQueryError } from '@reduxjs/toolkit/query/react';
 import Avatar from 'react-avatar';
 import {
-  arrowBackOutline,
   chatbubbleOutline,
   createOutline,
   ellipsisVertical,
@@ -38,20 +37,19 @@ import api from '../../api/base';
 import { useLogoutMutation } from '../../api/auth';
 import { useGetProfileQuery } from '../../api/profile';
 import { selectCurrentUser, unsetCredentials } from '../../reducers/auth';
-import { Gender } from '../../types/profile';
-import type { ErrorResponse } from '../../types/error';
-
-import OfflineCard from '../../components/OfflineCard';
-import ChatRouterLink from '../../components/ChatRouterLink';
-
 import { unsetTutorListingFilters } from '../../reducers/tutorFilters';
 import { unsetTuteeListingFilters } from '../../reducers/tuteeFilters';
-import { EventCategory, UserEventAction } from '../../types/analytics';
 import {
   selectProfileTuteePagination,
   selectProfileTutorPagination,
 } from '../../reducers/profileListings';
+import { Gender } from '../../types/profile';
+import { EventCategory, UserEventAction } from '../../types/analytics';
 import { ListingType } from '../../types/listing';
+import type { ErrorResponse } from '../../types/error';
+
+import OfflineCard from '../../components/OfflineCard';
+import ChatRouterLink from '../../components/ChatRouterLink';
 import TutorListings from '../../components/TutorListings';
 import TuteeListings from '../../components/TuteeListings';
 
@@ -61,42 +59,43 @@ interface Params {
   id: string;
 }
 
+interface PopoverState {
+  showPopover: boolean;
+  event?: React.MouseEvent;
+}
+
 const Profile: React.FC = () => {
   const {
     params: { id },
   } = useRouteMatch<Params>();
+
   const profileId = parseInt(id, 10);
   const dispatch = useAppDispatch();
   const [logout] = useLogoutMutation();
+  const { data: profile, refetch } = useGetProfileQuery(profileId);
 
   const user = useAppSelector(selectCurrentUser);
-  const { data: profile, refetch } = useGetProfileQuery(profileId);
+  const tutorFilters = useAppSelector(selectProfileTutorPagination);
+  const tuteeFilters = useAppSelector(selectProfileTuteePagination);
   const isOwnProfile = user.profileId === profileId;
 
   const [listingType, setListingType] = useState<ListingType>(
     ListingType.Tutor
   );
-  const tutorFilters = useAppSelector(selectProfileTutorPagination);
-  const tuteeFilters = useAppSelector(selectProfileTuteePagination);
+  const [popoverState, setPopoverState] = useState<PopoverState>({
+    showPopover: false,
+  });
 
   const router = useIonRouter();
   const [present] = useIonToast();
-  const [popoverState, setPopoverState] = useState({
-    showPopover: false,
-    event: undefined,
-  });
 
   useEffect(
-    () =>
-      window.navigator.serviceWorker.addEventListener('message', (message) => {
-        console.log(message);
-        refetch();
-      }),
+    () => window.navigator.serviceWorker.addEventListener('message', refetch),
     [refetch]
   );
 
   const handleLogout = async () => {
-    setPopoverState({ showPopover: false, event: undefined });
+    setPopoverState({ showPopover: false });
 
     if (window.navigator.onLine) {
       try {
@@ -113,19 +112,21 @@ const Profile: React.FC = () => {
             refreshToken: user.refreshToken,
             subscriptionJson: subscription,
           }).unwrap();
-
-          ReactGA.event({
-            category: EventCategory.User,
-            action: UserEventAction.Logout,
-          });
         }
 
         caches.delete('api');
         subscription?.unsubscribe();
+
         dispatch(api.util.resetApiState());
         dispatch(unsetCredentials());
         dispatch(unsetTutorListingFilters());
         dispatch(unsetTuteeListingFilters());
+
+        ReactGA.event({
+          category: EventCategory.User,
+          action: UserEventAction.Logout,
+        });
+
         router.push('/tutors', 'back');
       } catch (error) {
         const message = (
@@ -171,8 +172,7 @@ const Profile: React.FC = () => {
           <IonButtons slot="primary" collapse>
             {isOwnProfile ? (
               <IonButton
-                onClick={(e: any) => {
-                  e.persist();
+                onClick={(e: React.MouseEvent<HTMLIonButtonElement>) => {
                   setPopoverState({ showPopover: true, event: e });
                 }}
               >
@@ -195,8 +195,7 @@ const Profile: React.FC = () => {
             <IonButtons slot="primary">
               {isOwnProfile ? (
                 <IonButton
-                  onClick={(e: any) => {
-                    e.persist();
+                  onClick={(e: React.MouseEvent<HTMLIonButtonElement>) => {
                     setPopoverState({ showPopover: true, event: e });
                   }}
                 >
@@ -234,17 +233,19 @@ const Profile: React.FC = () => {
             </div>
             <p className={styles.description}>{profile?.description}</p>
           </div>
-          <IonSegment
-            value={listingType}
-            onIonChange={(e) => setListingType(e.detail.value as ListingType)}
-          >
-            {Object.keys(ListingType).map((key) => (
-              <IonSegmentButton value={key as ListingType}>
-                <IonLabel>{key}</IonLabel>
-              </IonSegmentButton>
-            ))}
-          </IonSegment>
         </div>
+
+        <IonSegment
+          className={styles.listingType}
+          value={listingType}
+          onIonChange={(e) => setListingType(e.detail.value as ListingType)}
+        >
+          {Object.values(ListingType).map((value) => (
+            <IonSegmentButton value={value} key={value}>
+              <IonLabel>{value}</IonLabel>
+            </IonSegmentButton>
+          ))}
+        </IonSegment>
 
         {listingType === ListingType.Tutor && (
           <TutorListings
@@ -264,28 +265,26 @@ const Profile: React.FC = () => {
           />
         )}
       </IonContent>
+
       <IonPopover
         event={popoverState.event}
         isOpen={popoverState.showPopover}
-        onDidDismiss={() =>
-          setPopoverState({ showPopover: false, event: undefined })
-        }
+        onDidDismiss={() => setPopoverState({ showPopover: false })}
       >
         <IonList>
           <IonItem
-            button
             detail={false}
             routerLink={`/profile/${id}/edit`}
             onClick={() => {
-              setPopoverState({ showPopover: false, event: undefined });
+              setPopoverState({ showPopover: false });
             }}
           >
-            <IonIcon icon={createOutline} slot="end" />
             <IonLabel>Edit Profile</IonLabel>
+            <IonIcon icon={createOutline} slot="end" />
           </IonItem>
           <IonItem button detail={false} onClick={handleLogout}>
-            <IonIcon icon={logOutOutline} slot="end" color="danger" />
             <IonLabel color="danger">Logout</IonLabel>
+            <IonIcon icon={logOutOutline} slot="end" color="danger" />
           </IonItem>
         </IonList>
       </IonPopover>

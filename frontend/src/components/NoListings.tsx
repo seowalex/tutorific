@@ -1,20 +1,19 @@
 import React from 'react';
-
 import { closeCircle } from 'ionicons/icons';
+
 import { ListingType } from '../types/listing';
 
-import styles from './NoListings.module.scss';
 import EmptyPlaceholder from './EmptyPlaceholder';
+
+import styles from './NoListings.module.scss';
 
 interface Props {
   listingType: ListingType;
   owner: 'self' | 'other' | 'all';
 }
 
-const NoListings: React.FC<Props> = (props) => {
-  const { listingType, owner } = props;
-
-  const getMessage = (): string => {
+const NoListings: React.FC<Props> = ({ listingType, owner }) => {
+  const getMessage = () => {
     switch (owner) {
       case 'self':
         return `You have no ${listingType.toLowerCase()} listings.`;

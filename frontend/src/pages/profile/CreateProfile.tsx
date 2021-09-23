@@ -10,6 +10,7 @@ import {
   IonToolbar,
   useIonRouter,
   useIonToast,
+  useIonViewWillEnter,
 } from '@ionic/react';
 import { useForm } from 'react-hook-form';
 import type { FetchBaseQueryError } from '@reduxjs/toolkit/query/react';
@@ -17,10 +18,10 @@ import type { FetchBaseQueryError } from '@reduxjs/toolkit/query/react';
 import { useAppDispatch } from '../../app/hooks';
 import { useAddProfileMutation } from '../../api/profile';
 import { setProfileId, setToken } from '../../reducers/auth';
+import { EventCategory, ProfileEventAction } from '../../types/analytics';
 import type { ErrorResponse } from '../../types/error';
 
 import ProfileForm, { ProfileData } from '../../components/ProfileForm';
-import { EventCategory, ProfileEventAction } from '../../types/analytics';
 
 const CreateProfile: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -31,22 +32,27 @@ const CreateProfile: React.FC = () => {
   const {
     formState: { errors },
     handleSubmit,
+    reset,
     setError,
     control,
   } = useForm<ProfileData>();
+
+  useIonViewWillEnter(() => reset());
 
   const onSubmit = async (data: ProfileData) => {
     if (window.navigator.onLine) {
       try {
         const profile = await addProfile(data).unwrap();
-        ReactGA.event({
-          category: EventCategory.Profile,
-          action: ProfileEventAction.Create,
-        });
+
         if (profile.profileId && profile.token) {
           dispatch(setProfileId(profile.profileId));
           dispatch(setToken(profile.token));
         }
+
+        ReactGA.event({
+          category: EventCategory.Profile,
+          action: ProfileEventAction.Create,
+        });
 
         router.push('/tutors');
       } catch (error) {

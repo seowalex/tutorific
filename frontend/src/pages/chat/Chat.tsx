@@ -22,12 +22,12 @@ import { chatbubbleEllipses, person, send } from 'ionicons/icons';
 import { useAppSelector } from '../../app/hooks';
 import { useAddMessageMutation, useGetChatQuery } from '../../api/chat';
 import { selectCurrentUserId } from '../../reducers/auth';
+import { ChatEventAction, EventCategory } from '../../types/analytics';
 
 import OfflineCard from '../../components/OfflineCard';
 import EmptyPlaceholder from '../../components/EmptyPlaceholder';
 
 import styles from './Chat.module.scss';
-import { ChatEventAction, EventCategory } from '../../types/analytics';
 
 interface Params {
   id: string;
@@ -149,6 +149,7 @@ const Chat: React.FC = () => {
                 rows={1}
                 autoGrow
                 onKeyDown={handleKeyDown}
+                autocapitalize="on"
               />
             )}
             rules={{

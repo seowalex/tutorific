@@ -19,10 +19,10 @@ import {
   useGetProfileQuery,
   useUpdateProfileMutation,
 } from '../../api/profile';
+import { EventCategory, ProfileEventAction } from '../../types/analytics';
 import type { ErrorResponse } from '../../types/error';
 
 import ProfileForm, { ProfileData } from '../../components/ProfileForm';
-import { EventCategory, ProfileEventAction } from '../../types/analytics';
 
 interface Params {
   id: string;
@@ -46,15 +46,18 @@ const EditProfile: React.FC = () => {
     control,
   } = useForm<ProfileData>();
 
-  useEffect(() => reset(profile), [reset, profile]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useEffect(() => reset(profile), [profile]);
 
   const onSubmit = async (data: ProfileData) => {
     try {
       await updateProfile({ id: parseInt(id, 10), ...data }).unwrap();
+
       ReactGA.event({
         category: EventCategory.Profile,
         action: ProfileEventAction.Update,
       });
+
       router.push(`/profile/${id}`, 'back');
     } catch (error) {
       if (window.navigator.onLine) {
