@@ -29,7 +29,7 @@ const updateProfile = async (ctx: Koa.Context): Promise<void> => {
 };
 
 const createProfile = async (ctx: Koa.Context): Promise<void> => {
-  const { userId, email } = ctx.state.user;
+  const { userId } = ctx.state.user;
   // disallow creating profile more than once
   const user = await userService.getUser(userId);
   if (user?.profile !== null) {
@@ -41,11 +41,7 @@ const createProfile = async (ctx: Koa.Context): Promise<void> => {
   });
 
   // create new jwt and pass to FE
-  const newJwt = await authService.generateJwtToken(
-    userId,
-    email,
-    newProfile.id
-  );
+  const newJwt = await authService.generateJwtToken(userId, newProfile.id);
   ctx.body = {
     profileId: newProfile.id,
     jwtToken: newJwt,
