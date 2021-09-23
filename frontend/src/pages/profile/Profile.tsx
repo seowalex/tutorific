@@ -7,8 +7,11 @@ import {
   IonContent,
   IonHeader,
   IonIcon,
+  IonItem,
   IonLabel,
+  IonList,
   IonPage,
+  IonPopover,
   IonSegment,
   IonSegmentButton,
   IonText,
@@ -24,6 +27,7 @@ import {
   arrowBackOutline,
   chatbubbleOutline,
   createOutline,
+  ellipsisVertical,
   female,
   logOutOutline,
   male,
@@ -77,6 +81,10 @@ const Profile: React.FC = () => {
 
   const router = useIonRouter();
   const [present] = useIonToast();
+  const [popoverState, setPopoverState] = useState({
+    showPopover: false,
+    event: undefined,
+  });
 
   useEffect(
     () => window.navigator.serviceWorker.addEventListener('message', refetch),
@@ -155,14 +163,14 @@ const Profile: React.FC = () => {
           </IonButtons>
           <IonButtons slot="primary" collapse>
             {isOwnProfile ? (
-              <>
-                <IonButton routerLink={`/profile/${id}/edit`}>
-                  <IonIcon slot="icon-only" icon={createOutline} />
-                </IonButton>
-                <IonButton onClick={handleLogout}>
-                  <IonIcon slot="icon-only" icon={logOutOutline} />
-                </IonButton>
-              </>
+              <IonButton
+                onClick={(e: any) => {
+                  e.persist();
+                  setPopoverState({ showPopover: true, event: e });
+                }}
+              >
+                <IonIcon slot="icon-only" icon={ellipsisVertical} />
+              </IonButton>
             ) : (
               <ChatRouterLink profileId={profileId}>
                 <IonButton>
@@ -179,14 +187,14 @@ const Profile: React.FC = () => {
             <IonTitle size="large">Profile</IonTitle>
             <IonButtons slot="primary">
               {isOwnProfile ? (
-                <>
-                  <IonButton routerLink={`/profile/${id}/edit`}>
-                    <IonIcon slot="icon-only" icon={createOutline} />
-                  </IonButton>
-                  <IonButton onClick={handleLogout}>
-                    <IonIcon slot="icon-only" icon={logOutOutline} />
-                  </IonButton>
-                </>
+                <IonButton
+                  onClick={(e: any) => {
+                    e.persist();
+                    setPopoverState({ showPopover: true, event: e });
+                  }}
+                >
+                  <IonIcon slot="icon-only" icon={ellipsisVertical} />
+                </IonButton>
               ) : (
                 <ChatRouterLink profileId={profileId}>
                   <IonButton>
@@ -249,6 +257,35 @@ const Profile: React.FC = () => {
           />
         )}
       </IonContent>
+      <IonPopover
+        event={popoverState.event}
+        isOpen={popoverState.showPopover}
+        onDidDismiss={() =>
+          setPopoverState({ showPopover: false, event: undefined })
+        }
+      >
+        <IonList>
+          <IonItem
+            button
+            detail={false}
+            routerLink={`/profile/${id}/edit`}
+            onClick={() => {
+              setPopoverState({ showPopover: false, event: undefined });
+            }}
+          >
+            <IonIcon icon={createOutline} slot="end" />
+            <IonLabel>Edit Profile</IonLabel>
+          </IonItem>
+          <IonItem
+            button
+            detail={false}
+            onClick={handleLogout}
+          >
+            <IonIcon icon={logOutOutline} slot="end" color='danger'/>
+            <IonLabel color='danger'>Logout</IonLabel>
+          </IonItem>
+        </IonList>
+      </IonPopover>
     </IonPage>
   );
 };
