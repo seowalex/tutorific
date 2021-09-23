@@ -87,22 +87,6 @@ const TuteeListingForm: React.FC<Props> = (props: Props) => {
 
   return (
     <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
-      <IonRow>
-        <IonCol>
-          <Controller
-            name="timeSlots"
-            control={control}
-            render={({ field: { onChange, value } }) => (
-              <SelectTimeSlotsItem
-                onChange={onChange}
-                value={value}
-                errors={errors}
-                isSubmitting={isSubmitting}
-              />
-            )}
-          />
-        </IonCol>
-      </IonRow>
       <IonRow className={styles.priceInputsRow}>
         <IonCol>
           <IonItem
@@ -311,6 +295,22 @@ const TuteeListingForm: React.FC<Props> = (props: Props) => {
               </IonNote>
             )}
           </IonItem>
+        </IonCol>
+      </IonRow>
+      <IonRow>
+        <IonCol>
+          <Controller
+            name="timeSlots"
+            control={control}
+            render={({ field: { onChange, value } }) => (
+              <SelectTimeSlotsItem
+                onChange={onChange}
+                value={value}
+                errors={errors}
+                isSubmitting={isSubmitting}
+              />
+            )}
+          />
         </IonCol>
       </IonRow>
       <IonRow>

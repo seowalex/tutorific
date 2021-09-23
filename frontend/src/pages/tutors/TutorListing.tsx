@@ -129,12 +129,6 @@ const TutorListing: React.FC = () => {
       {listing ? (
         <IonContent fullscreen>
           <ProfileItem profile={listing.tutor} enableLink />
-          <SelectTimeSlotsItem
-            value={arrayToSelectedTimeSlots(listing.timeSlots)}
-            disabled
-            fill="solid"
-            lines="none"
-          />
           <ListingDetail
             header="Subjects"
             label={formatStringList(listing.subjects)}
@@ -146,6 +140,12 @@ const TutorListing: React.FC = () => {
           <ListingDetail
             header="Hourly Rate"
             label={formatPriceRange(listing.priceMin, listing.priceMax)}
+          />
+          <SelectTimeSlotsItem
+            value={arrayToSelectedTimeSlots(listing.timeSlots)}
+            disabled
+            fill="solid"
+            lines="none"
           />
           <ListingDetail header="Description" label={listing.description} />
         </IonContent>

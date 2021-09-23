@@ -59,6 +59,7 @@ const SelectTimeSlotsItem: React.FC<Props> = (props) => {
         lines={lines}
         color={errors?.timeSlots ? 'danger' : undefined}
         disabled={isSubmitting}
+        className={styles.timeSlotsItem}
       >
         <IonLabel position="stacked">
           {'Available Times: On '}
