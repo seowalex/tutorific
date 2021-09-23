@@ -13,7 +13,7 @@ import {
   GetTuteeListingsQueryParams,
   useGetTuteeListingsQuery,
 } from '../api/tutee';
-import { ListingType, TuteeListing } from '../app/types';
+import { ListingType, TuteeListing } from '../types/listing';
 import {
   incrementTuteeListingPagination,
   resetTuteeListingPagination,

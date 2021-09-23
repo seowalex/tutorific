@@ -21,7 +21,7 @@ import {
   Subject,
   TutorListing,
   TutorListingFormData,
-} from '../app/types';
+} from '../types/listing';
 import SelectTimeSlotsItem from './timeSlots/SelectTimeSlotsItem';
 
 import styles from './ListingForm.module.scss';

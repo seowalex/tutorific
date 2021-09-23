@@ -51,7 +51,7 @@ import {
   selectProfileTuteePagination,
   selectProfileTutorPagination,
 } from '../../reducers/profileListings';
-import { ListingType } from '../../app/types';
+import { ListingType } from '../../types/listing';
 import TutorListings from '../../components/TutorListings';
 import TuteeListings from '../../components/TuteeListings';
 
@@ -283,13 +283,9 @@ const Profile: React.FC = () => {
             <IonIcon icon={createOutline} slot="end" />
             <IonLabel>Edit Profile</IonLabel>
           </IonItem>
-          <IonItem
-            button
-            detail={false}
-            onClick={handleLogout}
-          >
-            <IonIcon icon={logOutOutline} slot="end" color='danger'/>
-            <IonLabel color='danger'>Logout</IonLabel>
+          <IonItem button detail={false} onClick={handleLogout}>
+            <IonIcon icon={logOutOutline} slot="end" color="danger" />
+            <IonLabel color="danger">Logout</IonLabel>
           </IonItem>
         </IonList>
       </IonPopover>

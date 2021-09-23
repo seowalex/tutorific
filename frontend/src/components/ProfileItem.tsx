@@ -2,7 +2,7 @@ import React from 'react';
 import { IonAvatar, IonItem, IonLabel } from '@ionic/react';
 
 import styles from './ProfileItem.module.scss';
-import { Profile } from '../app/types';
+import { Profile } from '../types/profile';
 
 interface Props {
   profile: Profile;

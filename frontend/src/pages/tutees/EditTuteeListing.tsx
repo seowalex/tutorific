@@ -25,7 +25,7 @@ import { selectCurrentUserId } from '../../reducers/auth';
 import TuteeListingForm from '../../components/TuteeListingForm';
 import { selectedTimeSlotsToArray } from '../../app/utils';
 import { resetTuteeListingPagination } from '../../reducers/tuteeFilters';
-import { TuteeListingFormData } from '../../app/types';
+import { TuteeListingFormData } from '../../types/listing';
 import { EventCategory, TuteeEventAction } from '../../app/analytics';
 
 interface Params {

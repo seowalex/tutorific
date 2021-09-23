@@ -1,14 +1,9 @@
-import { NestedValue } from 'react-hook-form';
+import type { NestedValue } from 'react-hook-form';
+import type { Gender, Profile } from './profile';
 
 export enum ListingType {
   Tutor = 'Tutor',
   Tutee = 'Tutee',
-}
-
-export enum Gender {
-  MALE = 'Male',
-  FEMALE = 'Female',
-  PNTS = 'Prefer not to say',
 }
 
 export enum Level {
@@ -66,14 +61,6 @@ export enum WeekDay {
   Fri = 'Fri',
   Sat = 'Sat',
   Sun = 'Sun',
-}
-
-export interface Profile {
-  id: number;
-  name: string;
-  description: string;
-  gender: Gender;
-  createdAt: Date;
 }
 
 export interface TutorListing {

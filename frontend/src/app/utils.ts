@@ -1,4 +1,4 @@
-import { SelectedTimeSlots, Subject, WeekDay } from './types';
+import { SelectedTimeSlots, Subject, WeekDay } from '../types/listing';
 
 const hoursInADay = 24;
 const slotsPerHour = 2; // 00 and 30 mins

@@ -1,6 +1,7 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 import type { RootState } from '../app/store';
-import type { Gender, Level } from '../app/types';
+import type { Level } from '../types/listing';
+import type { Gender } from '../types/profile';
 
 export interface TutorFiltersState {
   priceMin?: number;

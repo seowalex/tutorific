@@ -13,7 +13,7 @@ import {
   GetTutorListingsQueryParams,
   useGetTutorListingsQuery,
 } from '../api/tutor';
-import { ListingType, TutorListing } from '../app/types';
+import { ListingType, TutorListing } from '../types/listing';
 import {
   incrementTutorListingPagination,
   resetTutorListingPagination,

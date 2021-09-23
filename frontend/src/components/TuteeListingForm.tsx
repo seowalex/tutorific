@@ -17,13 +17,13 @@ import React, { useState } from 'react';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { addOutline } from 'ionicons/icons';
 import {
-  Gender,
   Level,
   Subject,
   Town,
   TuteeListing,
   TuteeListingFormData,
-} from '../app/types';
+} from '../types/listing';
+import { Gender } from '../types/profile';
 import SelectTimeSlotsItem from './timeSlots/SelectTimeSlotsItem';
 
 import styles from './ListingForm.module.scss';

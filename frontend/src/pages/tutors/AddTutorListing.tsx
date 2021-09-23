@@ -20,7 +20,7 @@ import { useAppSelector } from '../../app/hooks';
 import { selectCurrentUserId } from '../../reducers/auth';
 
 import TutorListingForm from '../../components/TutorListingForm';
-import { Level, TutorListingFormData } from '../../app/types';
+import { Level, TutorListingFormData } from '../../types/listing';
 import { unsetTutorListingFilters } from '../../reducers/tutorFilters';
 import { selectedTimeSlotsToArray } from '../../app/utils';
 import { EventCategory, TutorEventAction } from '../../app/analytics';

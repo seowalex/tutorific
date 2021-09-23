@@ -7,7 +7,7 @@ import clsx from 'clsx';
 
 import styles from './TimeSlots.module.scss';
 import { calculateSlotNumber, computeHour, formatHour } from '../../app/utils';
-import { SelectedTimeSlots } from '../../app/types';
+import { SelectedTimeSlots } from '../../types/listing';
 
 enum DragDirection {
   Left,

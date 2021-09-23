@@ -20,7 +20,8 @@ import {
   useForm,
 } from 'react-hook-form';
 import { addOutline } from 'ionicons/icons';
-import { Gender, Level, SelectedTimeSlots, Subject } from '../app/types';
+import { Level, SelectedTimeSlots, Subject } from '../types/listing';
+import { Gender } from '../types/profile';
 import { TutorFiltersState } from '../reducers/tutorFilters';
 
 import styles from './ListingForm.module.scss';

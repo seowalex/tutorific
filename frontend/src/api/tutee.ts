@@ -1,5 +1,6 @@
 import api from './base';
-import { Gender, Level, Town, TuteeListing } from '../app/types';
+import { Level, Town, TuteeListing } from '../types/listing';
+import type { Gender } from '../types/profile';
 import { constructQueryString } from '../app/utils';
 
 export type GetTuteeListingsQueryParams = Partial<{

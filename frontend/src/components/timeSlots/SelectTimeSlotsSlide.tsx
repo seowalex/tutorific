@@ -2,7 +2,7 @@ import React from 'react';
 
 import { IonCol, IonGrid, IonRow } from '@ionic/react';
 
-import { SelectedTimeSlots, WeekDay } from '../../app/types';
+import { SelectedTimeSlots, WeekDay } from '../../types/listing';
 import styles from './TimeSlots.module.scss';
 import {
   computeFirstTimeSlotOfDay,

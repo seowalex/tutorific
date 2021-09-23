@@ -12,7 +12,7 @@ import {
   TuteeListingFormData,
   TutorListingFormData,
   WeekDay,
-} from '../../app/types';
+} from '../../types/listing';
 import SelectTimeSlotsSlide from './SelectTimeSlotsSlide';
 import { formatWeekDay } from '../../app/utils';
 

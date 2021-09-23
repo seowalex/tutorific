@@ -1,5 +1,6 @@
 import api from './base';
-import { Gender, Level, TutorListing } from '../app/types';
+import { Level, TutorListing } from '../types/listing';
+import type { Gender } from '../types/profile';
 import { constructQueryString } from '../app/utils';
 
 export type GetTutorListingsQueryParams = Partial<{

@@ -12,7 +12,7 @@ import {
 import styles from './ListingCard.module.scss';
 import ProfileItem from './ProfileItem';
 import WeekDaysItem from './WeekDaysItem';
-import { TutorListing } from '../app/types';
+import { TutorListing } from '../types/listing';
 import { formatPriceRange, formatStringList } from '../app/utils';
 
 interface Props {

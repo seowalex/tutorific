@@ -119,12 +119,14 @@ const TuteeListing: React.FC = () => {
               >
                 <IonIcon slot="icon-only" icon={ellipsisVertical} />
               </IonButton>
-            ) : (listing && 
-              <ChatRouterLink profileId={listing.tutee.id}>
-                <IonButton>
-                  <IonIcon slot="icon-only" icon={chatbubbleOutline} />
-                </IonButton>
-              </ChatRouterLink>
+            ) : (
+              listing && (
+                <ChatRouterLink profileId={listing.tutee.id}>
+                  <IonButton>
+                    <IonIcon slot="icon-only" icon={chatbubbleOutline} />
+                  </IonButton>
+                </ChatRouterLink>
+              )
             )}
           </IonButtons>
         </IonToolbar>

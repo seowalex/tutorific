@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { closeCircle } from 'ionicons/icons';
-import { ListingType } from '../app/types';
+import { ListingType } from '../types/listing';
 
 import styles from './NoListings.module.scss';
 import EmptyPlaceholder from './EmptyPlaceholder';
@@ -29,10 +29,7 @@ const NoListings: React.FC<Props> = (props) => {
 
   return (
     <div className={styles.noListingsContainer}>
-      <EmptyPlaceholder
-        icon={closeCircle}
-        text={getMessage()}
-      />
+      <EmptyPlaceholder icon={closeCircle} text={getMessage()} />
     </div>
   );
 };
