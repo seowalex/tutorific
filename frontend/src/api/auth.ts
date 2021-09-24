@@ -44,6 +44,7 @@ const extendedApi = api.injectEndpoints({
         body: {
           userId: credentials.id,
           refreshToken: credentials.refreshToken,
+          subscriptionJson: credentials.subscriptionJson,
         },
       }),
     }),
