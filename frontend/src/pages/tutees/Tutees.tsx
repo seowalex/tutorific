@@ -18,6 +18,7 @@ import {
 } from '../../reducers/tuteeFilters';
 
 import TuteeListings from '../../components/TuteeListings';
+import OfflineCard from '../../components/OfflineCard';
 
 const Tutees: React.FC = () => {
   const filters = useAppSelector(selectTuteeFilters);
@@ -66,6 +67,7 @@ const Tutees: React.FC = () => {
             </IonButtons>
           </IonToolbar>
         </IonHeader>
+        <OfflineCard />
         <TuteeListings filters={filters} owner="all" />
       </IonContent>
     </IonPage>

@@ -16,7 +16,7 @@ import { locationOutline } from 'ionicons/icons';
 import styles from './ListingCard.module.scss';
 import ProfileItem from './ProfileItem';
 import WeekDaysItem from './WeekDaysItem';
-import { Level, Subject, TuteeListing } from '../types/listing';
+import { Level, TuteeListing } from '../types/listing';
 import { Gender } from '../types/profile';
 import { formatPriceRange, formatStringList } from '../app/utils';
 

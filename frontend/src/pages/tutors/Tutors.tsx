@@ -18,6 +18,7 @@ import {
 } from '../../reducers/tutorFilters';
 
 import TutorListings from '../../components/TutorListings';
+import OfflineCard from '../../components/OfflineCard';
 
 const Tutors: React.FC = () => {
   const filters = useAppSelector(selectTutorFilters);
@@ -65,6 +66,7 @@ const Tutors: React.FC = () => {
             </IonButtons>
           </IonToolbar>
         </IonHeader>
+        <OfflineCard />
         <TutorListings filters={filters} owner="all" />
       </IonContent>
     </IonPage>
