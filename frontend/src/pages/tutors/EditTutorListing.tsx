@@ -9,12 +9,13 @@ import {
   IonRow,
   IonTitle,
   IonToolbar,
+  useIonRouter,
   useIonToast,
 } from '@ionic/react';
 import React from 'react';
 import ReactGA from 'react-ga';
 import { SubmitHandler } from 'react-hook-form';
-import { useHistory, useRouteMatch } from 'react-router';
+import { useRouteMatch } from 'react-router';
 import { useDispatch } from 'react-redux';
 import {
   useGetTutorListingQuery,
@@ -42,7 +43,7 @@ const EditTutorListing: React.FC = () => {
   const { data: listing } = useGetTutorListingQuery(listingId);
   const [updateTutorListing] = useUpdateTutorListingMutation();
   const dispatch = useDispatch();
-  const history = useHistory();
+  const router = useIonRouter();
   const [present] = useIonToast();
 
   const onSubmit: SubmitHandler<TutorListingFormData> = async (data) => {
@@ -69,7 +70,7 @@ const EditTutorListing: React.FC = () => {
         action: TutorEventAction.Update,
       });
       dispatch(resetTutorListingPagination());
-      history.push(`/tutors/listing/${id}`);
+      router.push(`/tutors/listing/${id}`, 'back');
     } catch {
       if (!window.navigator.onLine) {
         present({
@@ -77,7 +78,7 @@ const EditTutorListing: React.FC = () => {
           message: 'Listing will be updated when you are online',
           duration: 5000,
         });
-        history.push(`/tutors/listing/${id}`);
+        router.push(`/tutors/listing/${id}`, 'back');
       }
     }
   };

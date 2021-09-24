@@ -9,12 +9,13 @@ import {
   IonRow,
   IonTitle,
   IonToolbar,
+  useIonRouter,
   useIonToast,
 } from '@ionic/react';
 import React from 'react';
 import ReactGA from 'react-ga';
 import { SubmitHandler } from 'react-hook-form';
-import { useHistory, useRouteMatch } from 'react-router';
+import { useRouteMatch } from 'react-router';
 import { useDispatch } from 'react-redux';
 import {
   useGetTuteeListingQuery,
@@ -43,7 +44,7 @@ const EditTuteeListing: React.FC = () => {
   const { data: listing } = useGetTuteeListingQuery(listingId);
   const [updateTuteeListing] = useUpdateTuteeListingMutation();
   const dispatch = useDispatch();
-  const history = useHistory();
+  const router = useIonRouter();
   const [present] = useIonToast();
 
   const onSubmit: SubmitHandler<TuteeListingFormData> = async (data) => {
@@ -62,14 +63,14 @@ const EditTuteeListing: React.FC = () => {
         subjects: details.subjects as string[],
         timeSlots: selectedTimeSlotsToArray(details.timeSlots),
       };
-      const result = await updateTuteeListing(listingData).unwrap();
+      await updateTuteeListing(listingData).unwrap();
 
       ReactGA.event({
         category: EventCategory.Tutee,
         action: TuteeEventAction.Update,
       });
       dispatch(resetTuteeListingPagination());
-      history.push(`/tutees/listing/${id}`);
+      router.push(`/tutees/listing/${id}`, 'back');
     } catch {
       if (!window.navigator.onLine) {
         present({
@@ -77,7 +78,7 @@ const EditTuteeListing: React.FC = () => {
           message: 'Listing will be updated when you are online',
           duration: 5000,
         });
-        history.push(`/tutees/listing/${id}`);
+        router.push(`/tutees/listing/${id}`, 'back');
       }
     }
   };

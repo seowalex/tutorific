@@ -9,12 +9,12 @@ import {
   IonRow,
   IonTitle,
   IonToolbar,
+  useIonRouter,
   useIonToast,
 } from '@ionic/react';
 import React from 'react';
 import ReactGA from 'react-ga';
 import { SubmitHandler } from 'react-hook-form';
-import { useHistory } from 'react-router';
 import { useDispatch } from 'react-redux';
 import { useCreateTutorListingMutation } from '../../api/tutor';
 import { useAppSelector } from '../../app/hooks';
@@ -30,7 +30,7 @@ const AddTutorListing: React.FC = () => {
   const dispatch = useDispatch();
   const userId = useAppSelector(selectCurrentUserId);
   const [createTutorListing] = useCreateTutorListingMutation();
-  const history = useHistory();
+  const router = useIonRouter();
   const [present] = useIonToast();
 
   const onSubmit: SubmitHandler<TutorListingFormData> = async (data) => {
@@ -56,7 +56,7 @@ const AddTutorListing: React.FC = () => {
         action: TutorEventAction.Create,
       });
       dispatch(unsetTutorListingFilters());
-      history.push('/tutors');
+      router.push('/tutors', 'back');
     } catch {
       if (!window.navigator.onLine) {
         present({
@@ -64,7 +64,7 @@ const AddTutorListing: React.FC = () => {
           message: 'Listing will be added when you are online',
           duration: 5000,
         });
-        history.push('/tutors');
+        router.push('/tutors', 'back');
       }
     }
   };

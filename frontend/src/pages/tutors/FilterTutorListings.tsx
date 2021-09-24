@@ -11,10 +11,10 @@ import {
   IonRow,
   IonTitle,
   IonToolbar,
+  useIonRouter,
   useIonToast,
 } from '@ionic/react';
 import { SubmitHandler } from 'react-hook-form';
-import { useHistory } from 'react-router';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import FilterTutorListingForm, {
   FilterTutorListingFormData,
@@ -28,7 +28,7 @@ import { EventCategory, TutorEventAction } from '../../types/analytics';
 
 const FilterTutorListings: React.FC = () => {
   const dispatch = useAppDispatch();
-  const history = useHistory();
+  const router = useIonRouter();
   const currentFilters = useAppSelector(selectTutorFilters);
   const [present] = useIonToast();
 
@@ -45,7 +45,7 @@ const FilterTutorListings: React.FC = () => {
         category: EventCategory.Tutor,
         action: TutorEventAction.Filter,
       });
-      history.push('/tutors');
+      router.push('/tutors', 'back');
     } else {
       present({
         message: 'No internet connection',

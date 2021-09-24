@@ -9,12 +9,12 @@ import {
   IonRow,
   IonTitle,
   IonToolbar,
+  useIonRouter,
   useIonToast,
 } from '@ionic/react';
 import React from 'react';
 import ReactGA from 'react-ga';
 import { SubmitHandler } from 'react-hook-form';
-import { useHistory } from 'react-router';
 import { useDispatch } from 'react-redux';
 import { useCreateTuteeListingMutation } from '../../api/tutee';
 import { useAppSelector } from '../../app/hooks';
@@ -30,7 +30,7 @@ const AddTuteeListing: React.FC = () => {
   const dispatch = useDispatch();
   const userId = useAppSelector(selectCurrentUserId);
   const [createTuteeListing] = useCreateTuteeListingMutation();
-  const history = useHistory();
+  const router = useIonRouter();
   const [present] = useIonToast();
 
   const onSubmit: SubmitHandler<TuteeListingFormData> = async (data) => {
@@ -55,7 +55,7 @@ const AddTuteeListing: React.FC = () => {
         action: TuteeEventAction.Create,
       });
       dispatch(unsetTuteeListingFilters());
-      history.push('/tutees');
+      router.push('/tutees', 'back');
     } catch {
       if (!window.navigator.onLine) {
         present({
@@ -63,7 +63,7 @@ const AddTuteeListing: React.FC = () => {
           message: 'Listing will be added when you are online',
           duration: 5000,
         });
-        history.push('/tutees');
+        router.push('/tutees', 'back');
       }
     }
   };
