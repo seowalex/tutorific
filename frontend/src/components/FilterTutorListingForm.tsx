@@ -202,9 +202,9 @@ const FilterTutorListingForm: React.FC<Props> = (props) => {
                       {subject}
                     </IonSelectOption>
                   ))}
-                  {Object.keys(Subject).sort().map((key) => (
-                    <IonSelectOption value={key} key={key}>
-                      {Object(Subject)[key]}
+                  {Object.values(Subject).sort().map((subject) => (
+                    <IonSelectOption value={subject} key={subject}>
+                      {subject}
                     </IonSelectOption>
                   ))}
                 </IonSelect>
