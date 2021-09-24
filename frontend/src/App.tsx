@@ -84,7 +84,7 @@ const App: React.FC = () => {
         present({
           header: 'Notification Permission Denied',
           message:
-            'You will not be able to receive push notifications or automatically update your chats',
+            'You will not be able to receive push notifications and chats may not update in real-time',
           duration: 5000,
         });
       }

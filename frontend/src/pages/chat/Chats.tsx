@@ -23,7 +23,9 @@ import EmptyPlaceholder from '../../components/EmptyPlaceholder';
 import styles from './Chats.module.scss';
 
 const Chats: React.FC = () => {
-  const { data: chats, refetch } = useGetChatsQuery();
+  const { data: chats, refetch } = useGetChatsQuery(undefined, {
+    pollingInterval: Notification.permission === 'granted' ? 0 : 5000,
+  });
 
   useEffect(
     () => window.navigator.serviceWorker.addEventListener('message', refetch),

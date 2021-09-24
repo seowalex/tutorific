@@ -43,7 +43,9 @@ const Chat: React.FC = () => {
   } = useRouteMatch<Params>();
 
   const [addMessage] = useAddMessageMutation();
-  const { data: chat, refetch } = useGetChatQuery(parseInt(id, 10));
+  const { data: chat, refetch } = useGetChatQuery(parseInt(id, 10), {
+    pollingInterval: Notification.permission === 'granted' ? 0 : 1000,
+  });
   const currentUserId = useAppSelector(selectCurrentUserId);
 
   const [present] = useIonToast();
