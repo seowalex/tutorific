@@ -43,6 +43,16 @@ const updateTutorListing = async (ctx: Koa.Context): Promise<void> => {
     ctx.throw(HttpStatus.UNAUTHORIZED);
   }
 
+  const currentListing = await tutorListingService.getTutorListing(
+    ctx.params.id
+  );
+
+  if (!currentListing) {
+    ctx.throw(HttpStatus.NOT_FOUND);
+  } else if (currentListing.tutor.id !== profileId) {
+    ctx.throw(HttpStatus.UNAUTHORIZED);
+  }
+
   const savedTutorListing = await tutorListingService.updateTutorListing(
     ctx.params.id,
     tutorListing
