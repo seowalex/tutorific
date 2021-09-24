@@ -17,7 +17,6 @@ import {
   useIonAlert,
   useIonRouter,
   useIonToast,
-  useIonViewWillEnter,
 } from '@ionic/react';
 import {
   chatbubbleOutline,
@@ -53,6 +52,11 @@ interface Params {
   id: string;
 }
 
+interface PopoverState {
+  showPopover: boolean;
+  event?: React.MouseEvent;
+}
+
 const TutorListing: React.FC = () => {
   const {
     params: { id },
@@ -63,9 +67,8 @@ const TutorListing: React.FC = () => {
   const router = useIonRouter();
 
   const isOwnListing = userId === listing?.tutor.id;
-  const [popoverState, setPopoverState] = useState({
+  const [popoverState, setPopoverState] = useState<PopoverState>({
     showPopover: false,
-    event: undefined,
   });
   const [showShareSheet, setShowShareSheet] = useState<boolean>(false);
   const [presentDeleteAlert] = useIonAlert();
@@ -88,7 +91,7 @@ const TutorListing: React.FC = () => {
         action: TutorEventAction.Delete,
       });
       router.push('/tutors', 'back');
-      setPopoverState({ showPopover: false, event: undefined });
+      setPopoverState({ showPopover: false });
     } catch {
       if (!window.navigator.onLine) {
         present({
@@ -97,7 +100,7 @@ const TutorListing: React.FC = () => {
           duration: 5000,
         });
         router.push('/tutors', 'back');
-        setPopoverState({ showPopover: false, event: undefined });
+        setPopoverState({ showPopover: false });
       }
     }
   };
@@ -112,7 +115,7 @@ const TutorListing: React.FC = () => {
           <IonButtons slot="primary" collapse>
             {isOwnListing ? (
               <IonButton
-                onClick={(e: any) => {
+                onClick={(e: React.MouseEvent<HTMLIonButtonElement>) => {
                   e.persist();
                   setPopoverState({ showPopover: true, event: e });
                 }}
@@ -158,9 +161,7 @@ const TutorListing: React.FC = () => {
       <IonPopover
         event={popoverState.event}
         isOpen={popoverState.showPopover}
-        onDidDismiss={() =>
-          setPopoverState({ showPopover: false, event: undefined })
-        }
+        onDidDismiss={() => setPopoverState({ showPopover: false })}
       >
         <IonList>
           <IonItem
@@ -176,7 +177,7 @@ const TutorListing: React.FC = () => {
             detail={false}
             routerLink={`/tutors/listing/${listingId}/edit`}
             onClick={() => {
-              setPopoverState({ showPopover: false, event: undefined });
+              setPopoverState({ showPopover: false });
             }}
           >
             <IonIcon icon={createOutline} slot="end" />
@@ -213,21 +214,45 @@ const TutorListing: React.FC = () => {
             text: 'Facebook',
             icon: logoFacebook,
             handler: () => {
-              window.location.href = `http://www.facebook.com/share.php?u=${listingUrl}`;
+              if (window.navigator.onLine) {
+                window.location.href = `http://www.facebook.com/share.php?u=${listingUrl}`;
+              } else {
+                present({
+                  message: 'No internet connection',
+                  color: 'danger',
+                  duration: 2000,
+                });
+              }
             },
           },
           {
             text: 'WhatsApp',
             icon: logoWhatsapp,
             handler: () => {
-              window.open(`whatsapp://send?text=${listingUrl}`);
+              if (window.navigator.onLine) {
+                window.open(`whatsapp://send?text=${listingUrl}`);
+              } else {
+                present({
+                  message: 'No internet connection',
+                  color: 'danger',
+                  duration: 2000,
+                });
+              }
             },
           },
           {
             text: 'Telegram',
             icon: paperPlaneOutline,
             handler: () => {
-              window.location.href = `https://t.me/share/url?url=${listingUrl}&text=I'm looking for students!`;
+              if (window.navigator.onLine) {
+                window.location.href = `https://t.me/share/url?url=${listingUrl}&text=I'm looking for students!`;
+              } else {
+                present({
+                  message: 'No internet connection',
+                  color: 'danger',
+                  duration: 2000,
+                });
+              }
             },
           },
           {

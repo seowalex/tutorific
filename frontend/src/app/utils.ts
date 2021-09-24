@@ -17,7 +17,9 @@ export const baseUrl = 'https://tutorific.herokuapp.com';
 
 // #region APIs
 
-export const constructQueryString = (params: Record<string, any>): string => {
+export const constructQueryString = (
+  params: Record<string, unknown>
+): string => {
   if (params === {}) {
     return '';
   }
@@ -28,7 +30,7 @@ export const constructQueryString = (params: Record<string, any>): string => {
     if (Array.isArray(value)) {
       value.forEach((element) => queryString.append(key, element));
     } else if (value != null) {
-      queryString.append(key, value);
+      queryString.append(key, value as string);
     }
   });
   return `?${queryString.toString()}`;

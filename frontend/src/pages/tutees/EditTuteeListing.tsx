@@ -38,8 +38,7 @@ const EditTuteeListing: React.FC = () => {
   const {
     params: { id },
   } = useRouteMatch<Params>();
-  // eslint-disable-next-line radix
-  const listingId = parseInt(id);
+  const listingId = parseInt(id, 10);
   const userId = useAppSelector(selectCurrentUserId);
   const { data: listing } = useGetTuteeListingQuery(listingId);
   const [updateTuteeListing] = useUpdateTuteeListingMutation();

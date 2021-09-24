@@ -294,7 +294,7 @@ const FilterTuteeListingForm: React.FC<Props> = (props) => {
                 >
                   {Object.values(Gender).map((gender) =>
                     gender === Gender.PNTS ? (
-                      <IonSelectOption value={null}>
+                      <IonSelectOption value={null} key={null}>
                         No Preference
                       </IonSelectOption>
                     ) : (

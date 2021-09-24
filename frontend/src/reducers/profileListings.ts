@@ -1,7 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-// eslint-disable-next-line import/no-cycle
-import { RootState } from '../app/store';
+import type { RootState } from '../app/store';
 
 interface ProfileListingsState {
   tutor: {

@@ -52,6 +52,11 @@ interface Params {
   id: string;
 }
 
+interface PopoverState {
+  showPopover: boolean;
+  event?: React.MouseEvent;
+}
+
 const TuteeListing: React.FC = () => {
   const {
     params: { id },
@@ -62,9 +67,8 @@ const TuteeListing: React.FC = () => {
   const router = useIonRouter();
 
   const isOwnListing = userId === listing?.tutee.id;
-  const [popoverState, setShowPopover] = useState({
+  const [popoverState, setShowPopover] = useState<PopoverState>({
     showPopover: false,
-    event: undefined,
   });
   const [showShareSheet, setShowShareSheet] = useState<boolean>(false);
   const [presentDeleteAlert] = useIonAlert();
@@ -87,7 +91,7 @@ const TuteeListing: React.FC = () => {
         action: TuteeEventAction.Delete,
       });
       router.push('/tutees', 'back');
-      setShowPopover({ showPopover: false, event: undefined });
+      setShowPopover({ showPopover: false });
     } catch {
       if (!window.navigator.onLine) {
         present({
@@ -96,7 +100,7 @@ const TuteeListing: React.FC = () => {
           duration: 5000,
         });
         router.push('/tutees', 'back');
-        setShowPopover({ showPopover: false, event: undefined });
+        setShowPopover({ showPopover: false });
       }
     }
   };
@@ -116,7 +120,7 @@ const TuteeListing: React.FC = () => {
           <IonButtons slot="primary" collapse>
             {isOwnListing ? (
               <IonButton
-                onClick={(e: any) => {
+                onClick={(e: React.MouseEvent<HTMLIonButtonElement>) => {
                   e.persist();
                   setShowPopover({ showPopover: true, event: e });
                 }}
@@ -161,9 +165,7 @@ const TuteeListing: React.FC = () => {
       <IonPopover
         event={popoverState.event}
         isOpen={popoverState.showPopover}
-        onDidDismiss={() =>
-          setShowPopover({ showPopover: false, event: undefined })
-        }
+        onDidDismiss={() => setShowPopover({ showPopover: false })}
       >
         <IonList>
           <IonItem
@@ -179,7 +181,7 @@ const TuteeListing: React.FC = () => {
             detail={false}
             routerLink={`/tutees/listing/${listingId}/edit`}
             onClick={() => {
-              setShowPopover({ showPopover: false, event: undefined });
+              setShowPopover({ showPopover: false });
             }}
           >
             <IonIcon icon={createOutline} slot="end" />
@@ -216,21 +218,45 @@ const TuteeListing: React.FC = () => {
             text: 'Facebook',
             icon: logoFacebook,
             handler: () => {
-              window.location.href = `http://www.facebook.com/share.php?u=${listingUrl}`;
+              if (window.navigator.onLine) {
+                window.location.href = `http://www.facebook.com/share.php?u=${listingUrl}`;
+              } else {
+                present({
+                  message: 'No internet connection',
+                  color: 'danger',
+                  duration: 2000,
+                });
+              }
             },
           },
           {
             text: 'WhatsApp',
             icon: logoWhatsapp,
             handler: () => {
-              window.open(`whatsapp://send?text=${listingUrl}`);
+              if (window.navigator.onLine) {
+                window.open(`whatsapp://send?text=${listingUrl}`);
+              } else {
+                present({
+                  message: 'No internet connection',
+                  color: 'danger',
+                  duration: 2000,
+                });
+              }
             },
           },
           {
             text: 'Telegram',
             icon: paperPlaneOutline,
             handler: () => {
-              window.location.href = `https://t.me/share/url?url=${listingUrl}&text=I'm looking for students!`;
+              if (window.navigator.onLine) {
+                window.location.href = `https://t.me/share/url?url=${listingUrl}&text=I'm looking for students!`;
+              } else {
+                present({
+                  message: 'No internet connection',
+                  color: 'danger',
+                  duration: 2000,
+                });
+              }
             },
           },
           {

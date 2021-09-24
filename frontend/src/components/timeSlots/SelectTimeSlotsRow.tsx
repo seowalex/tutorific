@@ -112,7 +112,12 @@ const SelectTimeSlotsRow: React.FC<Props> = (props) => {
               const isFirstHalfHour = timeSlot % 2 === 0;
               const hour = computeHour(timeSlot);
               return (
-                <IonCol key={slot}>
+                <IonCol
+                  onClick={() =>
+                    setSelectedSlots((s) => ({ ...s, [slot]: !s[slot] }))
+                  }
+                  key={slot}
+                >
                   <div
                     className={clsx(
                       styles.timeSlotBox,
