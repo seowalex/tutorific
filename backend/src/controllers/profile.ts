@@ -33,7 +33,7 @@ const createProfile = async (ctx: Koa.Context): Promise<void> => {
   // disallow creating profile more than once
   const user = await userService.getUser(userId);
   if (user?.profile !== null) {
-    ctx.throw(HttpStatus.CONFLICT);
+    ctx.throw(HttpStatus.CONFLICT, 'Already have an existing Profile.');
   }
   const newProfile = await profileService.createProfile(ctx.request.body);
   await userService.updateUser(userId, {
