@@ -1,5 +1,6 @@
 import React from 'react';
-import { IonAvatar, IonItem, IonLabel } from '@ionic/react';
+import { IonItem, IonLabel } from '@ionic/react';
+import Avatar from 'react-avatar';
 
 import styles from './ProfileItem.module.scss';
 import { Profile } from '../types/profile';
@@ -21,13 +22,13 @@ const ProfileItem: React.FC<Props> = (props: Props) => {
       mode="ios"
       routerLink={enableLink ? `/profile/${profile.id}` : undefined}
     >
-      <IonAvatar slot="start">
-        <img
-          src={`https://ui-avatars.com/api/?name=${encodeURIComponent(
-            profile.name
-          )}&background=random`}
-        />
-      </IonAvatar>
+      <Avatar
+        className={styles.avatar}
+        name={profile.name}
+        maxInitials={2}
+        size="2.25rem"
+        round
+      />
       <IonLabel>{profile.name}</IonLabel>
     </IonItem>
   );

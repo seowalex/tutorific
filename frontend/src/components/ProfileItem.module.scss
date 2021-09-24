@@ -3,3 +3,7 @@
   --padding-top: 0.5rem;
   --padding-bottom: 0.5rem;
 }
+
+.avatar:global(.sb-avatar) {
+  margin: 2px 20px 2px 0px;
+}
