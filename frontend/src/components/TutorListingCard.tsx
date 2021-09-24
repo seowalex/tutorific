@@ -12,7 +12,7 @@ import {
 import styles from './ListingCard.module.scss';
 import ProfileItem from './ProfileItem';
 import WeekDaysItem from './WeekDaysItem';
-import { TutorListing } from '../types/listing';
+import { Subject, TutorListing } from '../types/listing';
 import { formatPriceRange, formatStringList } from '../app/utils';
 
 interface Props {
@@ -40,7 +40,7 @@ const TutorListingCard: React.FC<Props> = (props: Props) => {
                 class="ion-text-start"
                 className={styles.listingCardTitle}
               >
-                {formatStringList(listing.subjects)}
+                {formatStringList(listing.subjects.map(subject => Object(Subject)[subject]))}
               </IonCardTitle>
             </IonCol>
             <IonCol>

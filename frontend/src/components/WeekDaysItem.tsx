@@ -12,7 +12,7 @@ interface Props {
 const WeekDaysItem: React.FC<Props> = (props: Props) => {
   const { timeSlots } = props;
   return (
-    <IonItem color="none" lines="none">
+    <IonItem color="none" lines="none" className={styles.itemContainer}>
       <IonIcon icon={todayOutline} slot="start" />
       <IonLabel className={styles.itemLabel}>
         {formatStringList(computeWeekDays(timeSlots))}

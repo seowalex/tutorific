@@ -19,6 +19,18 @@ export enum Subject {
   English = 'English',
   Science = 'Science',
   Chinese = 'Chinese',
+  Malay = 'Malay',
+  Tamil = 'Tamil',
+  Geography = 'Geography',
+  History = 'History',
+  EnglishLiterature = 'English Literature',
+  Physics = 'Physics',
+  Chemistry = 'Chemistry',
+  Biology = 'Biology',
+  Art = 'Art',
+  Music = 'Music',
+  GeneralPaper = 'General Paper',
+  Economics = 'Economics'
 }
 
 export enum Town {
