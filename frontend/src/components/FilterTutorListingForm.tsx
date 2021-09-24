@@ -184,7 +184,7 @@ const FilterTutorListingForm: React.FC<Props> = (props) => {
       <IonRow>
         <IonCol>
           <IonItem fill="outline" lines="full" disabled={isSubmitting}>
-            <IonLabel position="stacked">Subjects</IonLabel>
+            <IonLabel position="stacked">Subjects (all of the following)</IonLabel>
             <Controller
               name="subjects"
               control={control}
@@ -202,7 +202,7 @@ const FilterTutorListingForm: React.FC<Props> = (props) => {
                       {subject}
                     </IonSelectOption>
                   ))}
-                  {Object.keys(Subject).map((key) => (
+                  {Object.keys(Subject).sort().map((key) => (
                     <IonSelectOption value={key} key={key}>
                       {Object(Subject)[key]}
                     </IonSelectOption>
@@ -240,7 +240,7 @@ const FilterTutorListingForm: React.FC<Props> = (props) => {
       <IonRow>
         <IonCol>
           <IonItem fill="outline" lines="full" disabled={isSubmitting}>
-            <IonLabel position="stacked">Education Levels</IonLabel>
+            <IonLabel position="stacked">Education Levels (all of the following)</IonLabel>
             <IonSelect
               multiple
               cancelText="Cancel"

@@ -186,7 +186,7 @@ const FilterTuteeListingForm: React.FC<Props> = (props) => {
       <IonRow>
         <IonCol>
           <IonItem fill="outline" lines="full" disabled={isSubmitting}>
-            <IonLabel position="stacked">Subjects</IonLabel>
+            <IonLabel position="stacked">Subjects (any of the following)</IonLabel>
             <Controller
               name="subjects"
               control={control}
@@ -204,7 +204,7 @@ const FilterTuteeListingForm: React.FC<Props> = (props) => {
                       {subject}
                     </IonSelectOption>
                   ))}
-                  {Object.keys(Subject).map((key) => (
+                  {Object.keys(Subject).sort().map((key) => (
                     <IonSelectOption value={key} key={key}>
                       {Object(Subject)[key]}
                     </IonSelectOption>
@@ -242,7 +242,7 @@ const FilterTuteeListingForm: React.FC<Props> = (props) => {
       <IonRow>
         <IonCol>
           <IonItem fill="outline" lines="full" disabled={isSubmitting}>
-            <IonLabel position="stacked">Education Levels</IonLabel>
+            <IonLabel position="stacked">Education Levels (any of the following)</IonLabel>
             <IonSelect
               multiple
               cancelText="Cancel"
@@ -261,7 +261,7 @@ const FilterTuteeListingForm: React.FC<Props> = (props) => {
       <IonRow>
         <IonCol>
           <IonItem fill="outline" lines="full" disabled={isSubmitting}>
-            <IonLabel position="stacked">Locations</IonLabel>
+            <IonLabel position="stacked">Locations (any of the following)</IonLabel>
             <IonSelect
               multiple
               cancelText="Cancel"

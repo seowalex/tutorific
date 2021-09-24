@@ -16,7 +16,7 @@ import { locationOutline } from 'ionicons/icons';
 import styles from './ListingCard.module.scss';
 import ProfileItem from './ProfileItem';
 import WeekDaysItem from './WeekDaysItem';
-import { Level, TuteeListing } from '../types/listing';
+import { Level, Subject, TuteeListing } from '../types/listing';
 import { Gender } from '../types/profile';
 import { formatPriceRange, formatStringList } from '../app/utils';
 
@@ -48,7 +48,7 @@ const TuteeListingCard: React.FC<Props> = (props: Props) => {
                 class="ion-text-start"
                 className={styles.listingCardTitle}
               >
-                {formatStringList(listing.subjects)}
+                {formatStringList(listing.subjects.map(subject => Object(Subject)[subject]))}
               </IonCardTitle>
             </IonCol>
             <IonCol>
@@ -69,11 +69,11 @@ const TuteeListingCard: React.FC<Props> = (props: Props) => {
           </IonRow>
         </IonGrid>
       </IonCardHeader>
-      <WeekDaysItem timeSlots={listing.timeSlots} />
       <IonItem color="none" lines="none">
         <IonIcon icon={locationOutline} slot="start" />
         <IonLabel className={styles.itemLabel}>{listing.location}</IonLabel>
       </IonItem>
+      <WeekDaysItem timeSlots={listing.timeSlots} />
     </IonCard>
   );
 };

@@ -42,7 +42,7 @@ const getTuteeListings = async (
   }
 
   if (queries.subjects) {
-    conditions.subjects = Raw((subjects) => `${subjects} <@ :querySubjects`, {
+    conditions.subjects = Raw((subjects) => `${subjects} && :querySubjects`, {
       querySubjects: [queries.subjects],
     });
   }

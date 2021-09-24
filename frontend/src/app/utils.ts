@@ -63,6 +63,20 @@ export const mapSubject = (subject: string): string | undefined => {
     Maths: Subject.Mathematics,
     Sci: Subject.Science,
     Eng: Subject.English,
+    "English Language": Subject.English,
+    "Chinese Language": Subject.Chinese,
+    "Malay Language": Subject.Malay,
+    "Tamil Language": Subject.Tamil,
+    Geog: Subject.Geography,
+    Hist: Subject.History,
+    Lit: Subject.EnglishLiterature,
+    "English Lit": Subject.EnglishLiterature,
+    Phys: Subject.Physics,
+    Chem: Subject.Chemistry,
+    Bio: Subject.Biology,
+    GP: Subject.GeneralPaper,
+    Econ: Subject.Economics,
+    Econs: Subject.Economics,
   };
 
   return Object.keys(Subject).includes(subject)

@@ -172,7 +172,7 @@ const TutorListingForm: React.FC<Props> = (props: Props) => {
                       {subject}
                     </IonSelectOption>
                   ))}
-                  {Object.keys(Subject).map((key) => (
+                  {Object.keys(Subject).sort().map((key) => (
                     <IonSelectOption value={key} key={key}>
                       {Object(Subject)[key]}
                     </IonSelectOption>

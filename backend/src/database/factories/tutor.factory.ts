@@ -1,5 +1,5 @@
 import faker from 'faker';
-import { Level } from '../../utils/model';
+import { Level, Subject } from '../../utils/model';
 import Profile from '../../models/profile';
 import TutorListing from '../../models/tutorListing';
 
@@ -21,12 +21,6 @@ const TutorListingSeed = (context?: { tutor: Profile }) => {
     tutorListing.timeSlots.push(hour * 2 + 1);
   });
 
-  const subjects = ['English', 'Chinese', 'Math', 'Science'];
-
-  tutorListing.subjects = faker.random
-    .arrayElements(subjects, faker.datatype.number({ min: 1, max: 3 }))
-    .sort((a, b) => subjects.indexOf(a) - subjects.indexOf(b));
-
   tutorListing.levels = faker.random
     .arrayElements(
       Object.values(Level),
@@ -36,6 +30,62 @@ const TutorListingSeed = (context?: { tutor: Profile }) => {
       (a, b) =>
         Object.values(Level).indexOf(a) - Object.values(Level).indexOf(b)
     );
+
+  const expectedSubjects = {
+    [Level.LowerPrimary]: [
+      Subject.Mathematics,
+      Subject.English,
+      Subject.Science
+    ],
+    [Level.UpperPrimary]: [
+      Subject.Mathematics,
+      Subject.English,
+      Subject.Science
+    ],
+    [Level.LowerSecondary]: [
+      Subject.Mathematics,
+      Subject.English,
+      Subject.Physics,
+      Subject.Chemistry,
+      Subject.Biology,
+      Subject.Geography,
+      Subject.History,
+      Subject.EnglishLiterature,
+      Subject.Art,
+      Subject.Music,
+    ],
+    [Level.UpperSecondary]: [
+      Subject.Mathematics,
+      Subject.English,
+      Subject.Physics,
+      Subject.Chemistry,
+      Subject.Biology,
+      Subject.Geography,
+      Subject.History,
+      Subject.EnglishLiterature,
+      Subject.Art,
+      Subject.Music,
+    ],
+    [Level.JC]: [
+      Subject.Mathematics,
+      Subject.GeneralPaper,
+      Subject.Economics,
+      Subject.Physics,
+      Subject.Chemistry,
+      Subject.Biology,
+      Subject.Geography,
+      Subject.History,
+      Subject.EnglishLiterature,
+      Subject.Art,
+      Subject.Music,
+    ],
+  }
+
+  const subjects = expectedSubjects[faker.random.arrayElement(tutorListing.levels)];
+
+  tutorListing.subjects = faker.random
+    .arrayElements(subjects, faker.datatype.number({ min: 1, max: 3 }))
+    .sort((a, b) => subjects.indexOf(a) - subjects.indexOf(b));
 
   const expectedPriceRange = {
     [Level.LowerPrimary]: [20, 25],
