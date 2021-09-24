@@ -48,7 +48,7 @@ const TuteeListingCard: React.FC<Props> = (props: Props) => {
                 class="ion-text-start"
                 className={styles.listingCardTitle}
               >
-                {formatStringList(listing.subjects.map(subject => Object(Subject)[subject]))}
+                {formatStringList(listing.subjects)}
               </IonCardTitle>
             </IonCol>
             <IonCol>
