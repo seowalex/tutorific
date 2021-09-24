@@ -172,11 +172,13 @@ const TuteeListingForm: React.FC<Props> = (props: Props) => {
                       {subject}
                     </IonSelectOption>
                   ))}
-                  {Object.values(Subject).sort().map((subject) => (
-                    <IonSelectOption value={subject} key={subject}>
-                      {subject}
-                    </IonSelectOption>
-                  ))}
+                  {Object.values(Subject)
+                    .sort()
+                    .map((subject) => (
+                      <IonSelectOption value={subject} key={subject}>
+                        {subject}
+                      </IonSelectOption>
+                    ))}
                 </IonSelect>
               )}
               rules={{ required: 'Please select at least one subject' }}
@@ -316,6 +318,9 @@ const TuteeListingForm: React.FC<Props> = (props: Props) => {
                 isSubmitting={isSubmitting}
               />
             )}
+            rules={{
+              required: 'Please select at least one time slot',
+            }}
           />
         </IonCol>
       </IonRow>
