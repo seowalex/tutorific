@@ -19,6 +19,12 @@ const updateProfile = async (ctx: Koa.Context): Promise<void> => {
     ctx.throw(HttpStatus.UNAUTHORIZED);
   }
 
+  const currentProfile = await profileService.getProfile(profileId);
+
+  if (!currentProfile) {
+    ctx.throw(HttpStatus.NOT_FOUND);
+  }
+
   const savedProfile = await profileService.updateProfile(
     ctx.params.id,
     ctx.request.body

@@ -43,6 +43,16 @@ const updateTuteeListing = async (ctx: Koa.Context): Promise<void> => {
     ctx.throw(HttpStatus.UNAUTHORIZED);
   }
 
+  const currentListing = await tuteeListingService.getTuteeListing(
+    ctx.params.id
+  );
+
+  if (!currentListing) {
+    ctx.throw(HttpStatus.NOT_FOUND);
+  } else if (currentListing.tutee.id !== profileId) {
+    ctx.throw(HttpStatus.UNAUTHORIZED);
+  }
+
   const savedTuteeListing = await tuteeListingService.updateTuteeListing(
     ctx.params.id,
     tuteeListing
