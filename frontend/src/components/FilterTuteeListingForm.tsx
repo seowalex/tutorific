@@ -200,10 +200,12 @@ const FilterTuteeListingForm: React.FC<Props> = (props) => {
                   value={value}
                 >
                   {otherSubjects.map((subject) => (
-                    <IonSelectOption value={subject}>{subject}</IonSelectOption>
+                    <IonSelectOption value={subject} key={subject}>
+                      {subject}
+                    </IonSelectOption>
                   ))}
                   {Object.keys(Subject).map((key) => (
-                    <IonSelectOption value={key}>
+                    <IonSelectOption value={key} key={key}>
                       {Object(Subject)[key]}
                     </IonSelectOption>
                   ))}
@@ -248,7 +250,9 @@ const FilterTuteeListingForm: React.FC<Props> = (props) => {
               {...register('levels')}
             >
               {Object.values(Level).map((value) => (
-                <IonSelectOption value={value}>{value}</IonSelectOption>
+                <IonSelectOption value={value} key={value}>
+                  {value}
+                </IonSelectOption>
               ))}
             </IonSelect>
           </IonItem>
@@ -265,7 +269,9 @@ const FilterTuteeListingForm: React.FC<Props> = (props) => {
               {...register('locations')}
             >
               {Object.values(Town).map((value) => (
-                <IonSelectOption value={value}>{value}</IonSelectOption>
+                <IonSelectOption value={value} key={value}>
+                  {value}
+                </IonSelectOption>
               ))}
             </IonSelect>
           </IonItem>
@@ -292,7 +298,9 @@ const FilterTuteeListingForm: React.FC<Props> = (props) => {
                         No Preference
                       </IonSelectOption>
                     ) : (
-                      <IonSelectOption value={gender}>{gender}</IonSelectOption>
+                      <IonSelectOption value={gender} key={gender}>
+                        {gender}
+                      </IonSelectOption>
                     )
                   )}
                 </IonSelect>

@@ -27,7 +27,7 @@ const SelectTimeSlotsSlide: React.FC<Props> = (props) => {
   return (
     <IonGrid className={styles.timeSlotSlideContainer}>
       {[...Array(numberOfRows).keys()].map((row) => (
-        <IonRow>
+        <IonRow key={row}>
           <IonCol>
             <SelectTimeSlotsRow
               firstTimeSlot={firstTimeSlotOfDay + row * slotsPerRow}

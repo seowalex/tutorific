@@ -168,10 +168,12 @@ const TuteeListingForm: React.FC<Props> = (props: Props) => {
                   value={value}
                 >
                   {otherSubjects.map((subject) => (
-                    <IonSelectOption value={subject}>{subject}</IonSelectOption>
+                    <IonSelectOption value={subject} key={subject}>
+                      {subject}
+                    </IonSelectOption>
                   ))}
                   {Object.keys(Subject).map((key) => (
-                    <IonSelectOption value={key}>
+                    <IonSelectOption value={key} key={key}>
                       {Object(Subject)[key]}
                     </IonSelectOption>
                   ))}
@@ -228,7 +230,9 @@ const TuteeListingForm: React.FC<Props> = (props: Props) => {
               })}
             >
               {Object.values(Level).map((value) => (
-                <IonSelectOption value={value}>{value}</IonSelectOption>
+                <IonSelectOption value={value} key={value}>
+                  {value}
+                </IonSelectOption>
               ))}
             </IonSelect>
             {errors.level && (
@@ -256,7 +260,9 @@ const TuteeListingForm: React.FC<Props> = (props: Props) => {
               })}
             >
               {Object.values(Gender).map((value) => (
-                <IonSelectOption value={value}>{value}</IonSelectOption>
+                <IonSelectOption value={value} key={value}>
+                  {value}
+                </IonSelectOption>
               ))}
             </IonSelect>
             {errors.gender && (
@@ -284,7 +290,7 @@ const TuteeListingForm: React.FC<Props> = (props: Props) => {
               })}
             >
               {Object.values(Town).map((value) => (
-                <IonSelectOption value={value.toString()}>
+                <IonSelectOption value={value.toString()} key={value}>
                   {value.toString()}
                 </IonSelectOption>
               ))}

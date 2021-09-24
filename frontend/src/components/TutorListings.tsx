@@ -94,7 +94,11 @@ const TutorListings: React.FC<Props> = (props) => {
         </IonRefresher>
       )}
       {listings.map((listing) => (
-        <TutorListingCard listing={listing} hideProfile={hideProfiles} />
+        <TutorListingCard
+          listing={listing}
+          hideProfile={hideProfiles}
+          key={listing.id}
+        />
       ))}
       <IonInfiniteScroll
         threshold="100px"

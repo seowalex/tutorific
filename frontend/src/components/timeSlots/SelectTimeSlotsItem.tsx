@@ -73,6 +73,7 @@ const SelectTimeSlotsItem: React.FC<Props> = (props) => {
                 value={value}
                 disabled={disabled}
                 onSubmit={handleSubmit}
+                key={key}
               />
             )
         )}
@@ -88,7 +89,7 @@ const SelectTimeSlotsItem: React.FC<Props> = (props) => {
         onIonChange={(e) => setWeekDay(e.detail.value as WeekDay)}
       >
         {Object.keys(WeekDay).map((key) => (
-          <IonSegmentButton value={key as WeekDay}>
+          <IonSegmentButton value={key as WeekDay} key={key}>
             <IonLabel>{key}</IonLabel>
           </IonSegmentButton>
         ))}

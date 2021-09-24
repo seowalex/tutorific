@@ -168,10 +168,12 @@ const TutorListingForm: React.FC<Props> = (props: Props) => {
                   value={value}
                 >
                   {otherSubjects.map((subject) => (
-                    <IonSelectOption value={subject}>{subject}</IonSelectOption>
+                    <IonSelectOption value={subject} key={subject}>
+                      {subject}
+                    </IonSelectOption>
                   ))}
                   {Object.keys(Subject).map((key) => (
-                    <IonSelectOption value={key}>
+                    <IonSelectOption value={key} key={key}>
                       {Object(Subject)[key]}
                     </IonSelectOption>
                   ))}
@@ -233,7 +235,9 @@ const TutorListingForm: React.FC<Props> = (props: Props) => {
               })}
             >
               {Object.values(Level).map((value) => (
-                <IonSelectOption value={value}>{value}</IonSelectOption>
+                <IonSelectOption value={value} key={value}>
+                  {value}
+                </IonSelectOption>
               ))}
             </IonSelect>
             {errors.levels && (

@@ -94,7 +94,11 @@ const TuteeListings: React.FC<Props> = (props) => {
         </IonRefresher>
       )}
       {listings.map((listing) => (
-        <TuteeListingCard listing={listing} hideProfile={hideProfiles} />
+        <TuteeListingCard
+          listing={listing}
+          hideProfile={hideProfiles}
+          key={listing.id}
+        />
       ))}
       <IonInfiniteScroll
         threshold="100px"
