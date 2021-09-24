@@ -50,6 +50,16 @@ const TutorListings: React.FC<Props> = (props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data]);
 
+  useEffect(
+    () =>
+      window.navigator.serviceWorker.addEventListener('message', () => {
+        setIsAppending(false);
+        dispatch(resetTutorListingPagination());
+      }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    []
+  );
+
   const fetchNext = ($event: CustomEvent<void>) => {
     setIsAppending(true);
     dispatch(incrementTutorListingPagination());

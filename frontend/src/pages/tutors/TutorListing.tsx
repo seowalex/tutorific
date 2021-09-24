@@ -102,10 +102,6 @@ const TutorListing: React.FC = () => {
     }
   };
 
-  useIonViewWillEnter(() => {
-    refetch();
-  });
-
   return (
     <IonPage>
       <IonHeader>

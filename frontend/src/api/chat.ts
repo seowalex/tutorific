@@ -61,17 +61,13 @@ const extendedApi = api.injectEndpoints({
         const message = { id: new Date().getTime(), ...body };
 
         dispatch(
-          extendedApi.util.updateQueryData(
-            'getChats',
-            undefined as void,
-            (draft) => {
-              const pendingChat = draft.find((chat) => chat.id === chatId);
+          extendedApi.util.updateQueryData('getChats', undefined, (draft) => {
+            const pendingChat = draft.find((chat) => chat.id === chatId);
 
-              if (pendingChat) {
-                pendingChat.lastMessage = message;
-              }
+            if (pendingChat) {
+              pendingChat.lastMessage = message;
             }
-          )
+          })
         );
 
         dispatch(

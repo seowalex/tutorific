@@ -39,7 +39,6 @@ interface Props {
 
 const TutorListingForm: React.FC<Props> = (props: Props) => {
   const { onSubmit, submitButtonText, currentData } = props;
-  console.log(currentData);
   const {
     register,
     formState: { errors, isSubmitting },
@@ -258,6 +257,9 @@ const TutorListingForm: React.FC<Props> = (props: Props) => {
                 isSubmitting={isSubmitting}
               />
             )}
+            rules={{
+              required: 'Please select at least one time slot',
+            }}
           />
         </IonCol>
       </IonRow>

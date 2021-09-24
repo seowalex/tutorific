@@ -75,6 +75,25 @@ const extendedApi = api.injectEndpoints({
       }),
       invalidatesTags: (result, error, arg) =>
         result ? [{ type: 'TuteeListing', id: arg.id }] : [],
+      async onQueryStarted({ id, ...body }, { dispatch }) {
+        dispatch(
+          extendedApi.util.updateQueryData('getTuteeListings', {}, (draft) => {
+            const pendingListing = draft.listings.find(
+              (listing) => listing.id === id
+            );
+
+            if (pendingListing) {
+              Object.assign(pendingListing, { ...pendingListing, ...body });
+            }
+          })
+        );
+
+        dispatch(
+          extendedApi.util.updateQueryData('getTuteeListing', id, (draft) => {
+            Object.assign(draft, { ...draft, ...body });
+          })
+        );
+      },
     }),
     deleteTuteeListing: builder.mutation<void, number>({
       query: (id) => ({
@@ -83,6 +102,16 @@ const extendedApi = api.injectEndpoints({
       }),
       invalidatesTags: (result, error, id) =>
         result ? [{ type: 'TuteeListing', id }] : [],
+      async onQueryStarted(id, { dispatch }) {
+        dispatch(
+          extendedApi.util.updateQueryData('getTuteeListings', {}, (draft) => {
+            Object.assign(
+              draft,
+              draft.listings.filter((listing) => listing.id !== id)
+            );
+          })
+        );
+      },
     }),
   }),
 });

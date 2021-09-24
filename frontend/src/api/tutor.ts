@@ -1,5 +1,5 @@
 import api from './base';
-import { Level, TutorListing } from '../types/listing';
+import type { Level, TutorListing } from '../types/listing';
 import type { Gender } from '../types/profile';
 import { constructQueryString } from '../app/utils';
 
@@ -75,6 +75,25 @@ const extendedApi = api.injectEndpoints({
       }),
       invalidatesTags: (result, error, arg) =>
         result ? [{ type: 'TutorListing', id: arg.id }] : [],
+      async onQueryStarted({ id, ...body }, { dispatch }) {
+        dispatch(
+          extendedApi.util.updateQueryData('getTutorListings', {}, (draft) => {
+            const pendingListing = draft.listings.find(
+              (listing) => listing.id === id
+            );
+
+            if (pendingListing) {
+              Object.assign(pendingListing, { ...pendingListing, ...body });
+            }
+          })
+        );
+
+        dispatch(
+          extendedApi.util.updateQueryData('getTutorListing', id, (draft) => {
+            Object.assign(draft, { ...draft, ...body });
+          })
+        );
+      },
     }),
     deleteTutorListing: builder.mutation<void, number>({
       query: (id) => ({
@@ -83,6 +102,16 @@ const extendedApi = api.injectEndpoints({
       }),
       invalidatesTags: (result, error, id) =>
         result ? [{ type: 'TutorListing', id }] : [],
+      async onQueryStarted(id, { dispatch }) {
+        dispatch(
+          extendedApi.util.updateQueryData('getTutorListings', {}, (draft) => {
+            Object.assign(
+              draft,
+              draft.listings.filter((listing) => listing.id !== id)
+            );
+          })
+        );
+      },
     }),
   }),
 });

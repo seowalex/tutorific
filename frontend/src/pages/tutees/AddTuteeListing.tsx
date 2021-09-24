@@ -35,8 +35,6 @@ const AddTuteeListing: React.FC = () => {
 
   const onSubmit: SubmitHandler<TuteeListingFormData> = async (data) => {
     if (userId == null) {
-      // eslint-disable-next-line no-console
-      console.log('User is not logged in');
       return;
     }
 

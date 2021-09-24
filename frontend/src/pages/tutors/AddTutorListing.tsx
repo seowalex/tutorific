@@ -35,8 +35,6 @@ const AddTutorListing: React.FC = () => {
 
   const onSubmit: SubmitHandler<TutorListingFormData> = async (data) => {
     if (userId == null) {
-      // eslint-disable-next-line no-console
-      console.log('User is not logged in');
       return;
     }
 

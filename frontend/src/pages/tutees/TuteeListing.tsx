@@ -17,7 +17,6 @@ import {
   useIonAlert,
   useIonRouter,
   useIonToast,
-  useIonViewWillEnter,
 } from '@ionic/react';
 import {
   chatbubbleOutline,
@@ -102,9 +101,10 @@ const TuteeListing: React.FC = () => {
     }
   };
 
-  useIonViewWillEnter(() => {
-    refetch();
-  });
+  useEffect(
+    () => window.navigator.serviceWorker.addEventListener('message', refetch),
+    [refetch]
+  );
 
   return (
     <IonPage>

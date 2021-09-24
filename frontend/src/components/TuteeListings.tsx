@@ -50,6 +50,16 @@ const TuteeListings: React.FC<Props> = (props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data]);
 
+  useEffect(
+    () =>
+      window.navigator.serviceWorker.addEventListener('message', () => {
+        setIsAppending(false);
+        dispatch(resetTuteeListingPagination());
+      }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    []
+  );
+
   const fetchNext = ($event: CustomEvent<void>) => {
     setIsAppending(true);
     dispatch(incrementTuteeListingPagination());
