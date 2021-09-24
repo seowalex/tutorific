@@ -27,12 +27,12 @@ const TuteeListingSeed = (context?: { tutee: Profile }) => {
     [Level.LowerPrimary]: [
       Subject.Mathematics,
       Subject.English,
-      Subject.Science
+      Subject.Science,
     ],
     [Level.UpperPrimary]: [
       Subject.Mathematics,
       Subject.English,
-      Subject.Science
+      Subject.Science,
     ],
     [Level.LowerSecondary]: [
       Subject.Mathematics,
@@ -71,7 +71,7 @@ const TuteeListingSeed = (context?: { tutee: Profile }) => {
       Subject.Art,
       Subject.Music,
     ],
-  }
+  };
 
   const subjects = expectedSubjects[tuteeListing.level];
 

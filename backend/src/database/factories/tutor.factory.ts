@@ -35,12 +35,12 @@ const TutorListingSeed = (context?: { tutor: Profile }) => {
     [Level.LowerPrimary]: [
       Subject.Mathematics,
       Subject.English,
-      Subject.Science
+      Subject.Science,
     ],
     [Level.UpperPrimary]: [
       Subject.Mathematics,
       Subject.English,
-      Subject.Science
+      Subject.Science,
     ],
     [Level.LowerSecondary]: [
       Subject.Mathematics,
@@ -79,9 +79,10 @@ const TutorListingSeed = (context?: { tutor: Profile }) => {
       Subject.Art,
       Subject.Music,
     ],
-  }
+  };
 
-  const subjects = expectedSubjects[faker.random.arrayElement(tutorListing.levels)];
+  const subjects =
+    expectedSubjects[faker.random.arrayElement(tutorListing.levels)];
 
   tutorListing.subjects = faker.random
     .arrayElements(subjects, faker.datatype.number({ min: 1, max: 3 }))

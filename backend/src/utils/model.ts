@@ -31,7 +31,7 @@ export enum Subject {
   Art = 'Art',
   Music = 'Music',
   GeneralPaper = 'General Paper',
-  Economics = 'Economics'
+  Economics = 'Economics',
 }
 
 export enum Town {
